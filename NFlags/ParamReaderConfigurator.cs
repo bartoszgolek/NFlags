@@ -9,7 +9,7 @@ namespace NFlags
         
         private string _description = "";
         
-        private Dialect _dialect = new Dialects.WinDialect();
+        private Dialect _dialect = Dialect.Win;
 
         private readonly List<Arg> _parameters = new List<Arg>();
 
