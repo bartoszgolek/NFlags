@@ -9,7 +9,7 @@ namespace NFlags
         private static readonly Dictionary<OptionValueMode, Func<Dialect, OptionFormatter>> Printers = new Dictionary<OptionValueMode, Func<Dialect, OptionFormatter>>
         {
             { OptionValueMode.NextArgument, dialect => new ArgSeparatorOptionFormatter(dialect) },
-            { OptionValueMode.AfterEqual, dialect => new EqualityOptionFormatter(dialect) },
+            { OptionValueMode.AfterEqual, dialect => new EqualityOptionFormatter(dialect) }
             
         };
         

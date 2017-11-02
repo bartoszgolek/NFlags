@@ -10,14 +10,14 @@ namespace NFlags
             new Dictionary<OptionValueMode, Func<Dialect, ArgMatcher>>
             {
                 {OptionValueMode.NextArgument, dialect => new ArgSeparatorMatcher(dialect)},
-                {OptionValueMode.AfterEqual, dialect => new EqualityMatcher(dialect)},
+                {OptionValueMode.AfterEqual, dialect => new EqualityMatcher(dialect)}
             };
 
         protected readonly Dialect Dialect;
 
         protected ArgMatcher(Dialect dialect)
         {
-            this.Dialect = dialect;
+            Dialect = dialect;
         }
 
         public static ArgMatcher GetMatcher(Dialect dialect)

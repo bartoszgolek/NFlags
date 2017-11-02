@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -7,27 +6,14 @@ namespace NFlags
 {
     public class HelpPrinter
     {
-        private readonly string _name;
-        private readonly string _description;
-        private readonly Dialect _dialect;
-        private readonly List<Flag> _flags;
-        private readonly List<Parameter> _parameters;
-        private readonly List<Option> _options;
+        private readonly NFlagsConfig _readerConfig;
 
-        public HelpPrinter(
-            string name,
-            string description,
-            Dialect dialect, 
-            List<Flag> flags, 
-            List<Parameter> parameters, 
-            List<Option> options)
+        private readonly CommandConfig _commandConfig;
+
+        public HelpPrinter(NFlagsConfig readerConfig, CommandConfig commandConfig)
         {
-            _name = name;
-            _description = description;
-            _dialect = dialect;
-            _flags = flags;
-            _parameters = parameters;
-            _options = options;
+            _readerConfig = readerConfig;
+            _commandConfig = commandConfig;
         }
 
         public string Print()
@@ -46,35 +32,35 @@ namespace NFlags
             writeLine("Usage:");
             var line = "\t";
 
-            line += _name;           
-            if (_flags.Any())
+            line += _readerConfig.Name;           
+            if (_commandConfig.Flags.Any())
                 line += " [FLAGS]...";
-            if (_options.Any())
+            if (_commandConfig.Options.Any())
                 line += " [OPTIONS]...";
-            if (_parameters.Any())
+            if (_commandConfig.Parameters.Any())
                 line += " [PARAMETERS]...";
 
             writeLine(line);
             writeLine("");
 
-            if (string.IsNullOrEmpty(_description)) 
+            if (string.IsNullOrEmpty(_readerConfig.Description)) 
                 return;
             
-            writeLine(_description);
+            writeLine(_readerConfig.Description);
             writeLine("");
         }
 
         private void PrintFlags(Action<string> writeLine)
         {
-            if (!_flags.Any()) 
+            if (!_commandConfig.Flags.Any()) 
                 return;
 
             writeLine("\tFlags:");
-            foreach (var flag in _flags)
+            foreach (var flag in _commandConfig.Flags)
             {
-                var line = "\t" + _dialect.Prefix + flag.Name;
+                var line = "\t" + _readerConfig.Dialect.Prefix + flag.Name;
                 if (flag.Abr != null)
-                    line += ", " + _dialect.AbrPrefix + flag.Abr;
+                    line += ", " + _readerConfig.Dialect.AbrPrefix + flag.Abr;
                 line += "\t" + flag.Description;
                 writeLine(line);
             }
@@ -84,13 +70,13 @@ namespace NFlags
 
         private void PrintOptions(Action<string> writeLine)
         {
-            if (!_options.Any()) 
+            if (!_commandConfig.Options.Any()) 
                 return;
 
-            var optionFormatter = OptionFormatter.GetFormatter(_dialect);
+            var optionFormatter = OptionFormatter.GetFormatter(_readerConfig.Dialect);
             
             writeLine("\tOptions:");
-            foreach (var option in _options)
+            foreach (var option in _commandConfig.Options)
             {
                 var line = "\t" + optionFormatter.FormatName(option);
                 if (option.Abr != null)
@@ -105,11 +91,11 @@ namespace NFlags
 
         private void PrintParameters(Action<string> writeLine)
         {
-            if (!_parameters.Any()) 
+            if (!_commandConfig.Parameters.Any()) 
                 return;
 
             writeLine("\tParameters:");
-            foreach (var parameter in _parameters)
+            foreach (var parameter in _commandConfig.Parameters)
             {
                 var line = "\t<" + parameter.Name;
                 line += ">\t" + parameter.Description;

@@ -6,7 +6,7 @@
 
         public ArgSeparatorOptionFormatter(Dialect dialect)
         {
-            this._dialect = dialect;
+            _dialect = dialect;
         }
 
         public override string FormatName(Option option)

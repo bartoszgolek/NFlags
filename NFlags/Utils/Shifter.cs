@@ -6,15 +6,15 @@ namespace NFlags.Utils
         private int _current;
 
         public Shifter(T[] array) {
-            this._array = array;
+            _array = array;
         }
 
         public T Shift() {
-            return this._array[this._current++];
+            return _array[_current++];
         }
 
         public bool HasData() {
-            return this._current < this._array.Length;
+            return _current < _array.Length;
         }
     }
 }
