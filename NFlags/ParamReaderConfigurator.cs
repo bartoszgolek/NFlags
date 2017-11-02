@@ -11,7 +11,7 @@ namespace NFlags
         
         private Dialect _dialect = Dialect.Win;
 
-        private readonly List<Arg> _parameters = new List<Arg>();
+        private readonly List<Parameter> _parameters = new List<Parameter>();
 
         private readonly List<Flag> _flags = new List<Flag>();
 
@@ -68,7 +68,7 @@ namespace NFlags
 
         public ParamReaderConfigurator RegisterParam(string name, string description, Action<string> handler)
         {
-            _parameters.Add(new Arg{ Name = name, Description = description, Action = handler });
+            _parameters.Add(new Parameter{ Name = name, Description = description, Action = handler });
 
             return this;
         }

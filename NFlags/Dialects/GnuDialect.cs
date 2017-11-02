@@ -1,11 +1,17 @@
 namespace NFlags.Dialects
 {
+    /// <summary>
+    /// Predefined dialect following Gnu standards.
+    /// </summary>
     public class GnuDialect : Dialect
-    {      
+    {   
+        /// <inheritdoc />
         public override string Prefix => "--";
 
+        /// <inheritdoc />
         public override string AbrPrefix => "-";
 
-        public override OptionSeparator OptionSeparator => OptionSeparator.ArgSeparator;
+        /// <inheritdoc />
+        public override OptionValueMode OptionValueMode => OptionValueMode.NextArgument;
     }
 }

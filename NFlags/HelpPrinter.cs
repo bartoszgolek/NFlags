@@ -11,7 +11,7 @@ namespace NFlags
         private readonly string _description;
         private readonly Dialect _dialect;
         private readonly List<Flag> _flags;
-        private readonly List<Arg> _parameters;
+        private readonly List<Parameter> _parameters;
         private readonly List<Option> _options;
 
         public HelpPrinter(
@@ -19,7 +19,7 @@ namespace NFlags
             string description,
             Dialect dialect, 
             List<Flag> flags, 
-            List<Arg> parameters, 
+            List<Parameter> parameters, 
             List<Option> options)
         {
             _name = name;

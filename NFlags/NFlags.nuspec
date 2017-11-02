@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>NFlags</id>
+    <version>1.0.0</version>
+    <authors>Bartosz Gołek</authors>
+    <owners>bartoszgolek</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple library to made parsing CLI arguments easy. Library also allow You to print usage help "out of box".</description>
+    <projectUrl>https://github.com/bartoszgolek/NFlags</projectUrl>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <copyright>Bartosz Gołek@2017</copyright>
+    <tags>cli;library;parser;parsing;helper</tags>
+  </metadata>
+</package>

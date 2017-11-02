@@ -6,16 +6,16 @@ namespace NFlags
 {
     internal abstract class OptionReader
     {
-        private static readonly Dictionary<OptionSeparator, OptionReader> Readers = new Dictionary<OptionSeparator, OptionReader>
+        private static readonly Dictionary<OptionValueMode, OptionReader> Readers = new Dictionary<OptionValueMode, OptionReader>
         {
-            { OptionSeparator.ArgSeparator, new ArgSeparatorOptionReder() },
-            { OptionSeparator.Equality, new EqualityOptionReder() },
+            { OptionValueMode.NextArgument, new ArgSeparatorOptionReder() },
+            { OptionValueMode.AfterEqual, new EqualityOptionReder() },
             
         };
         
-        public static OptionReader GetReader(OptionSeparator optionSeparator)
+        public static OptionReader GetReader(OptionValueMode optionValueMode)
         {
-            return Readers[optionSeparator];
+            return Readers[optionValueMode];
         }
 
         public abstract string ReadValue(Shifter<string> args, string arg);

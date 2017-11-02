@@ -1,6 +1,6 @@
 namespace NFlags.Utils
 {
-    public class Shifter<T> {
+    internal class Shifter<T> {
         private readonly T[] _array;
 
         private int _current;

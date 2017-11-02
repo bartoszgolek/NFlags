@@ -41,7 +41,7 @@ namespace NFlags.Gnu
                 Console.WriteLine("V: " + flagV);
                 Console.WriteLine("Param1: " + param1);
             }
-            catch (TooManyArgumentsException e)
+            catch (TooManyParametersException e)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine(paramReader.PrintHelp());

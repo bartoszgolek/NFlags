@@ -10,14 +10,14 @@ namespace NFlags
         private readonly string _description;
         private readonly Dialect _dialect;
         private readonly List<Flag> _flags;
-        private readonly List<Arg> _parameters;
+        private readonly List<Parameter> _parameters;
         private readonly List<Option> _options;
 
-        public ParamReader(
+        internal ParamReader(
             string name,
             string description,
             Dialect dialect, 
-            List<Arg> parameters, 
+            List<Parameter> parameters, 
             List<Flag> flags, 
             List<Option> options)
         {
@@ -29,17 +29,25 @@ namespace NFlags
             _options = options;
         }
 
+        /// <summary>
+        /// Read and parse arguments.
+        /// </summary>
+        /// <param name="args">Application arguments.</param>
         public void Read(string[] args)
         {
             new ParamReaderInt(
                 _dialect,
                 _flags,
-                new Shifter<Arg>(_parameters.ToArray()),
+                new Shifter<Parameter>(_parameters.ToArray()),
                 _options,
                 args
             ).Read();
         }
 
+        /// <summary>
+        /// Print and returns help for application.
+        /// </summary>
+        /// <returns>Help text</returns>
         public string PrintHelp()
         {
             return new HelpPrinter(_name, _description, _dialect, _flags, _parameters, _options).Print();
@@ -49,11 +57,11 @@ namespace NFlags
         {
             private readonly Dialect _dialect;
             private readonly List<Flag> _flags;
-            private readonly Shifter<Arg> _parameters;
+            private readonly Shifter<Parameter> _parameters;
             private readonly List<Option> _options;
             private readonly Shifter<string> _args;
 
-            public ParamReaderInt(Dialect dialect, List<Flag> flags, Shifter<Arg> parameters, List<Option> options,
+            public ParamReaderInt(Dialect dialect, List<Flag> flags, Shifter<Parameter> parameters, List<Option> options,
                 string[] args)
             {
                 _dialect = dialect;
@@ -78,7 +86,7 @@ namespace NFlags
                 if (_parameters.HasData())
                     _parameters.Shift().Action(arg);
                 else
-                    throw new TooManyArgumentsException(arg);
+                    throw new TooManyParametersException(arg);
             }
 
             private bool ReadOpt(string arg)
@@ -91,7 +99,7 @@ namespace NFlags
                     return false;
 
                 opt.Action(
-                    OptionReader.GetReader(_dialect.OptionSeparator).ReadValue(_args, arg)
+                    OptionReader.GetReader(_dialect.OptionValueMode).ReadValue(_args, arg)
                 );
 
                 return true;

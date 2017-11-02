@@ -6,11 +6,11 @@ namespace NFlags
 {
     internal abstract class ArgMatcher
     {
-        private static readonly Dictionary<OptionSeparator, Func<Dialect, ArgMatcher>> Matchers =
-            new Dictionary<OptionSeparator, Func<Dialect, ArgMatcher>>
+        private static readonly Dictionary<OptionValueMode, Func<Dialect, ArgMatcher>> Matchers =
+            new Dictionary<OptionValueMode, Func<Dialect, ArgMatcher>>
             {
-                {OptionSeparator.ArgSeparator, dialect => new ArgSeparatorMatcher(dialect)},
-                {OptionSeparator.Equality, dialect => new EqualityMatcher(dialect)},
+                {OptionValueMode.NextArgument, dialect => new ArgSeparatorMatcher(dialect)},
+                {OptionValueMode.AfterEqual, dialect => new EqualityMatcher(dialect)},
             };
 
         protected readonly Dialect Dialect;
@@ -22,7 +22,7 @@ namespace NFlags
 
         public static ArgMatcher GetMatcher(Dialect dialect)
         {
-            return Matchers[dialect.OptionSeparator](dialect);
+            return Matchers[dialect.OptionValueMode](dialect);
         }
 
         public abstract bool IsOptionMatching(Option option, string arg);

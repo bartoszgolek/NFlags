@@ -1,11 +1,17 @@
 namespace NFlags.Dialects
 {
+    /// <summary>
+    /// Predefined dialect following MS Windows standards.
+    /// </summary>
     public class WinDialect : Dialect
-    {      
+    {
+        /// <inheritdoc />
         public override string Prefix => "/";
 
+        /// <inheritdoc />
         public override string AbrPrefix => "/";
 
-        public override OptionSeparator OptionSeparator => OptionSeparator.Equality;
+        /// <inheritdoc />
+        public override OptionValueMode OptionValueMode => OptionValueMode.AfterEqual;
     }
 }
