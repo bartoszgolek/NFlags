@@ -72,8 +72,8 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
-                    .RegisterFlag("flag1", "Flag 1 Description", () => { })
-                    .RegisterFlag("flag2", "f2", "Flag 2 Description", () => { })
+                    .RegisterFlag("flag1", "Flag 1 Description", false)
+                    .RegisterFlag("flag2", "f2", "Flag 2 Description", false)
                 )
                 .PrintHelp();
 
@@ -95,8 +95,8 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
-                    .RegisterOption("option1", "Option 1 Description", v => { })
-                    .RegisterOption("option2", "o2", "Option 2 Description", v => { })
+                    .RegisterOption("option1", "Option 1 Description", "")
+                    .RegisterOption("option2", "o2", "Option 2 Description", "")
                 )
                 .PrintHelp();
 
@@ -118,8 +118,8 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
-                    .RegisterParam("param1", "Param 1 Description", v => { })
-                    .RegisterParam("param2", "Param 2 Description", v => { })
+                    .RegisterParam("param1", "Param 1 Description", "")
+                    .RegisterParam("param2", "Param 2 Description", "")
                 )
                 .PrintHelp();
 
@@ -153,12 +153,12 @@ namespace NFlags.Tests
                     .SetDescription("description asdsd sa")
                 )
                 .Root(configurator => configurator
-                    .RegisterFlag("flag1", "Flag 1 Description", () => { })
-                    .RegisterFlag("flag2", "f2", "Flag 2 Description", () => { })
-                    .RegisterOption("option1", "Option 1 Description", v => { })
-                    .RegisterOption("option2", "o2", "Option 2 Description", v => { })
-                    .RegisterParam("param1", "Param 1 Description", v => { })
-                    .RegisterParam("param2", "Param 2 Description", v => { })
+                    .RegisterFlag("flag1", "Flag 1 Description", false)
+                    .RegisterFlag("flag2", "f2", "Flag 2 Description", false)
+                    .RegisterOption("option1", "Option 1 Description", "")
+                    .RegisterOption("option2", "o2", "Option 2 Description", "")
+                    .RegisterParam("param1", "Param 1 Description", "")
+                    .RegisterParam("param2", "Param 2 Description", "")
                 )
                 .PrintHelp();
 

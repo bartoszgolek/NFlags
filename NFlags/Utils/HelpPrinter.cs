@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using NFlags.Commands;
 
 namespace NFlags
 {
-    public class HelpPrinter
+    internal class HelpPrinter
     {
         private readonly NFlagsConfig _readerConfig;
 
