@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using NFlags.Utils;
 
@@ -45,8 +43,7 @@ namespace NFlags.Commands
         /// <param name="args">Application arguments.</param>
         public CommandExecutionContext Read(string[] args)
         {
-            var commandConfigFlags = _commandConfig.Flags;
-            commandConfigFlags.Add(
+            _commandConfig.Flags.Add(
                 new Flag
                 {
                     Name = HelpFlag,
@@ -57,13 +54,8 @@ namespace NFlags.Commands
             );
             
             var commandExecutionContext = new CommandInt(
-                _nFlagsConfig.Dialect,
-                _commandConfig.Commands,
-                commandConfigFlags,
-                _commandConfig.Parameters,
-                _commandConfig.Options,
-                InitDefaultCommandArgs(),
-                _commandConfig.Execute,
+                _nFlagsConfig,
+                _commandConfig,
                 args
             ).Read();
 
@@ -77,50 +69,24 @@ namespace NFlags.Commands
             return new HelpPrinter(_nFlagsConfig, _commandConfig).Print();
         }
 
-        private CommandArgs InitDefaultCommandArgs()
-        {
-            var commandArgs = new CommandArgs();
-            foreach (var flag in _commandConfig.Flags)
-                commandArgs.Flags.Add(flag.Name, flag.DefaultValue);
-                
-            foreach (var option in _commandConfig.Options)
-                commandArgs.Options.Add(option.Name, option.DefaultValue);
-
-            foreach (var parameter in _commandConfig.Parameters.ToArray())
-                commandArgs.Parameters.Add(parameter.Name, parameter.DefaultValue);
-
-            return commandArgs;
-        }
-
         private class CommandInt
         {
-            private readonly Dialect _dialect;
-            private readonly List<Flag> _flags;
+            private readonly NFlagsConfig _nFlagsConfig;
+            private readonly CommandConfig _commandConfig;
             private readonly Shifter<Parameter> _parameters;
-            private readonly List<Option> _options;
-            private readonly List<Command> _commands;
             private readonly Shifter<string> _args;
             private readonly CommandArgs _commandArgs;
-            private readonly Action<CommandArgs, Action<string>> _execute;
 
             public CommandInt(
-                Dialect dialect, 
-                List<Command> commands, 
-                List<Flag> flags, 
-                List<Parameter> parameters, 
-                List<Option> options, 
-                CommandArgs commandArgs, 
-                Action<CommandArgs, Action<string>> execute,
+                NFlagsConfig nFlagsConfig,
+                CommandConfig commandConfig, 
                 string[] args)
             {
-                _dialect = dialect;
-                _commands = commands;
-                _flags = flags;
-                _parameters = new Shifter<Parameter>(parameters.ToArray());
-                _options = options;
-                _execute = execute;
+                _nFlagsConfig = nFlagsConfig;
+                _commandConfig = commandConfig;
+                _parameters = new Shifter<Parameter>(commandConfig.Parameters.ToArray());
                 _args = new Shifter<string>(args);
-                _commandArgs = commandArgs;
+                _commandArgs = InitDefaultCommandArgs();
             }
 
             public CommandExecutionContext Read()
@@ -143,7 +109,22 @@ namespace NFlags.Commands
                     
                 }
                 
-                return new CommandExecutionContext(_execute, _commandArgs);
+                return new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
+            }
+
+            private CommandArgs InitDefaultCommandArgs()
+            {
+                var commandArgs = new CommandArgs();
+                foreach (var flag in _commandConfig.Flags)
+                    commandArgs.Flags.Add(flag.Name, flag.DefaultValue);
+                
+                foreach (var option in _commandConfig.Options)
+                    commandArgs.Options.Add(option.Name, option.DefaultValue);
+
+                foreach (var parameter in _parameters.ToArray())
+                    commandArgs.Parameters.Add(parameter.Name, parameter.DefaultValue);
+
+                return commandArgs;
             }
 
             private void ReadParam(string arg)
@@ -156,29 +137,29 @@ namespace NFlags.Commands
 
             private bool ReadOpt(string arg)
             {
-                var opt = _options.FirstOrDefault(
-                    option => ArgMatcher.GetMatcher(_dialect).IsOptionMatching(option, arg)
+                var opt = _commandConfig.Options.FirstOrDefault(
+                    option => ArgMatcher.GetMatcher(_nFlagsConfig.Dialect).IsOptionMatching(option, arg)
                 );
 
                 if (opt == null)
                     return false;
 
-                _commandArgs.Options[opt.Name] = OptionReader.GetReader(_dialect.OptionValueMode).ReadValue(_args, arg);
+                _commandArgs.Options[opt.Name] = OptionReader.GetReader(_nFlagsConfig.Dialect.OptionValueMode).ReadValue(_args, arg);
 
                 return true;
             }
 
             private Command GetCommand(string arg)
             {
-                return _commands.FirstOrDefault(
+                return _commandConfig.Commands.FirstOrDefault(
                     command => command._commandConfig.Name == arg
                 );
             }
 
             private bool ReadFlag(string arg)
             {
-                var flag = _flags.FirstOrDefault(
-                    f => ArgMatcher.GetMatcher(_dialect).IsFlagMatching(f, arg)
+                var flag = _commandConfig.Flags.FirstOrDefault(
+                    f => ArgMatcher.GetMatcher(_nFlagsConfig.Dialect).IsFlagMatching(f, arg)
                 );
 
                 if (flag == null)
