@@ -25,7 +25,8 @@ namespace NFlags.Win
                         output("Option2: " + commandArgs.Options["option2"]);
                         output("Param1: " + commandArgs.Parameters["param1"]);
                     })
-                )(args);
+                )
+                .Run(args);
         }
     }
 }

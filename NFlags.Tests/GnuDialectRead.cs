@@ -13,7 +13,8 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterOption("option", "o", "", "")
                     .SetExecute((args, output) => Assert.Equal(args.Options["option"], "optValue"))
-                )(new[] {"--option", "optValue"});
+                )
+                .Run(new[] {"--option", "optValue"});
         }
 
         [Fact]
@@ -25,7 +26,8 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterOption("option", "o", "", "defaultValue")
                     .SetExecute((args, output) => Assert.Equal(args.Options["option"], "defaultValue"))
-                )(new string[] { });
+                )
+                .Run(new string[] { });
         }
 
         [Fact]
@@ -42,7 +44,8 @@ namespace NFlags.Tests
                         Assert.Equal(args.Options["option1"], "optionValue1");
                         Assert.Equal(args.Options["option2"], "optionValue2");
                     })
-                )(new[] {"--option1", "optValue1", "--option2", "optValue2"});
+                )
+                .Run(new[] {"--option1", "optValue1", "--option2", "optValue2"});
         }
 
         [Fact]
@@ -54,7 +57,8 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterOption("option", "o", "", "")
                     .SetExecute((args, output) => Assert.Equal(args.Options["option1"], "optionValue1"))
-                )(new[] {"-o", "optValue"});
+                )
+                .Run(new[] {"-o", "optValue"});
         }
 
         [Fact]
@@ -71,7 +75,8 @@ namespace NFlags.Tests
                         Assert.Equal(args.Options["option1"], "optionValue1");
                         Assert.Equal(args.Options["option2"], "optionValue2");
                     })
-                )(new[] {"-o1", "optValue1", "-o2", "optValue2"});
+                )
+                .Run(new[] {"-o1", "optValue1", "-o2", "optValue2"});
         }
 
         [Fact]
@@ -88,7 +93,8 @@ namespace NFlags.Tests
                         Assert.Equal(args.Options["option1"], "optionValue1");
                         Assert.Equal(args.Parameters["option2"], "optionValue2");
                     })
-                )(new[] {"--option1", "optValue1", "--option2", "optValue2"});
+                )
+                .Run(new[] {"--option1", "optValue1", "--option2", "optValue2"});
         }
 
         [Fact]
@@ -100,7 +106,8 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("xFlag", "x", "", false)
                     .SetExecute((args, output) => Assert.True(args.Flags["xFlag"]))
-                )(new[] {"--xFlag"});
+                )
+                .Run(new[] {"--xFlag"});
         }
 
         [Fact]
@@ -112,7 +119,8 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("yFlag", "y", "", false)
                     .SetExecute((args, output) => Assert.False(args.Flags["xFlag"]))
-                )(new string[] { });
+                )
+                .Run(new string[] { });
         }
 
         [Fact]
@@ -124,7 +132,8 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("xFlag1", "x1", "", false)
                     .RegisterFlag("xFlag2", "x2", "", false)
-                )(new[] {"--xFlag1", "--xFlag2"});
+                )
+                .Run(new[] {"--xFlag1", "--xFlag2"});
         }
 
         [Fact]
@@ -141,7 +150,8 @@ namespace NFlags.Tests
                         Assert.False(args.Flags["xFlag"]);
                         Assert.False(args.Flags["xFlag"]);
                     })
-                )(new[] {"--xFlag1", "--xFlag2"});
+                )
+                .Run(new[] {"--xFlag1", "--xFlag2"});
         }
 
         [Fact]
@@ -156,7 +166,8 @@ namespace NFlags.Tests
                     {                        
                         Assert.True(args.Flags["xFlag"]);
                     })
-                )(new[] {"-x"});
+                )
+                .Run(new[] {"-x"});
         }
 
         [Fact]
@@ -173,7 +184,8 @@ namespace NFlags.Tests
                         Assert.True(args.Flags["flag1"]);
                         Assert.True(args.Flags["flag2"]);
                     })
-                )(new[] {"-f1", "-f2"});
+                )
+                .Run(new[] {"-f1", "-f2"});
         }
 
         [Fact]
@@ -185,7 +197,8 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "", false)
                     .RegisterFlag("flag2", "", false)
-                )(new[] {"--flag1", "--flag2"});
+                )
+                .Run(new[] {"--flag1", "--flag2"});
         }
 
         [Fact]
@@ -196,7 +209,8 @@ namespace NFlags.Tests
                 )
                 .Root(configurator => configurator
                     .RegisterParam("param", "", "")
-                )(new[] {"paramValue"});
+                )
+                .Run(new[] {"paramValue"});
         }
 
         [Fact]
@@ -213,7 +227,8 @@ namespace NFlags.Tests
                         Assert.Equal(args.Parameters["param1"], "paramValue1");
                         Assert.Equal(args.Parameters["param2"], "paramValue2");
                     })
-                )(new[] {"paramValue1", "paramValue2"});
+                )
+                .Run(new[] {"paramValue1", "paramValue2"});
         }
 
         [Fact]
@@ -238,7 +253,8 @@ namespace NFlags.Tests
                         Assert.Equal(args.Parameters["param1"], "paramValue1");
                         Assert.Equal(args.Parameters["param2"], "paramValue2");
                     })
-                )(new[]
+                )
+                .Run(new[]
                 {
                     "-f1",
                     "--flag2",

@@ -10,7 +10,10 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithDefaultName()
         {
             var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost" + Environment.NewLine +
+                               "\ttesthost [FLAGS]..." + Environment.NewLine +
+                               Environment.NewLine +
+                               "\tFlags:" + Environment.NewLine +                               
+                               "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
             var help = new StringBuilder();
@@ -18,7 +21,7 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Win)
                     .SetOutput(output => help.Append(output))
                 )
-                .Root()(Array.Empty<string>());
+                .Root(c => { }).Run(new[] { "/help" });
 
             Assert.Equal(expectedHelp, help.ToString());
         }
@@ -27,7 +30,10 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithCustomName()
         {
             var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\tcustName" + Environment.NewLine +
+                               "\tcustName [FLAGS]..." + Environment.NewLine +
+                               Environment.NewLine +
+                               "\tFlags:" + Environment.NewLine +                               
+                               "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
             var help = new StringBuilder();
@@ -36,7 +42,7 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Win)
                     .SetOutput(output => help.Append(output))
                 )
-                .Root()(Array.Empty<string>());
+                .Root(c => { }).Run(new[] { "/help" });
 
             Assert.Equal(expectedHelp, help.ToString());
         }
@@ -45,9 +51,12 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithDescription()
         {
             var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost" + Environment.NewLine +
+                               "\ttesthost [FLAGS]..." + Environment.NewLine +
                                Environment.NewLine +
                                "description asdsd sa" + Environment.NewLine +
+                               Environment.NewLine +
+                               "\tFlags:" + Environment.NewLine +                               
+                               "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
             var help = new StringBuilder();
@@ -56,7 +65,7 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Win)
                     .SetOutput(output => help.Append(output))
                 )
-                .Root()(Array.Empty<string>());
+                .Root(c => { }).Run(new[] { "/help" });
 
             Assert.Equal(expectedHelp, help.ToString());
         }
@@ -69,7 +78,8 @@ namespace NFlags.Tests
                                Environment.NewLine +
                                "\tFlags:" + Environment.NewLine +
                                "\t/flag1\tFlag 1 Description" + Environment.NewLine +
-                               "\t/flag2, /f2\tFlag 2 Description" + Environment.NewLine +
+                               "\t/flag2, /f2\tFlag 2 Description" + Environment.NewLine +                               
+                               "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
             var help = new StringBuilder();
@@ -80,7 +90,7 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "Flag 1 Description", false)
                     .RegisterFlag("flag2", "f2", "Flag 2 Description", false)
-                )(Array.Empty<string>());
+                ).Run(new[] { "/help" });
 
             Assert.Equal(expectedHelp, help.ToString());
         }
@@ -89,7 +99,10 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithOptions()
         {
             var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [OPTIONS]..." + Environment.NewLine +
+                               "\ttesthost [FLAGS]... [OPTIONS]..." + Environment.NewLine +
+                               Environment.NewLine +
+                               "\tFlags:" + Environment.NewLine +                               
+                               "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine +
                                "\tOptions:" + Environment.NewLine +
                                "\t/option1=<option1>\tOption 1 Description" + Environment.NewLine +
@@ -104,7 +117,7 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterOption("option1", "Option 1 Description", "")
                     .RegisterOption("option2", "o2", "Option 2 Description", "")
-                )(Array.Empty<string>());
+                ).Run(new[] { "/help" });
 
             Assert.Equal(expectedHelp, help.ToString());
         }
@@ -113,7 +126,10 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithParams()
         {
             var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [PARAMETERS]..." + Environment.NewLine +
+                               "\ttesthost [FLAGS]... [PARAMETERS]..." + Environment.NewLine +
+                               Environment.NewLine +
+                               "\tFlags:" + Environment.NewLine +                               
+                               "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine +
                                "\tParameters:" + Environment.NewLine +
                                "\t<param1>\tParam 1 Description" + Environment.NewLine +
@@ -128,7 +144,7 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterParam("param1", "Param 1 Description", "")
                     .RegisterParam("param2", "Param 2 Description", "")
-                )(Array.Empty<string>());
+                ).Run(new[] { "/help" });
 
             Assert.Equal(expectedHelp, help.ToString());
         }
@@ -143,7 +159,8 @@ namespace NFlags.Tests
                                Environment.NewLine +
                                "\tFlags:" + Environment.NewLine +
                                "\t/flag1\tFlag 1 Description" + Environment.NewLine +
-                               "\t/flag2, /f2\tFlag 2 Description" + Environment.NewLine +
+                               "\t/flag2, /f2\tFlag 2 Description" + Environment.NewLine +                               
+                               "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine +
                                "\tOptions:" + Environment.NewLine +
                                "\t/option1=<option1>\tOption 1 Description" + Environment.NewLine +
@@ -168,7 +185,7 @@ namespace NFlags.Tests
                     .RegisterOption("option2", "o2", "Option 2 Description", "")
                     .RegisterParam("param1", "Param 1 Description", "")
                     .RegisterParam("param2", "Param 2 Description", "")
-                )(Array.Empty<string>());
+                ).Run(new[] { "/help" });
 
             Assert.Equal(expectedHelp, help.ToString());
         }

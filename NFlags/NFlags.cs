@@ -30,33 +30,14 @@ namespace NFlags
         /// <summary>
         /// Configure and get root command
         /// </summary>
-        /// <param name="configureCommand">Action to configure command using CommandConfigurator</param>
-        public Action<string[]> Root(Action<CommandConfigurator> configureCommand)
+        /// <param name="configureRootCommand">Action to configure command using CommandConfigurator</param>
+        public Bootstrap Root(Action<CommandConfigurator> configureRootCommand)
         {
             var commandConfigurator = new CommandConfigurator("", "", _nFlagsConfig);
-            configureCommand(commandConfigurator);
-            var cmd = commandConfigurator.CreateCommand();
+            configureRootCommand(commandConfigurator);
+            var rootCommand = commandConfigurator.CreateCommand();
 
-            return args =>
-            {
-                var c = cmd.Read(args);
-                try
-                {
-                    c.Execute(c.Args, _nFlagsConfig.Output);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            };
-        }
-
-        /// <summary>
-        /// Get root command
-        /// </summary>
-        public Action<string[]> Root()
-        {
-            return Root(c => {});
+            return new Bootstrap(_nFlagsConfig, rootCommand);
         }
     }
 }
