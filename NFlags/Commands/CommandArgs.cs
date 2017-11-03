@@ -7,6 +7,9 @@ namespace NFlags.Commands
     /// </summary>
     public class CommandArgs
     {
+        /// <summary>
+        /// Creates new instance of CommandArgs
+        /// </summary>
         public CommandArgs()
         {
             Flags = new Dictionary<string, bool>();

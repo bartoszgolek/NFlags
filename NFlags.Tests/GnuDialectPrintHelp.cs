@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Xunit;
 
 namespace NFlags.Tests
@@ -12,13 +13,14 @@ namespace NFlags.Tests
                                "\ttesthost" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = NFlags.Configure(configurator => configurator
+            var help = new StringBuilder();
+            NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
+                    .SetOutput(output => help.Append(output))
                 )
-                .Root()
-                .PrintHelp();
+                .Root()(Array.Empty<string>());
 
-            Assert.Equal(expectedHelp, help);
+            Assert.Equal(expectedHelp, help.ToString());
         }
 
         [Fact]
@@ -28,14 +30,15 @@ namespace NFlags.Tests
                                "\tcustName" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = NFlags.Configure(configurator => configurator
+            var help = new StringBuilder();
+            NFlags.Configure(configurator => configurator
                     .SetName("custName")
                     .SetDialect(Dialect.Gnu)
+                    .SetOutput(output => help.Append(output))
                 )
-                .Root()
-                .PrintHelp();
+                .Root()(Array.Empty<string>());
 
-            Assert.Equal(expectedHelp, help);
+            Assert.Equal(expectedHelp, help.ToString());
         }
 
         [Fact]
@@ -47,14 +50,15 @@ namespace NFlags.Tests
                                "description asdsd sa" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = NFlags.Configure(configurator => configurator
+            var help = new StringBuilder();
+            NFlags.Configure(configurator => configurator
                     .SetDescription("description asdsd sa")
                     .SetDialect(Dialect.Gnu)
+                    .SetOutput(output => help.Append(output))
                 )
-                .Root()
-                .PrintHelp();
+                .Root()(Array.Empty<string>());
 
-            Assert.Equal(expectedHelp, help);
+            Assert.Equal(expectedHelp, help.ToString());
         }
 
         [Fact]
@@ -68,16 +72,17 @@ namespace NFlags.Tests
                                "\t--flag2, -f2\tFlag 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = NFlags.Configure(configurator => configurator
+            var help = new StringBuilder();
+            NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
+                    .SetOutput(output => help.Append(output))
                 )
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "Flag 1 Description", false)
                     .RegisterFlag("flag2", "f2", "Flag 2 Description", false)
-                )
-                .PrintHelp();
+                )(Array.Empty<string>());
 
-            Assert.Equal(expectedHelp, help);
+            Assert.Equal(expectedHelp, help.ToString());
         }
 
         [Fact]
@@ -91,16 +96,17 @@ namespace NFlags.Tests
                                "\t--option2 <option2>, -o2 <option2>\tOption 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = NFlags.Configure(configurator => configurator
+            var help = new StringBuilder();
+            NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
+                    .SetOutput(output => help.Append(output))
                 )
                 .Root(configurator => configurator
                     .RegisterOption("option1", "Option 1 Description", "")
                     .RegisterOption("option2", "o2", "Option 2 Description", "")
-                )
-                .PrintHelp();
+                )(Array.Empty<string>());
 
-            Assert.Equal(expectedHelp, help);
+            Assert.Equal(expectedHelp, help.ToString());
         }
 
         [Fact]
@@ -114,16 +120,17 @@ namespace NFlags.Tests
                                "\t<param2>\tParam 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = NFlags.Configure(configurator => configurator
+            var help = new StringBuilder();
+            NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
+                    .SetOutput(output => help.Append(output))
                 )
                 .Root(configurator => configurator
                     .RegisterParam("param1", "Param 1 Description", "")
                     .RegisterParam("param2", "Param 2 Description", "")
-                )
-                .PrintHelp();
+                )(Array.Empty<string>());
 
-            Assert.Equal(expectedHelp, help);
+            Assert.Equal(expectedHelp, help.ToString());
         }
 
         [Fact]
@@ -147,8 +154,10 @@ namespace NFlags.Tests
                                "\t<param2>\tParam 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = NFlags.Configure(configurator => configurator
+            var help = new StringBuilder();
+            NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
+                    .SetOutput(output => help.Append(output))
                     .SetName("custName")
                     .SetDescription("description asdsd sa")
                 )
@@ -159,10 +168,9 @@ namespace NFlags.Tests
                     .RegisterOption("option2", "o2", "Option 2 Description", "")
                     .RegisterParam("param1", "Param 1 Description", "")
                     .RegisterParam("param2", "Param 2 Description", "")
-                )
-                .PrintHelp();
+                )(Array.Empty<string>());
 
-            Assert.Equal(expectedHelp, help);
+            Assert.Equal(expectedHelp, help.ToString());
         }
     }
 }

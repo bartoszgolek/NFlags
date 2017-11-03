@@ -21,6 +21,7 @@ namespace NFlags
         {
             var sb = new StringBuilder();
             PrintUsage(line => sb.Append(line + Environment.NewLine));
+            PrintCommands(line => sb.Append(line + Environment.NewLine));
             PrintFlags(line => sb.Append(line + Environment.NewLine));
             PrintOptions(line => sb.Append(line + Environment.NewLine));
             PrintParameters(line => sb.Append(line + Environment.NewLine));
@@ -34,6 +35,8 @@ namespace NFlags
             var line = "\t";
 
             line += _readerConfig.Name;           
+            if (_commandConfig.Commands.Any())
+                line += " [COMMAND]";           
             if (_commandConfig.Flags.Any())
                 line += " [FLAGS]...";
             if (_commandConfig.Options.Any())
@@ -63,6 +66,22 @@ namespace NFlags
                 if (flag.Abr != null)
                     line += ", " + _readerConfig.Dialect.AbrPrefix + flag.Abr;
                 line += "\t" + flag.Description;
+                writeLine(line);
+            }
+
+            writeLine("");
+        }
+
+        private void PrintCommands(Action<string> writeLine)
+        {
+            if (!_commandConfig.Commands.Any()) 
+                return;
+
+            writeLine("\tCommands:");
+            foreach (var command in _commandConfig.Commands)
+            {
+                var line = "\t" + command.Name;
+                line += "\t" + command.Description;
                 writeLine(line);
             }
 

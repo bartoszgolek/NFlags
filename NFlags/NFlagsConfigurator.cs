@@ -13,6 +13,8 @@ namespace NFlags
         
         private Dialect _dialect = Dialect.Win;
 
+        private Action<string> _output = Console.Write;
+
         /// <summary>
         /// Set name of aplication, for help printing.
         /// </summary>
@@ -49,10 +51,22 @@ namespace NFlags
             return this;
         }
 
+        /// <summary>
+        /// Sets NFlags output function. Default is Console.Write
+        /// </summary>
+        /// <param name="output">Function used to print output</param>
+        /// <returns>Self instance</returns>
+        public NFlagsConfigurator SetOutput(Action<string> output)
+        {
+            _output = output;
+
+            return this;
+        }
+
         internal NFlags CreateNFlags()
         {
             return new NFlags(
-                new NFlagsConfig( _name, _description, _dialect)
+                new NFlagsConfig( _name, _description, _dialect, _output)
             );
         }
     }

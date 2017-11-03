@@ -9,21 +9,37 @@ namespace NFlags.Commands
     public class CommandConfigurator
     {
         private readonly string _name;
+        private readonly string _description;
         private readonly NFlagsConfig _nFlagsConfig;
         private readonly List<Command> _commands = new List<Command>();
         private readonly List<Parameter> _parameters = new List<Parameter>();
         private readonly List<Flag> _flags = new List<Flag>();
         private readonly List<Option> _options = new List<Option>();
+        private Action<CommandArgs, Action<string>> _execute;
 
         /// <summary>
         /// Creates new instance of CommandConfigurator
         /// </summary>
         /// <param name="name">Command name</param>
+        /// <param name="description">Command description</param>
         /// <param name="nFlagsConfig">NFlags configuration</param>
-        public CommandConfigurator(string name, NFlagsConfig nFlagsConfig)
+        public CommandConfigurator(string name, string description, NFlagsConfig nFlagsConfig)
         {
             _name = name;
             _nFlagsConfig = nFlagsConfig;
+            _description = description;
+        }
+
+        /// <summary>
+        /// Sets function to execute when command is called
+        /// </summary>
+        /// <param name="execute">Function to execute when command is called</param>
+        /// <returns></returns>
+        public CommandConfigurator SetExecute(Action<CommandArgs, Action<string>> execute)
+        {
+            _execute = execute;
+
+            return this;
         }
 
         /// <summary>
@@ -37,6 +53,22 @@ namespace NFlags.Commands
         public CommandConfigurator RegisterFlag(string name, string abr, string description, bool defaultValue)
         {
             _flags.Add(new Flag{ Name = name, Abr = abr, Description = description, DefaultValue = defaultValue });
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register sub command for the command
+        /// </summary>
+        /// <param name="name">Subcommand name</param>
+        /// <param name="description">Subcommand description for help.</param>
+        /// <param name="configureCommand">Command configuration callback</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterSubcommand(string name, string description, Action<CommandConfigurator> configureCommand)
+        {
+            var commandConfigurator = new CommandConfigurator(name, description, _nFlagsConfig);
+            configureCommand(commandConfigurator);
+            _commands.Add(commandConfigurator.CreateCommand());
 
             return this;
         }
@@ -102,7 +134,7 @@ namespace NFlags.Commands
         {
             return new Command(
                 _nFlagsConfig, 
-                new CommandConfig(_name, _commands, _flags, _options, _parameters)
+                new CommandConfig(_name, _description, _commands, _flags, _options, _parameters, _execute)
             );
         }
     }

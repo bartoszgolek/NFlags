@@ -31,17 +31,30 @@ namespace NFlags
         /// Configure and get root command
         /// </summary>
         /// <param name="configureCommand">Action to configure command using CommandConfigurator</param>
-        public Command Root(Action<CommandConfigurator> configureCommand)
+        public Action<string[]> Root(Action<CommandConfigurator> configureCommand)
         {
-            var commandConfigurator = new CommandConfigurator("", _nFlagsConfig);
+            var commandConfigurator = new CommandConfigurator("", "", _nFlagsConfig);
             configureCommand(commandConfigurator);
-            return commandConfigurator.CreateCommand();
+            var cmd = commandConfigurator.CreateCommand();
+
+            return args =>
+            {
+                var c = cmd.Read(args);
+                try
+                {
+                    c.Execute(c.Args, _nFlagsConfig.Output);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            };
         }
 
         /// <summary>
         /// Get root command
         /// </summary>
-        public Command Root()
+        public Action<string[]> Root()
         {
             return Root(c => {});
         }

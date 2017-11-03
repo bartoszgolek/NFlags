@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NFlags.Utils;
@@ -9,6 +10,10 @@ namespace NFlags.Commands
     /// </summary>
     public class Command
     {
+        private const string HelpFlag = "help";
+        private const string HelpFlagAbr = "h";
+        private const string HelpDescription = "Prints this help";
+        
         private readonly NFlagsConfig _nFlagsConfig;
 
         private readonly CommandConfig _commandConfig;
@@ -23,29 +28,51 @@ namespace NFlags.Commands
             _nFlagsConfig = nFlagsConfig;
             _commandConfig = commandConfig;
         }
-        
+
+        /// <summary>
+        /// Command name
+        /// </summary>
+        public string Name => _commandConfig.Name;
+
+        /// <summary>
+        /// Command description
+        /// </summary>
+        public string Description => _commandConfig.Description;
+
         /// <summary>
         /// Read and parse arguments.
         /// </summary>
         /// <param name="args">Application arguments.</param>
-        public void Read(string[] args)
+        public CommandExecutionContext Read(string[] args)
         {
-            new CommandInt(
+            var commandConfigFlags = _commandConfig.Flags;
+            commandConfigFlags.Add(
+                new Flag
+                {
+                    Name = HelpFlag,
+                    Abr = HelpFlagAbr,
+                    Description = HelpDescription,
+                    DefaultValue = false
+                }
+            );
+            
+            var commandExecutionContext = new CommandInt(
                 _nFlagsConfig.Dialect,
                 _commandConfig.Commands,
-                _commandConfig.Flags,
+                commandConfigFlags,
                 _commandConfig.Parameters,
                 _commandConfig.Options,
                 InitDefaultCommandArgs(),
+                _commandConfig.Execute,
                 args
             ).Read();
+
+            return commandExecutionContext.Args != null && commandExecutionContext.Args.Flags[HelpFlag]
+                ? new CommandExecutionContext((commandArgs, output) => output(PrintHelp()), null) 
+                : commandExecutionContext;
         }
 
-        /// <summary>
-        /// Print and returns help for application.
-        /// </summary>
-        /// <returns>Help text</returns>
-        public string PrintHelp()
+        private string PrintHelp()
         {
             return new HelpPrinter(_nFlagsConfig, _commandConfig).Print();
         }
@@ -74,6 +101,7 @@ namespace NFlags.Commands
             private readonly List<Command> _commands;
             private readonly Shifter<string> _args;
             private readonly CommandArgs _commandArgs;
+            private readonly Action<CommandArgs, Action<string>> _execute;
 
             public CommandInt(
                 Dialect dialect, 
@@ -81,7 +109,8 @@ namespace NFlags.Commands
                 List<Flag> flags, 
                 List<Parameter> parameters, 
                 List<Option> options, 
-                CommandArgs commandArgs,
+                CommandArgs commandArgs, 
+                Action<CommandArgs, Action<string>> execute,
                 string[] args)
             {
                 _dialect = dialect;
@@ -89,11 +118,12 @@ namespace NFlags.Commands
                 _flags = flags;
                 _parameters = new Shifter<Parameter>(parameters.ToArray());
                 _options = options;
+                _execute = execute;
                 _args = new Shifter<string>(args);
                 _commandArgs = commandArgs;
             }
 
-            public void Read()
+            public CommandExecutionContext Read()
             {
                 var cmdAllowed = true;
                 while (_args.HasData())
@@ -105,14 +135,15 @@ namespace NFlags.Commands
                         cmd = GetCommand(arg);
                     
                     if (cmd != null)
-                        cmd.Read(_args.ToArray());
-                    else
-                    {
-                        cmdAllowed = false;
-                        if (!ReadOpt(arg) && !ReadFlag(arg))
-                            ReadParam(arg);
-                    }
+                        return cmd.Read(_args.ToArray());
+                    
+                    cmdAllowed = false;
+                    if (!ReadOpt(arg) && !ReadFlag(arg))
+                        ReadParam(arg);
+                    
                 }
+                
+                return new CommandExecutionContext(_execute, _commandArgs);
             }
 
             private void ReadParam(string arg)
