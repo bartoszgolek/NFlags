@@ -1,4 +1,6 @@
-﻿namespace NFlags.OptionFormatters
+﻿using NFlags.Arguments;
+
+namespace NFlags.OptionFormatters
 {
     internal class EqualityOptionFormatter : OptionFormatter
     {

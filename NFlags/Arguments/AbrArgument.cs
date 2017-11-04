@@ -1,4 +1,4 @@
-namespace NFlags
+namespace NFlags.Arguments
 {
     /// <summary>
     /// Base class for arguments with abreviation

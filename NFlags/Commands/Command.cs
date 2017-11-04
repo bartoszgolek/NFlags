@@ -1,4 +1,5 @@
 using System.Linq;
+using NFlags.Arguments;
 using NFlags.Utils;
 
 namespace NFlags.Commands

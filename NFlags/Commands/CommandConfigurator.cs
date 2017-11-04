@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NFlags.Arguments;
 
 namespace NFlags.Commands
 {
@@ -9,6 +10,7 @@ namespace NFlags.Commands
     public class CommandConfigurator
     {
         private readonly string _name;
+        private readonly List<string> _parents;
         private readonly string _description;
         private readonly NFlagsConfig _nFlagsConfig;
         private readonly List<Command> _commands = new List<Command>();
@@ -17,15 +19,18 @@ namespace NFlags.Commands
         private readonly List<Option> _options = new List<Option>();
         private Action<CommandArgs, Action<string>> _execute;
 
-        /// <summary>
-        /// Creates new instance of CommandConfigurator
-        /// </summary>
-        /// <param name="name">Command name</param>
-        /// <param name="description">Command description</param>
-        /// <param name="nFlagsConfig">NFlags configuration</param>
-        public CommandConfigurator(string name, string description, NFlagsConfig nFlagsConfig)
+        private CommandConfigurator(string name, List<string> parents, string description, NFlagsConfig nFlagsConfig)
         {
             _name = name;
+            _parents = parents;
+            _nFlagsConfig = nFlagsConfig;
+            _description = description;
+        }
+
+        internal CommandConfigurator(string name, string description, NFlagsConfig nFlagsConfig)
+        {
+            _name = name;
+            _parents = new List<string>();
             _nFlagsConfig = nFlagsConfig;
             _description = description;
         }
@@ -66,11 +71,19 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterSubcommand(string name, string description, Action<CommandConfigurator> configureCommand)
         {
-            var commandConfigurator = new CommandConfigurator(name, description, _nFlagsConfig);
+            var commandConfigurator = new CommandConfigurator(name, GetSubcommandParents(), description, _nFlagsConfig);
             configureCommand(commandConfigurator);
             _commands.Add(commandConfigurator.CreateCommand());
 
             return this;
+        }
+
+        private List<string> GetSubcommandParents()
+        {
+            var subcommandParents = new List<string>(_parents.Count + 1);
+            subcommandParents.AddRange(_parents);
+            subcommandParents.Add(_name);
+            return subcommandParents;
         }
 
         /// <summary>
@@ -134,7 +147,7 @@ namespace NFlags.Commands
         {
             return new Command(
                 _nFlagsConfig, 
-                new CommandConfig(_name, _description, _commands, _flags, _options, _parameters, _execute)
+                new CommandConfig(_name, _parents, _description, _commands, _flags, _options, _parameters, _execute)
             );
         }
     }

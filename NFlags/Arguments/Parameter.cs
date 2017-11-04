@@ -1,6 +1,4 @@
-using System;
-
-namespace NFlags 
+namespace NFlags.Arguments 
 {
     /// <summary>
     /// Represents registered application parameter.

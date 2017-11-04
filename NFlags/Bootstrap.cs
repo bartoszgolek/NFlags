@@ -28,11 +28,10 @@ namespace NFlags
         /// <param name="args">Application arguments</param>
         public void Run(string[] args)
         {
-            CommandExecutionContext c = _rootCommand.Read(args);
             try
             {
-                if (c.Execute != null)
-                    c.Execute(c.Args, _nFlagsConfig.Output);
+                var c = _rootCommand.Read(args);
+                c.Execute?.Invoke(c.Args, _nFlagsConfig.Output);
             }
             catch (Exception e)
             {

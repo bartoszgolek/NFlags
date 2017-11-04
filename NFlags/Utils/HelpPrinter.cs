@@ -1,9 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using NFlags.Commands;
 
-namespace NFlags
+namespace NFlags.Utils
 {
     internal class HelpPrinter
     {
@@ -34,7 +35,11 @@ namespace NFlags
             writeLine("Usage:");
             var line = "\t";
 
-            line += _readerConfig.Name;           
+            line += _readerConfig.Name;
+            line += string.Join(" ", _commandConfig.Parents.ToArray());
+
+            if (!string.IsNullOrEmpty(_commandConfig.Name))
+                line += " " + _commandConfig.Name;
             if (_commandConfig.Commands.Any())
                 line += " [COMMAND]";           
             if (_commandConfig.Flags.Any())

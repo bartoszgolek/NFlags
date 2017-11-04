@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NFlags.Arguments;
 
 namespace NFlags.Commands
 {
@@ -12,22 +13,17 @@ namespace NFlags.Commands
         /// Creates new instance of command configuration.
         /// </summary>
         /// <param name="name">Command name</param>
+        /// <param name="parents">Command parents list</param>
         /// <param name="description">Command description</param>
         /// <param name="commands">List of registerd commands</param>
         /// <param name="flags">List of registerd flags</param>
         /// <param name="options">List of registerd options</param>
         /// <param name="parameters">List of registerd parameters</param>
         /// <param name="execute">Function to execute when command is called</param>
-        public CommandConfig(
-            string name, 
-            string description,
-            List<Command> commands,
-            List<Flag> flags, 
-            List<Option> options, 
-            List<Parameter> parameters, 
-            Action<CommandArgs, Action<string>> execute)
+        public CommandConfig(string name, List<string> parents, string description, List<Command> commands, List<Flag> flags, List<Option> options, List<Parameter> parameters, Action<CommandArgs, Action<string>> execute)
         {
             Name = name;
+            Parents = parents;
             Description = description;
             Flags = flags;
             Options = options;
@@ -45,6 +41,11 @@ namespace NFlags.Commands
         /// Command name
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Command parents list
+        /// </summary>
+        public List<string> Parents { get; }
 
         /// <summary>
         /// Command description

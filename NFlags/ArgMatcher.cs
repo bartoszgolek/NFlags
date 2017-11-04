@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NFlags.ArgMatchers;
+using NFlags.Arguments;
 
 namespace NFlags
 {

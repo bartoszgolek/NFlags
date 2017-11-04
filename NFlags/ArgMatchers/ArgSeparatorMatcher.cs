@@ -1,4 +1,6 @@
-﻿namespace NFlags.ArgMatchers
+﻿using NFlags.Arguments;
+
+namespace NFlags.ArgMatchers
 {
     internal class ArgSeparatorMatcher : ArgMatcher
     {

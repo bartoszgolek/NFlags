@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
@@ -98,8 +97,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldPrintSubCommandHelp_IfSubCommandCalled()
         {
-            string expectedHelp = "Usage:" + Environment.NewLine +
-                                  "\ttesthost [FLAGS]... [OPTIONS]... [PARAMETERS]..." + Environment.NewLine +
+            var expectedHelp = "Usage:" + Environment.NewLine +
+                                  "\ttesthost sub [FLAGS]... [OPTIONS]... [PARAMETERS]..." + Environment.NewLine +
                                   Environment.NewLine +
                                   "\tFlags:" + Environment.NewLine +
                                   "\t/help, /h\tPrints this help" + Environment.NewLine +
@@ -133,6 +132,32 @@ namespace NFlags.Tests
                     "sub",
                     "/h"
                 });
+
+            Assert.Equal(expectedHelp, sb.ToString());
+        }
+
+        [Fact]
+        public void NFlags_ShouldPrintHelpForNthLevelSubCommand()
+        {
+            var expectedHelp = "Usage:" + Environment.NewLine +
+                               "\ttesthost sub sub1 sub2 sub3 [FLAGS]..." + Environment.NewLine +
+                               Environment.NewLine +
+                               "\tFlags:" + Environment.NewLine +
+                               "\t/help, /h\tPrints this help" + Environment.NewLine +
+                               Environment.NewLine;
+
+            var sb = new StringBuilder();
+            NFlags.Configure(c => c.SetOutput(s => sb.Append(s)))
+                .Root(c => c.
+                    RegisterSubcommand("sub", "desc", sc => sc.
+                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
+                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
+                                RegisterSubcommand("sub3", "desc3", sc3 => { })
+                            )
+                        )
+                    )
+                )
+                .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
             Assert.Equal(expectedHelp, sb.ToString());
         }

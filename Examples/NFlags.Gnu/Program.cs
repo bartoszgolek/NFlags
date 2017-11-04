@@ -1,5 +1,4 @@
 ﻿using System;
-using NFlags.Commands;
 
 namespace NFlags.Gnu
 {
