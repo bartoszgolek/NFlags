@@ -5,15 +5,13 @@ using NFlags.Arguments;
 namespace NFlags.Commands
 {
     /// <summary>
-    /// Represents Command configuration ability. 
+    /// Represents Command configuration ability.
     /// </summary>
     public class CommandConfigurator
     {
-        private readonly string _name;
         private readonly List<string> _parents;
-        private readonly string _description;
         private readonly NFlagsConfig _nFlagsConfig;
-        private readonly List<Command> _commands = new List<Command>();
+        private readonly List<CommandConfigurator> _commands = new List<CommandConfigurator>();
         private readonly List<Parameter> _parameters = new List<Parameter>();
         private readonly List<Flag> _flags = new List<Flag>();
         private readonly List<Option> _options = new List<Option>();
@@ -21,19 +19,29 @@ namespace NFlags.Commands
 
         private CommandConfigurator(string name, List<string> parents, string description, NFlagsConfig nFlagsConfig)
         {
-            _name = name;
+            Name = name;
+            Description = description;
             _parents = parents;
             _nFlagsConfig = nFlagsConfig;
-            _description = description;
         }
 
         internal CommandConfigurator(string name, string description, NFlagsConfig nFlagsConfig)
         {
-            _name = name;
+            Name = name;
+            Description = description;
             _parents = new List<string>();
             _nFlagsConfig = nFlagsConfig;
-            _description = description;
         }
+
+        /// <summary>
+        /// Command name
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Command descriotion
+        /// </summary>
+        public string Description { get; }
 
         /// <summary>
         /// Sets function to execute when command is called
@@ -57,7 +65,7 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterFlag(string name, string abr, string description, bool defaultValue)
         {
-            _flags.Add(new Flag{ Name = name, Abr = abr, Description = description, DefaultValue = defaultValue });
+            _flags.Add(new Flag {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue});
 
             return this;
         }
@@ -69,11 +77,12 @@ namespace NFlags.Commands
         /// <param name="description">Subcommand description for help.</param>
         /// <param name="configureCommand">Command configuration callback</param>
         /// <returns>Self instance</returns>
-        public CommandConfigurator RegisterSubcommand(string name, string description, Action<CommandConfigurator> configureCommand)
+        public CommandConfigurator RegisterSubcommand(string name, string description,
+            Action<CommandConfigurator> configureCommand)
         {
             var commandConfigurator = new CommandConfigurator(name, GetSubcommandParents(), description, _nFlagsConfig);
             configureCommand(commandConfigurator);
-            _commands.Add(commandConfigurator.CreateCommand());
+            _commands.Add(commandConfigurator);
 
             return this;
         }
@@ -82,7 +91,7 @@ namespace NFlags.Commands
         {
             var subcommandParents = new List<string>(_parents.Count + 1);
             subcommandParents.AddRange(_parents);
-            subcommandParents.Add(_name);
+            subcommandParents.Add(Name);
             return subcommandParents;
         }
 
@@ -95,11 +104,11 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterFlag(string name, string description, bool defaultValue)
         {
-            _flags.Add(new Flag{ Name = name, Description = description, DefaultValue = defaultValue});
+            _flags.Add(new Flag {Name = name, Description = description, DefaultValue = defaultValue});
 
             return this;
         }
-        
+
         /// <summary>
         /// Register option for the command
         /// </summary>
@@ -110,7 +119,7 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterOption(string name, string abr, string description, string defaultValue)
         {
-            _options.Add(new Option{ Name = name, Abr = abr, Description = description, DefaultValue = defaultValue});
+            _options.Add(new Option {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue});
 
             return this;
         }
@@ -124,7 +133,7 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterOption(string name, string description, string defaultValue)
         {
-            _options.Add(new Option{ Name = name, Description = description, DefaultValue = defaultValue});
+            _options.Add(new Option {Name = name, Description = description, DefaultValue = defaultValue});
 
             return this;
         }
@@ -138,7 +147,7 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterParam(string name, string description, string defaultValue)
         {
-            _parameters.Add(new Parameter{ Name = name, Description = description, DefaultValue = defaultValue });
+            _parameters.Add(new Parameter {Name = name, Description = description, DefaultValue = defaultValue});
 
             return this;
         }
@@ -146,8 +155,17 @@ namespace NFlags.Commands
         internal Command CreateCommand()
         {
             return new Command(
-                _nFlagsConfig, 
-                new CommandConfig(_name, _parents, _description, _commands, _flags, _options, _parameters, _execute)
+                new CommandConfig(
+                    _nFlagsConfig,
+                    Name,
+                    _parents,
+                    Description,
+                    _commands,
+                    _flags,
+                    _options,
+                    _parameters,
+                    _execute
+                )
             );
         }
     }

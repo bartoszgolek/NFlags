@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using NFlags.Commands;
@@ -8,13 +7,10 @@ namespace NFlags.Utils
 {
     internal class HelpPrinter
     {
-        private readonly NFlagsConfig _readerConfig;
-
         private readonly CommandConfig _commandConfig;
 
-        public HelpPrinter(NFlagsConfig readerConfig, CommandConfig commandConfig)
+        public HelpPrinter(CommandConfig commandConfig)
         {
-            _readerConfig = readerConfig;
             _commandConfig = commandConfig;
         }
 
@@ -35,13 +31,13 @@ namespace NFlags.Utils
             writeLine("Usage:");
             var line = "\t";
 
-            line += _readerConfig.Name;
+            line += _commandConfig.NFlagsConfig.Name;
             line += string.Join(" ", _commandConfig.Parents.ToArray());
 
             if (!string.IsNullOrEmpty(_commandConfig.Name))
                 line += " " + _commandConfig.Name;
             if (_commandConfig.Commands.Any())
-                line += " [COMMAND]";           
+                line += " [COMMAND]";
             if (_commandConfig.Flags.Any())
                 line += " [FLAGS]...";
             if (_commandConfig.Options.Any())
@@ -52,24 +48,24 @@ namespace NFlags.Utils
             writeLine(line);
             writeLine("");
 
-            if (string.IsNullOrEmpty(_readerConfig.Description)) 
+            if (string.IsNullOrEmpty(_commandConfig.NFlagsConfig.Description))
                 return;
-            
-            writeLine(_readerConfig.Description);
+
+            writeLine(_commandConfig.NFlagsConfig.Description);
             writeLine("");
         }
 
         private void PrintFlags(Action<string> writeLine)
         {
-            if (!_commandConfig.Flags.Any()) 
+            if (!_commandConfig.Flags.Any())
                 return;
 
             writeLine("\tFlags:");
             foreach (var flag in _commandConfig.Flags)
             {
-                var line = "\t" + _readerConfig.Dialect.Prefix + flag.Name;
+                var line = "\t" + _commandConfig.NFlagsConfig.Dialect.Prefix + flag.Name;
                 if (flag.Abr != null)
-                    line += ", " + _readerConfig.Dialect.AbrPrefix + flag.Abr;
+                    line += ", " + _commandConfig.NFlagsConfig.Dialect.AbrPrefix + flag.Abr;
                 line += "\t" + flag.Description;
                 writeLine(line);
             }
@@ -79,7 +75,7 @@ namespace NFlags.Utils
 
         private void PrintCommands(Action<string> writeLine)
         {
-            if (!_commandConfig.Commands.Any()) 
+            if (!_commandConfig.Commands.Any())
                 return;
 
             writeLine("\tCommands:");
@@ -95,28 +91,28 @@ namespace NFlags.Utils
 
         private void PrintOptions(Action<string> writeLine)
         {
-            if (!_commandConfig.Options.Any()) 
+            if (!_commandConfig.Options.Any())
                 return;
 
-            var optionFormatter = OptionFormatter.GetFormatter(_readerConfig.Dialect);
-            
+            var optionFormatter = OptionFormatter.GetFormatter(_commandConfig.NFlagsConfig.Dialect);
+
             writeLine("\tOptions:");
             foreach (var option in _commandConfig.Options)
             {
                 var line = "\t" + optionFormatter.FormatName(option);
                 if (option.Abr != null)
                     line += ", " + optionFormatter.FormatAbr(option);
-                
+
                 line += "\t" + option.Description;
                 writeLine(line);
             }
-            
+
             writeLine("");
         }
 
         private void PrintParameters(Action<string> writeLine)
         {
-            if (!_commandConfig.Parameters.Any()) 
+            if (!_commandConfig.Parameters.Any())
                 return;
 
             writeLine("\tParameters:");
@@ -126,7 +122,7 @@ namespace NFlags.Utils
                 line += ">\t" + parameter.Description;
                 writeLine(line);
             }
-            
+
             writeLine("");
         }
     }

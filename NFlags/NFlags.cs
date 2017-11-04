@@ -19,7 +19,7 @@ namespace NFlags
             configurator(paramReaderConfigurator);
             return paramReaderConfigurator.CreateNFlags();
         }
-        
+
         private readonly NFlagsConfig _nFlagsConfig;
 
         internal NFlags(NFlagsConfig nFlagsConfig)
@@ -35,9 +35,8 @@ namespace NFlags
         {
             var commandConfigurator = new CommandConfigurator("", "", _nFlagsConfig);
             configureRootCommand(commandConfigurator);
-            var rootCommand = commandConfigurator.CreateCommand();
 
-            return new Bootstrap(_nFlagsConfig, rootCommand);
+            return new Bootstrap(_nFlagsConfig, commandConfigurator.CreateCommand());
         }
     }
 }

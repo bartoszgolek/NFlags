@@ -12,6 +12,7 @@ namespace NFlags.Commands
         /// <summary>
         /// Creates new instance of command configuration.
         /// </summary>
+        /// <param name="nFlagsConfig">NFlags config</param>
         /// <param name="name">Command name</param>
         /// <param name="parents">Command parents list</param>
         /// <param name="description">Command description</param>
@@ -20,8 +21,19 @@ namespace NFlags.Commands
         /// <param name="options">List of registerd options</param>
         /// <param name="parameters">List of registerd parameters</param>
         /// <param name="execute">Function to execute when command is called</param>
-        public CommandConfig(string name, List<string> parents, string description, List<Command> commands, List<Flag> flags, List<Option> options, List<Parameter> parameters, Action<CommandArgs, Action<string>> execute)
+        public CommandConfig(
+            NFlagsConfig nFlagsConfig,
+            string name,
+            List<string> parents,
+            string description,
+            List<CommandConfigurator> commands,
+            List<Flag> flags,
+            List<Option> options,
+            List<Parameter> parameters,
+            Action<CommandArgs,
+            Action<string>> execute)
         {
+            NFlagsConfig = nFlagsConfig;
             Name = name;
             Parents = parents;
             Description = description;
@@ -35,7 +47,12 @@ namespace NFlags.Commands
         /// <summary>
         /// List of registerd commands
         /// </summary>
-        public List<Command> Commands { get; }
+        public List<CommandConfigurator> Commands { get; }
+
+        /// <summary>
+        /// NFlags config
+        /// </summary>
+        public NFlagsConfig NFlagsConfig { get; }
 
         /// <summary>
         /// Command name
