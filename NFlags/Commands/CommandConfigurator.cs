@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NFlags.Arguments;
 
 namespace NFlags.Commands
@@ -56,21 +57,6 @@ namespace NFlags.Commands
         }
 
         /// <summary>
-        /// Register flag for the command
-        /// </summary>
-        /// <param name="name">Flag name</param>
-        /// <param name="abr">Flag shorthand</param>
-        /// <param name="description">Flag description for help.</param>
-        /// <param name="defaultValue">Default flag value.</param>
-        /// <returns>Self instance</returns>
-        public CommandConfigurator RegisterFlag(string name, string abr, string description, bool defaultValue)
-        {
-            _flags.Add(new Flag {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue});
-
-            return this;
-        }
-
-        /// <summary>
         /// Register sub command for the command
         /// </summary>
         /// <param name="name">Subcommand name</param>
@@ -110,6 +96,64 @@ namespace NFlags.Commands
         }
 
         /// <summary>
+        /// Register flag for the command
+        /// </summary>
+        /// <param name="name">Flag name</param>
+        /// <param name="abr">Flag shorthand</param>
+        /// <param name="description">Flag description for help.</param>
+        /// <param name="defaultValue">Default flag value.</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterFlag(string name, string abr, string description, bool defaultValue)
+        {
+            _flags.Add(new Flag {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue});
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register flag for the command and subcommands
+        /// </summary>
+        /// <param name="name">Flag name</param>
+        /// <param name="abr">Flag shorthand</param>
+        /// <param name="description">Flag description for help.</param>
+        /// <param name="defaultValue">Default flag value.</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterPersistentFlag(string name, string abr, string description,
+            bool defaultValue)
+        {
+            _flags.Add(new Flag
+            {
+                Name = name,
+                Abr = abr,
+                Description = description,
+                DefaultValue = defaultValue,
+                IsPersistent = true
+            });
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register flag for the command and subcommands
+        /// </summary>
+        /// <param name="name">Flag name</param>
+        /// <param name="description">Flag description for help.</param>
+        /// <param name="defaultValue">Default flag value.</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterPersistentFlag(string name, string description, bool defaultValue)
+        {
+            _flags.Add(new Flag
+            {
+                Name = name,
+                Description = description,
+                DefaultValue = defaultValue,
+                IsPersistent = true
+            });
+
+            return this;
+        }
+
+        /// <summary>
         /// Register option for the command
         /// </summary>
         /// <param name="name">Option name</param>
@@ -139,6 +183,49 @@ namespace NFlags.Commands
         }
 
         /// <summary>
+        /// Register option for the command and subcommands
+        /// </summary>
+        /// <param name="name">Option name</param>
+        /// <param name="description">Option description for help.</param>
+        /// <param name="defaultValue">Default option value.</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterPersistentOption(string name, string description, string defaultValue)
+        {
+            _options.Add(new Option
+            {
+                Name = name,
+                Description = description,
+                DefaultValue = defaultValue,
+                IsPersistent = true
+            });
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register option for the command and subcommands
+        /// </summary>
+        /// <param name="name">Option name</param>
+        /// <param name="abr">Option shorthand</param>
+        /// <param name="description">Option description for help.</param>
+        /// <param name="defaultValue">Default option value.</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterPersistentOption(string name, string abr, string description,
+            string defaultValue)
+        {
+            _options.Add(new Option
+            {
+                Name = name,
+                Abr = abr,
+                Description = description,
+                DefaultValue = defaultValue,
+                IsPersistent = true
+            });
+
+            return this;
+        }
+
+        /// <summary>
         /// Register parameter for the command
         /// </summary>
         /// <param name="name">Parameter name</param>
@@ -152,7 +239,7 @@ namespace NFlags.Commands
             return this;
         }
 
-        internal Command CreateCommand()
+        internal Command CreateCommand(CommandConfig parentConfig = null)
         {
             return new Command(
                 new CommandConfig(
@@ -161,12 +248,30 @@ namespace NFlags.Commands
                     _parents,
                     Description,
                     _commands,
-                    _flags,
-                    _options,
+                    GetSubcommandFlags(parentConfig),
+                    GetSubcommandOptions(parentConfig),
                     _parameters,
                     _execute
                 )
             );
+        }
+
+        private List<Flag> GetSubcommandFlags(CommandConfig parentConfig)
+        {
+            var subcommandFlags = new List<Flag>();
+            subcommandFlags.AddRange(_flags);
+            if (parentConfig != null)
+                subcommandFlags.AddRange(parentConfig.Flags.Where(f => f.IsPersistent));
+            return subcommandFlags;
+        }
+
+        private List<Option> GetSubcommandOptions(CommandConfig parentConfig)
+        {
+            var subcommandOptions = new List<Option>();
+            subcommandOptions.AddRange(_options);
+            if (parentConfig != null)
+                subcommandOptions.AddRange(parentConfig.Options.Where(f => f.IsPersistent));
+            return subcommandOptions;
         }
     }
 }

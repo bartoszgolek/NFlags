@@ -138,7 +138,7 @@ namespace NFlags.Commands
             {
                 return _commandConfig.Commands.FirstOrDefault(
                     command => command.Name == arg
-                )?.CreateCommand();
+                )?.CreateCommand(_commandConfig);
             }
 
             private bool ReadFlag(string arg)

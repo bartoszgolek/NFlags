@@ -3,7 +3,7 @@ namespace NFlags.Arguments
     /// <summary>
     /// Represents registered application option.
     /// </summary>
-    public class Option : AbrArgument<string>
+    public class Option : PrefixedArgument<string>
     {
     }
 }
