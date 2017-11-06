@@ -215,9 +215,12 @@ Example help for Win dialect:
 
 ```
 Usage:
-        NFlags.Win [FLAGS]... [OPTIONS]... [PARAMETERS]...
+        NFlags.Win [COMMAND] [FLAGS]... [OPTIONS]... [PARAMETERS]...
 
 Application description
+
+        Commands:
+        subcommand      Subcommand Description
 
         Flags:
         /help, /h       Print this help
@@ -236,9 +239,12 @@ Application description
 and for Gnu dialect:
 ```
 Usage:
-        NFlags.Gnu [FLAGS]... [OPTIONS]... [PARAMETERS]...
+        NFlags.Gnu [COMMAND] [FLAGS]... [OPTIONS]... [PARAMETERS]...
 
 Application description
+
+        Commands:
+        subcommand      Subcommand Description
 
         Flags:
         --help, -h      Print this help
