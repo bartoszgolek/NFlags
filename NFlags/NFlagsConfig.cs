@@ -1,5 +1,3 @@
-using System;
-
 namespace NFlags
 {
     /// <summary>
@@ -14,7 +12,7 @@ namespace NFlags
         /// <param name="description">Application description</param>
         /// <param name="dialect">NSpec arguments dialect</param>
         /// <param name="output"></param>
-        public NFlagsConfig(string name, string description, Dialect dialect, Action<string> output)
+        public NFlagsConfig(string name, string description, Dialect dialect, IOutput output)
         {
             Name = name;
             Description = description;
@@ -40,6 +38,6 @@ namespace NFlags
         /// <summary>
         /// NFlags output handler. 
         /// </summary>
-        public Action<string> Output { get; }
+        public IOutput Output { get; }
     }
 }

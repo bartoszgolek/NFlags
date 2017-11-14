@@ -46,7 +46,7 @@ namespace NFlags.Commands
             ).Read();
 
             return commandExecutionContext.Args != null && commandExecutionContext.Args.Flags[HelpFlag]
-                ? new CommandExecutionContext((commandArgs, output) => output(PrintHelp()), null)
+                ? new CommandExecutionContext((commandArgs, output) => output.Write(PrintHelp()), null)
                 : commandExecutionContext;
         }
 

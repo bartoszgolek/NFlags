@@ -1,5 +1,4 @@
-﻿using System;
-using NFlags.Commands;
+﻿using NFlags.Commands;
 
 namespace NFlags.Gnu
 {
@@ -24,13 +23,13 @@ namespace NFlags.Gnu
                 .RegisterSubcommand(ListCommand.Name, "List somethig", ListCommand.Configure);
         }
 
-        private static void Execute(CommandArgs commandArgs, Action<string> output)
+        private static void Execute(CommandArgs commandArgs, IOutput output)
         {
-            output("Verbose: " + commandArgs.Flags[Verbose]);
-            output("Clear: " + commandArgs.Flags[Clear]);
-            output("Option1: " + commandArgs.Options[Option1]);
-            output("Option2: " + commandArgs.Options[Option2]);
-            output("Param1: " + commandArgs.Parameters[Param1]);
+            output.WriteLine("Verbose: {0}", commandArgs.Flags[Verbose]);
+            output.WriteLine("Clear: {0}", commandArgs.Flags[Clear]);
+            output.WriteLine("Option1: {0}", commandArgs.Options[Option1]);
+            output.WriteLine("Option2: {0}", commandArgs.Options[Option2]);
+            output.WriteLine("Param1: {0}", commandArgs.Parameters[Param1]);
         }
     }
 }

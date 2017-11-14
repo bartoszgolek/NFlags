@@ -13,12 +13,12 @@ namespace NFlags.OptionFormatters
 
         public override string FormatName(Option option)
         {
-            return _dialect.Prefix + option.Name + " <" + option.Name + ">";
+            return $"{_dialect.Prefix}{option.Name} <{option.Name}>";
         }
 
         public override string FormatAbr(Option option)
         {
-            return _dialect.AbrPrefix + option.Abr + " <" + option.Name + ">";
+            return $"{_dialect.AbrPrefix}{option.Abr} <{option.Name}>";
         }
     }
 }

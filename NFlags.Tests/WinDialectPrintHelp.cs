@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using Xunit;
 
 namespace NFlags.Tests
@@ -16,14 +15,14 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = new StringBuilder();
+            var outputAgregator = new OutputAgregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
-                    .SetOutput(output => help.Append(output))
+                    .SetOutput(outputAgregator)
                 )
                 .Root(c => { }).Run(new[] { "/help" });
 
-            Assert.Equal(expectedHelp, help.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -36,15 +35,15 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = new StringBuilder();
+            var outputAgregator = new OutputAgregator();
             NFlags.Configure(configurator => configurator
                     .SetName("custName")
                     .SetDialect(Dialect.Win)
-                    .SetOutput(output => help.Append(output))
+                    .SetOutput(outputAgregator)
                 )
                 .Root(c => { }).Run(new[] { "/help" });
 
-            Assert.Equal(expectedHelp, help.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -59,15 +58,15 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = new StringBuilder();
+            var outputAgregator = new OutputAgregator();
             NFlags.Configure(configurator => configurator
                     .SetDescription("description asdsd sa")
                     .SetDialect(Dialect.Win)
-                    .SetOutput(output => help.Append(output))
+                    .SetOutput(outputAgregator)
                 )
                 .Root(c => { }).Run(new[] { "/help" });
 
-            Assert.Equal(expectedHelp, help.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -82,17 +81,17 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = new StringBuilder();
+            var outputAgregator = new OutputAgregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
-                    .SetOutput(output => help.Append(output))
+                    .SetOutput(outputAgregator)
                 )
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "Flag 1 Description", false)
                     .RegisterFlag("flag2", "f2", "Flag 2 Description", false)
                 ).Run(new[] { "/help" });
 
-            Assert.Equal(expectedHelp, help.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -109,17 +108,17 @@ namespace NFlags.Tests
                                "\t/option2=<option2>, /o2=<option2>\tOption 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = new StringBuilder();
+            var outputAgregator = new OutputAgregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
-                    .SetOutput(output => help.Append(output))
+                    .SetOutput(outputAgregator)
                 )
                 .Root(configurator => configurator
                     .RegisterOption("option1", "Option 1 Description", "")
                     .RegisterOption("option2", "o2", "Option 2 Description", "")
                 ).Run(new[] { "/help" });
 
-            Assert.Equal(expectedHelp, help.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -136,17 +135,17 @@ namespace NFlags.Tests
                                "\t<param2>\tParam 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = new StringBuilder();
+            var outputAgregator = new OutputAgregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
-                    .SetOutput(output => help.Append(output))
+                    .SetOutput(outputAgregator)
                 )
                 .Root(configurator => configurator
                     .RegisterParam("param1", "Param 1 Description", "")
                     .RegisterParam("param2", "Param 2 Description", "")
                 ).Run(new[] { "/help" });
 
-            Assert.Equal(expectedHelp, help.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -171,10 +170,10 @@ namespace NFlags.Tests
                                "\t<param2>\tParam 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var help = new StringBuilder();
+            var outputAgregator = new OutputAgregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
-                    .SetOutput(output => help.Append(output))
+                    .SetOutput(outputAgregator)
                     .SetName("custName")
                     .SetDescription("description asdsd sa")
                 )
@@ -187,7 +186,7 @@ namespace NFlags.Tests
                     .RegisterParam("param2", "Param 2 Description", "")
                 ).Run(new[] { "/help" });
 
-            Assert.Equal(expectedHelp, help.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
     }
 }

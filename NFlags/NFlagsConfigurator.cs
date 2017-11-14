@@ -13,7 +13,7 @@ namespace NFlags
         
         private Dialect _dialect = Dialect.Win;
 
-        private Action<string> _output = Console.Write;
+        private IOutput _output = Output.Console;
 
         /// <summary>
         /// Set name of aplication, for help printing.
@@ -54,9 +54,9 @@ namespace NFlags
         /// <summary>
         /// Sets NFlags output function. Default is Console.Write
         /// </summary>
-        /// <param name="output">Function used to print output</param>
+        /// <param name="output">Output printing interface</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator SetOutput(Action<string> output)
+        public NFlagsConfigurator SetOutput(IOutput output)
         {
             _output = output;
 

@@ -14,10 +14,10 @@
                 RegisterOption("option", "o", "Option description", "optionDefaultValue").
                 RegisterParam("param", "Param description", "ParamDefaultValue").
                 RegisterSubcommand("subcommand", "Subcommand Description", sc => sc.
-                        SetExecute((commandArgs, output) => output("This is subcommand: " + commandArgs.Parameters["SubParameter"])).
+                        SetExecute((commandArgs, output) => output.WriteLine("This is subcommand: {0}", commandArgs.Parameters["SubParameter"])).
                         RegisterParam("SubParameter", "SubParameter description", "SubParameterValue")
                 ).
-                SetExecute((commandArgs, output) => output("This is root command: " + commandArgs.Parameters["param"]))
+                SetExecute((commandArgs, output) => output.WriteLine("This is root command: {0}", commandArgs.Parameters["param"]))
             ).
             Run(args);
         }

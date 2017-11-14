@@ -35,7 +35,7 @@ namespace NFlags
             }
             catch (Exception e)
             {
-                _nFlagsConfig.Output(e.ToString());
+                _nFlagsConfig.Output.Write(e.ToString());
             }
         }
     }

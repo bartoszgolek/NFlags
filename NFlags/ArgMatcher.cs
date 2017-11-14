@@ -30,8 +30,18 @@ namespace NFlags
 
         public bool IsFlagMatching(Flag flag, string arg)
         {
-            return arg == Dialect.Prefix + flag.Name ||
-                   flag.Abr != null && arg == Dialect.AbrPrefix + flag.Abr;
+            return arg == GetPrefixedName(flag) ||
+                   flag.Abr != null && arg == GetPrefixedAbreviation(flag);
+        }
+
+        private string GetPrefixedAbreviation(Flag flag)
+        {
+            return $"{Dialect.AbrPrefix}{flag.Abr}";
+        }
+
+        private string GetPrefixedName(Flag flag)
+        {
+            return $"{Dialect.Prefix}{flag.Name}";
         }
     }
 }

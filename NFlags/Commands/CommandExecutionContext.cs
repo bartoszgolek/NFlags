@@ -11,7 +11,7 @@ namespace NFlags.Commands
         /// </summary>
         /// <param name="execute">Function to execute command</param>
         /// <param name="args">Command args</param>
-        public CommandExecutionContext(Action<CommandArgs, Action<string>> execute, CommandArgs args)
+        public CommandExecutionContext(Action<CommandArgs, IOutput> execute, CommandArgs args)
         {
             Execute = execute;
             Args = args;
@@ -20,7 +20,7 @@ namespace NFlags.Commands
         /// <summary>
         /// Command execution function
         /// </summary>
-        public Action<CommandArgs, Action<string>> Execute { get; }
+        public Action<CommandArgs, IOutput> Execute { get; }
 
         /// <summary>
         /// Command arguments

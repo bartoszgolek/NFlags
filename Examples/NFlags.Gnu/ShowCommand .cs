@@ -1,5 +1,4 @@
-﻿using System;
-using NFlags.Commands;
+﻿using NFlags.Commands;
 
 namespace NFlags.Gnu
 {
@@ -18,9 +17,9 @@ namespace NFlags.Gnu
                 .RegisterSubcommand("subshow", "Show somethig", SubShowCommand.Configure);
         }
 
-        private static void Execute(CommandArgs commandArgs, Action<string> outout)
+        private static void Execute(CommandArgs commandArgs, IOutput output)
         {
-            outout("Show: " + commandArgs.Parameters[Text]);
+            output.WriteLine("Show: {0}", commandArgs.Parameters[Text]);
         }
     }
 }

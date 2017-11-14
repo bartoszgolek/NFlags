@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NFlags.Win
+﻿namespace NFlags.Win
 {
     public static class Program
     {
@@ -9,7 +7,7 @@ namespace NFlags.Win
             NFlags.Configure(configurator => configurator
                     .SetName("Custom Name")
                     .SetDescription("moja apka")
-                    .SetOutput(Console.WriteLine)
+                    .SetOutput(Output.Console)
                 )
                 .Root(configurator => configurator
                     .RegisterFlag("verbose", "v", "Verbose description", false)
@@ -19,11 +17,11 @@ namespace NFlags.Win
                     .RegisterParam("param1", "Parameter 1 description", ".")
                     .SetExecute((commandArgs, output) =>
                     {
-                        output("Verbose: " + commandArgs.Flags["verbose"].ToString());
-                        output("Clear: " + commandArgs.Flags["clear"].ToString());
-                        output("Option1: " + commandArgs.Options["option1"]);
-                        output("Option2: " + commandArgs.Options["option2"]);
-                        output("Param1: " + commandArgs.Parameters["param1"]);
+                        output.WriteLine("Verbose: {0}", commandArgs.Flags["verbose"].ToString());
+                        output.WriteLine("Clear: {0}", commandArgs.Flags["clear"].ToString());
+                        output.WriteLine("Option1: {0}", commandArgs.Options["option1"]);
+                        output.WriteLine("Option2: {0}", commandArgs.Options["option2"]);
+                        output.WriteLine("Param1: {0}", commandArgs.Parameters["param1"]);
                     })
                 )
                 .Run(args);

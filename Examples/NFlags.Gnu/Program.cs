@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NFlags.Gnu
+﻿namespace NFlags.Gnu
 {
     public static class Program
     {
@@ -16,7 +14,7 @@ namespace NFlags.Gnu
             configurator
                 .SetDescription("Application description")
                 .SetDialect(Dialect.Gnu)
-                .SetOutput(Console.WriteLine);
+                .SetOutput(Output.Console);
         }
     }
 }

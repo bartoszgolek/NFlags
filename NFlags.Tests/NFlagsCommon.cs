@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using Xunit;
 
 namespace NFlags.Tests
@@ -84,14 +83,14 @@ namespace NFlags.Tests
         {
             const string expectedOutput = "";
 
-            var help = new StringBuilder();
+            var outputAgregator = new OutputAgregator();
             NFlags.Configure(configurator => configurator
-                    .SetOutput(output => help.Append(output))
+                    .SetOutput(outputAgregator)
                 )
                 .Root(c => { })
                 .Run(Array.Empty<string>());
 
-            Assert.Equal(expectedOutput, help.ToString());
+            Assert.Equal(expectedOutput, outputAgregator.ToString());
         }
 
         [Fact]
@@ -112,10 +111,10 @@ namespace NFlags.Tests
                                   "\t<param2>\t" + Environment.NewLine +
                                   Environment.NewLine;
 
-            var sb = new StringBuilder();
+            var outputAgregator = new OutputAgregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
-                    .SetOutput(line => sb.Append(line))
+                    .SetOutput(outputAgregator)
                 )
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "f1", "", false)
@@ -133,7 +132,7 @@ namespace NFlags.Tests
                     "/h"
                 });
 
-            Assert.Equal(expectedHelp, sb.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -146,8 +145,8 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var sb = new StringBuilder();
-            NFlags.Configure(c => c.SetOutput(s => sb.Append(s)))
+            var outputAgregator = new OutputAgregator();
+            NFlags.Configure(c => c.SetOutput(outputAgregator))
                 .Root(c => c.
                     RegisterSubcommand("sub", "desc", sc => sc.
                         RegisterSubcommand("sub1", "desc1", sc1 => sc1.
@@ -159,7 +158,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
-            Assert.Equal(expectedHelp, sb.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -174,15 +173,15 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var sb = new StringBuilder();
-            NFlags.Configure(c => c.SetOutput(s => sb.Append(s)))
+            var outputAgregator = new OutputAgregator();
+            NFlags.Configure(c => c.SetOutput(outputAgregator))
                 .Root(c => c.
                     RegisterPersistentFlag("flag1", "f1", "dFlag1", false).
                     RegisterPersistentFlag("flag2", "dFlag2", false)
                 )
                 .Run(new[] { "/h"});
 
-            Assert.Equal(expectedHelp, sb.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -197,8 +196,8 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var sb = new StringBuilder();
-            NFlags.Configure(c => c.SetOutput(s => sb.Append(s)))
+            var outputAgregator = new OutputAgregator();
+            NFlags.Configure(c => c.SetOutput(outputAgregator))
                 .Root(c => c.
                     RegisterPersistentFlag("flag1", "f1", "dFlag1", false).
                     RegisterSubcommand("sub", "desc", sc => sc.
@@ -212,7 +211,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
-            Assert.Equal(expectedHelp, sb.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -229,15 +228,15 @@ namespace NFlags.Tests
                                "\t/option2=<option2>\tdOption2" + Environment.NewLine +
                                Environment.NewLine;
 
-            var sb = new StringBuilder();
-            NFlags.Configure(c => c.SetOutput(s => sb.Append(s)))
+            var outputAgregator = new OutputAgregator();
+            NFlags.Configure(c => c.SetOutput(outputAgregator))
                 .Root(c => c.
                     RegisterPersistentOption("option1", "o1", "dOption1", "").
                     RegisterPersistentOption("option2", "dOption2", "")
                 )
                 .Run(new[] { "/h"});
 
-            Assert.Equal(expectedHelp, sb.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
 
         [Fact]
@@ -254,8 +253,8 @@ namespace NFlags.Tests
                                "\t/option2=<option2>\tdOption2" + Environment.NewLine +
                                Environment.NewLine;
 
-            var sb = new StringBuilder();
-            NFlags.Configure(c => c.SetOutput(s => sb.Append(s)))
+            var outputAgregator = new OutputAgregator();
+            NFlags.Configure(c => c.SetOutput(outputAgregator))
                 .Root(c => c.
                     RegisterPersistentOption("option1", "o1", "dOption1", "").
                     RegisterSubcommand("sub", "desc", sc => sc.
@@ -269,7 +268,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
-            Assert.Equal(expectedHelp, sb.ToString());
+            Assert.Equal(expectedHelp, outputAgregator.ToString());
         }
     }
 }

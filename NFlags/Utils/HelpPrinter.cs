@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using NFlags.Commands;
 
@@ -17,18 +16,18 @@ namespace NFlags.Utils
         public string Print()
         {
             var sb = new StringBuilder();
-            PrintUsage(line => sb.Append(line + Environment.NewLine));
-            PrintCommands(line => sb.Append(line + Environment.NewLine));
-            PrintFlags(line => sb.Append(line + Environment.NewLine));
-            PrintOptions(line => sb.Append(line + Environment.NewLine));
-            PrintParameters(line => sb.Append(line + Environment.NewLine));
+            PrintUsage(sb);
+            PrintCommands(sb);
+            PrintFlags(sb);
+            PrintOptions(sb);
+            PrintParameters(sb);
 
             return sb.ToString();
         }
-
-        private void PrintUsage(Action<string> writeLine)
+        
+        private void PrintUsage(StringBuilder builder)
         {
-            writeLine("Usage:");
+            builder.AppendLine("Usage:");
             var line = "\t";
 
             line += _commandConfig.NFlagsConfig.Name;
@@ -45,58 +44,58 @@ namespace NFlags.Utils
             if (_commandConfig.Parameters.Any())
                 line += " [PARAMETERS]...";
 
-            writeLine(line);
-            writeLine("");
+            builder.AppendLine(line);
+            builder.AppendLine("");
 
             if (string.IsNullOrEmpty(_commandConfig.NFlagsConfig.Description))
                 return;
 
-            writeLine(_commandConfig.NFlagsConfig.Description);
-            writeLine("");
+            builder.AppendLine(_commandConfig.NFlagsConfig.Description);
+            builder.AppendLine("");
         }
 
-        private void PrintFlags(Action<string> writeLine)
+        private void PrintFlags(StringBuilder builder)
         {
             if (!_commandConfig.Flags.Any())
                 return;
 
-            writeLine("\tFlags:");
+            builder.AppendLine("\tFlags:");
             foreach (var flag in _commandConfig.Flags)
             {
                 var line = "\t" + _commandConfig.NFlagsConfig.Dialect.Prefix + flag.Name;
                 if (flag.Abr != null)
                     line += ", " + _commandConfig.NFlagsConfig.Dialect.AbrPrefix + flag.Abr;
                 line += "\t" + flag.Description;
-                writeLine(line);
+                builder.AppendLine(line);
             }
 
-            writeLine("");
+            builder.AppendLine("");
         }
 
-        private void PrintCommands(Action<string> writeLine)
+        private void PrintCommands(StringBuilder builder)
         {
             if (!_commandConfig.Commands.Any())
                 return;
 
-            writeLine("\tCommands:");
+            builder.AppendLine("\tCommands:");
             foreach (var command in _commandConfig.Commands)
             {
                 var line = "\t" + command.Name;
                 line += "\t" + command.Description;
-                writeLine(line);
+                builder.AppendLine(line);
             }
 
-            writeLine("");
+            builder.AppendLine("");
         }
 
-        private void PrintOptions(Action<string> writeLine)
+        private void PrintOptions(StringBuilder builder)
         {
             if (!_commandConfig.Options.Any())
                 return;
 
             var optionFormatter = OptionFormatter.GetFormatter(_commandConfig.NFlagsConfig.Dialect);
 
-            writeLine("\tOptions:");
+            builder.AppendLine("\tOptions:");
             foreach (var option in _commandConfig.Options)
             {
                 var line = "\t" + optionFormatter.FormatName(option);
@@ -104,26 +103,26 @@ namespace NFlags.Utils
                     line += ", " + optionFormatter.FormatAbr(option);
 
                 line += "\t" + option.Description;
-                writeLine(line);
+                builder.AppendLine(line);
             }
 
-            writeLine("");
+            builder.AppendLine("");
         }
 
-        private void PrintParameters(Action<string> writeLine)
+        private void PrintParameters(StringBuilder builder)
         {
             if (!_commandConfig.Parameters.Any())
                 return;
 
-            writeLine("\tParameters:");
+            builder.AppendLine("\tParameters:");
             foreach (var parameter in _commandConfig.Parameters)
             {
                 var line = "\t<" + parameter.Name;
                 line += ">\t" + parameter.Description;
-                writeLine(line);
+                builder.AppendLine(line);
             }
 
-            writeLine("");
+            builder.AppendLine("");
         }
     }
 }

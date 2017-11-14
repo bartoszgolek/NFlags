@@ -16,7 +16,7 @@ namespace NFlags.Commands
         private readonly List<Parameter> _parameters = new List<Parameter>();
         private readonly List<Flag> _flags = new List<Flag>();
         private readonly List<Option> _options = new List<Option>();
-        private Action<CommandArgs, Action<string>> _execute;
+        private Action<CommandArgs, IOutput> _execute;
 
         private CommandConfigurator(string name, List<string> parents, string description, NFlagsConfig nFlagsConfig)
         {
@@ -47,9 +47,9 @@ namespace NFlags.Commands
         /// <summary>
         /// Sets function to execute when command is called
         /// </summary>
-        /// <param name="execute">Function to execute when command is called</param>
+        /// <param name="execute">Interface to print to output</param>
         /// <returns></returns>
-        public CommandConfigurator SetExecute(Action<CommandArgs, Action<string>> execute)
+        public CommandConfigurator SetExecute(Action<CommandArgs, IOutput> execute)
         {
             _execute = execute;
 
@@ -246,7 +246,6 @@ namespace NFlags.Commands
                     _nFlagsConfig,
                     Name,
                     _parents,
-                    Description,
                     _commands,
                     GetSubcommandFlags(parentConfig),
                     GetSubcommandOptions(parentConfig),

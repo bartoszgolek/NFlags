@@ -1,5 +1,4 @@
-﻿using System;
-using NFlags.Commands;
+﻿using NFlags.Commands;
 
 namespace NFlags.Gnu
 {
@@ -15,9 +14,9 @@ namespace NFlags.Gnu
                 .SetExecute(Execute);
         }
 
-        private static void Execute(CommandArgs commandArgs, Action<string> outout)
+        private static void Execute(CommandArgs commandArgs, IOutput output)
         {
-            outout("List: " + commandArgs.Parameters[Text]);
+            output.Write("List: {0}", commandArgs.Parameters[Text]);
         }
     }
 }
