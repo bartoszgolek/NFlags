@@ -59,6 +59,7 @@ namespace NFlags.Commands
         {
             private readonly CommandConfig _commandConfig;
             private readonly Shifter<Parameter> _parameters;
+            private readonly ParameterSeries _parameterSeries;
             private readonly Shifter<string> _args;
             private readonly CommandArgs _commandArgs;
 
@@ -68,6 +69,7 @@ namespace NFlags.Commands
             {
                 _commandConfig = commandConfig;
                 _parameters = new Shifter<Parameter>(commandConfig.Parameters.ToArray());
+                _parameterSeries = commandConfig.ParameterSeries;
                 _args = new Shifter<string>(args);
                 _commandArgs = InitDefaultCommandArgs();
             }
@@ -114,6 +116,8 @@ namespace NFlags.Commands
             {
                 if (_parameters.HasData())
                     _commandArgs.Parameters[_parameters.Shift().Name] = arg;
+                else if (_parameterSeries != null)
+                    _commandArgs.ParameterSeries.Add(arg);
                 else
                     throw new TooManyParametersException(arg);
             }

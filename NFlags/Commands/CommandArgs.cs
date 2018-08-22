@@ -15,6 +15,7 @@ namespace NFlags.Commands
             Flags = new Dictionary<string, bool>();
             Options = new Dictionary<string, string>();
             Parameters = new Dictionary<string, string>();
+            ParameterSeries = new List<string>();
         }
 
         /// <summary>
@@ -31,5 +32,10 @@ namespace NFlags.Commands
         /// All registered parameters with values
         /// </summary>
         public Dictionary<string, string> Parameters { get; }
+        
+        /// <summary>
+        /// Registered parameter series with values
+        /// </summary>
+        public List<string> ParameterSeries { get; }
     }
 }

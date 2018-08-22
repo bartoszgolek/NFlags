@@ -256,6 +256,42 @@ namespace NFlags.Tests
         }
 
         [Fact]
+        public void TestParams_ShouldSetParamSeries_IfContainedInArgs()
+        {
+            CommandArgs a = null;  
+            
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(Dialect.Win)
+                )
+                .Root(configurator => configurator
+                    .RegisterParamSeries("paramSeries1", "")
+                    .SetExecute((args, output) => a = args)
+                )
+                .Run(new[] {"paramValue1"});
+            
+            Assert.Equal(a.ParameterSeries[0], "paramValue1");
+        }
+
+        [Fact]
+        public void TestParams_ShouldSetParamSeriesMultipleValues_IfContainedInArgs()
+        {
+            CommandArgs a = null;  
+            
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(Dialect.Win)
+                )
+                .Root(configurator => configurator
+                    .RegisterParamSeries("paramSeries1", "")
+                    .SetExecute((args, output) => a = args)
+                )
+                .Run(new[] {"paramValue1", "paramValue2", "paramValue3"});
+            
+            Assert.Equal(a.ParameterSeries[0], "paramValue1");
+            Assert.Equal(a.ParameterSeries[1], "paramValue2");
+            Assert.Equal(a.ParameterSeries[2], "paramValue3");
+        }
+
+        [Fact]
         public void TestParams_ShouldSetSecondFlagsOptionsAndParams()
         {
             CommandArgs a = null;  

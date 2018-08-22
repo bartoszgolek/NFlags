@@ -1,9 +1,6 @@
 namespace NFlags.Arguments
 {
-    /// <summary>
-    /// Base class for all arguments
-    /// </summary>
-    public abstract class Argument<T>
+    public abstract class Argument
     {
         /// <summary>
         /// Name for help printing
@@ -14,10 +11,5 @@ namespace NFlags.Arguments
         /// Description for help printing
         /// </summary>
         public string Description;
-
-        /// <summary>
-        /// Default value
-        /// </summary>
-        public T DefaultValue;
     }
 }

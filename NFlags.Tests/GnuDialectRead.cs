@@ -8,6 +8,7 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetOptionValue_IfContainedInArgs()
         {
+            var strings = new[] {"--option", "optValue"};
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -15,7 +16,7 @@ namespace NFlags.Tests
                     .RegisterOption("option", "o", "", "")
                     .SetExecute((args, output) => Assert.Equal(args.Options["option"], "optValue"))
                 )
-                .Run(new[] {"--option", "optValue"});
+                .Run(strings);
         }
 
         [Fact]
@@ -253,6 +254,42 @@ namespace NFlags.Tests
             
             Assert.Equal(a.Parameters["param1"], "paramValue1");
             Assert.Equal(a.Parameters["param2"], "paramValue2");
+        }
+
+        [Fact]
+        public void TestParams_ShouldSetParamSeries_IfContainedInArgs()
+        {
+            CommandArgs a = null;  
+            
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(Dialect.Gnu)
+                )
+                .Root(configurator => configurator
+                    .RegisterParamSeries("paramSeries1", "")
+                    .SetExecute((args, output) => a = args)
+                )
+                .Run(new[] {"paramValue1"});
+            
+            Assert.Equal(a.ParameterSeries[0], "paramValue1");
+        }
+
+        [Fact]
+        public void TestParams_ShouldSetParamSeriesMultipleValues_IfContainedInArgs()
+        {
+            CommandArgs a = null;  
+            
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(Dialect.Gnu)
+                )
+                .Root(configurator => configurator
+                    .RegisterParamSeries("paramSeries1", "")
+                    .SetExecute((args, output) => a = args)
+                )
+                .Run(new[] {"paramValue1", "paramValue2", "paramValue3"});
+            
+            Assert.Equal(a.ParameterSeries[0], "paramValue1");
+            Assert.Equal(a.ParameterSeries[1], "paramValue2");
+            Assert.Equal(a.ParameterSeries[2], "paramValue3");
         }
 
         [Fact]

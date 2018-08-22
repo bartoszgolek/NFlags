@@ -15,10 +15,11 @@ namespace NFlags.Commands
         /// <param name="nFlagsConfig">NFlags config</param>
         /// <param name="name">Command name</param>
         /// <param name="parents">Command parents list</param>
-        /// <param name="commands">List of registerd commands</param>
-        /// <param name="flags">List of registerd flags</param>
-        /// <param name="options">List of registerd options</param>
-        /// <param name="parameters">List of registerd parameters</param>
+        /// <param name="commands">List of registered commands</param>
+        /// <param name="flags">List of registered flags</param>
+        /// <param name="options">List of registered options</param>
+        /// <param name="parameters">List of registered parameters</param>
+        /// <param name="parameterSeries">Registered parameter series</param>
         /// <param name="execute">Function to execute when command is called</param>
         public CommandConfig(
             NFlagsConfig nFlagsConfig,
@@ -28,6 +29,7 @@ namespace NFlags.Commands
             List<Flag> flags,
             List<Option> options,
             List<Parameter> parameters,
+            ParameterSeries parameterSeries,
             Action<CommandArgs, IOutput> execute)
         {
             NFlagsConfig = nFlagsConfig;
@@ -36,12 +38,13 @@ namespace NFlags.Commands
             Flags = flags;
             Options = options;
             Parameters = parameters;
+            ParameterSeries = parameterSeries;
             Execute = execute;
             Commands = commands;
         }
 
         /// <summary>
-        /// List of registerd commands
+        /// List of registered commands
         /// </summary>
         public List<CommandConfigurator> Commands { get; }
 
@@ -61,19 +64,24 @@ namespace NFlags.Commands
         public List<string> Parents { get; }
 
         /// <summary>
-        /// List of registerd flags
+        /// List of registered flags
         /// </summary>
         public List<Flag> Flags { get; }
 
         /// <summary>
-        /// List of registerd options
+        /// List of registered options
         /// </summary>
         public List<Option> Options { get; }
 
         /// <summary>
-        /// List of registerd parameters
+        /// List of registered parameters
         /// </summary>
         public List<Parameter> Parameters { get; }
+
+        /// <summary>
+        /// Registered paramter series
+        /// </summary>
+        public ParameterSeries ParameterSeries { get; }
 
         /// <summary>
         /// Function to execute when command is called.
