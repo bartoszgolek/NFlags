@@ -1,7 +1,7 @@
 namespace NFlags.Arguments
 {
     /// <summary>
-    /// Base class for all arguments
+    /// Base class for arguments with default values
     /// </summary>
     public abstract class DefaultValueArgument<T> : Argument
     {

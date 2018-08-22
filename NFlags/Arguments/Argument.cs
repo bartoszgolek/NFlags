@@ -1,5 +1,8 @@
 namespace NFlags.Arguments
 {
+    /// <summary>
+    /// Base class for all arguments
+    /// </summary>
     public abstract class Argument
     {
         /// <summary>

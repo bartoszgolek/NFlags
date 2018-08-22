@@ -265,7 +265,7 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
-                    .RegisterParamSeries("paramSeries1", "")
+                    .RegisterParameterSeries("paramSeries1", "")
                     .SetExecute((args, output) => a = args)
                 )
                 .Run(new[] {"paramValue1"});
@@ -282,7 +282,7 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
-                    .RegisterParamSeries("paramSeries1", "")
+                    .RegisterParameterSeries("paramSeries1", "")
                     .SetExecute((args, output) => a = args)
                 )
                 .Run(new[] {"paramValue1", "paramValue2", "paramValue3"});

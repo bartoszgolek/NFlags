@@ -240,7 +240,13 @@ namespace NFlags.Commands
             return this;
         }
 
-        public CommandConfigurator RegisterParamSeries(string name, string description)
+        /// <summary>
+        /// Register parameter series for the command
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <param name="description">Parameter description for help.</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterParameterSeries(string name, string description)
         {
             _paramSeries = new ParameterSeries {Name = name, Description = description};
 

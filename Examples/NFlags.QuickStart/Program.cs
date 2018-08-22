@@ -17,7 +17,7 @@
                         SetExecute((commandArgs, output) => output.WriteLine("This is subcommand: {0}", commandArgs.Parameters["SubParameter"])).
                         RegisterParam("SubParameter", "SubParameter description", "SubParameterValue")
                 ).
-                RegisterParamSeries("paramSeries", "paramSeriesDescription").
+                RegisterParameterSeries("paramSeries", "paramSeriesDescription").
                 SetExecute((commandArgs, output) => output.WriteLine("This is root command: {0}", commandArgs.Parameters["param"]))
             ).
             Run(args);

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Bartosz Gołek</Authors>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Description>Simple library to made parsing CLI arguments easy. Library also allow You to print usage help "out of box".</Description>
     <PackageProjectUrl>https://github.com/bartoszgolek/NFlags/tree/commands</PackageProjectUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
