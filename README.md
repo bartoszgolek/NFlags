@@ -28,6 +28,7 @@ Root(rc => rc.
             SetExecute((commandArgs, output) => output("This is subcommand: " + commandArgs.Parameters["SubParameter"])).
             RegisterParam("SubParameter", "SubParameter description", "SubParameterValue")
     ).
+    RegisterParamSeries("paramSeries", "paramSeriesDescription").
     SetExecute((commandArgs, output) => output("This is root command: " + commandArgs.Parameters["param"]))
 ).
 Run(args);
@@ -56,6 +57,8 @@ This is NFlags
 
         Parameters:
         <param> Param description
+        <paramSeries...>        paramSeriesDescription
+
 
 $> dotnet NFlags.QuickStart.dll subcommand
 This is subcommand: SubParameterValue
@@ -130,6 +133,14 @@ NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption("opti
 Parameter is an unprefixed value argument. Parameters are read by registration order.
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParam("param", "Param description", "paramDefaultValue"));
+```
+
+### Set parameter series
+Parameter series is a collection of parameters after last named parameter.
+Parameter series can be used to parse unknown count of parameters to process i.e. strings to concat 
+ 
+```c#
+NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries("paramSeries", "Param series description"));
 ```
 
 ### Attach code to execution

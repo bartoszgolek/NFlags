@@ -16,6 +16,7 @@ namespace NFlags.Commands
         private readonly List<Parameter> _parameters = new List<Parameter>();
         private readonly List<Flag> _flags = new List<Flag>();
         private readonly List<Option> _options = new List<Option>();
+        private ParameterSeries _paramSeries = null;
         private Action<CommandArgs, IOutput> _execute;
 
         private CommandConfigurator(string name, List<string> parents, string description, NFlagsConfig nFlagsConfig)
@@ -239,6 +240,13 @@ namespace NFlags.Commands
             return this;
         }
 
+        public CommandConfigurator RegisterParamSeries(string name, string description)
+        {
+            _paramSeries = new ParameterSeries {Name = name, Description = description};
+
+            return this;
+        }
+
         internal Command CreateCommand(CommandConfig parentConfig = null)
         {
             return new Command(
@@ -250,6 +258,7 @@ namespace NFlags.Commands
                     GetSubcommandFlags(parentConfig),
                     GetSubcommandOptions(parentConfig),
                     _parameters,
+                    _paramSeries,
                     _execute
                 )
             );

@@ -41,7 +41,7 @@ namespace NFlags.Utils
                 line += " [FLAGS]...";
             if (_commandConfig.Options.Any())
                 line += " [OPTIONS]...";
-            if (_commandConfig.Parameters.Any())
+            if (_commandConfig.Parameters.Any() || _commandConfig.ParameterSeries != null)
                 line += " [PARAMETERS]...";
 
             builder.AppendLine(line);
@@ -111,7 +111,7 @@ namespace NFlags.Utils
 
         private void PrintParameters(StringBuilder builder)
         {
-            if (!_commandConfig.Parameters.Any())
+            if (!_commandConfig.Parameters.Any() && _commandConfig.ParameterSeries == null)
                 return;
 
             builder.AppendLine("\tParameters:");
@@ -119,6 +119,13 @@ namespace NFlags.Utils
             {
                 var line = "\t<" + parameter.Name;
                 line += ">\t" + parameter.Description;
+                builder.AppendLine(line);
+            }
+
+            if (_commandConfig.ParameterSeries != null)
+            {
+                var line = "\t<" + _commandConfig.ParameterSeries.Name + "...";
+                line += ">\t" + _commandConfig.ParameterSeries.Description;
                 builder.AppendLine(line);
             }
 
