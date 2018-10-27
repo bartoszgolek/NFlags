@@ -1,3 +1,5 @@
+using System;
+
 namespace NFlags.Arguments
 {
     /// <summary>
@@ -14,5 +16,10 @@ namespace NFlags.Arguments
         /// Description for help printing
         /// </summary>
         public string Description;
+
+        /// <summary>
+        /// Describes type of argument value
+        /// </summary>
+        public Type ValueType;
     }
 }

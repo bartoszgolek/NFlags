@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NFlags.Arguments;
+using NFlags.TypeConverters;
 
 namespace NFlags.Commands
 {
@@ -16,8 +17,8 @@ namespace NFlags.Commands
         private readonly List<Parameter> _parameters = new List<Parameter>();
         private readonly List<Flag> _flags = new List<Flag>();
         private readonly List<Option> _options = new List<Option>();
-        private ParameterSeries _paramSeries = null;
-        private Action<CommandArgs, IOutput> _execute;
+        private ParameterSeries _paramSeries;
+        private Func<CommandArgs, IOutput, int> _execute;
 
         private CommandConfigurator(string name, List<string> parents, string description, NFlagsConfig nFlagsConfig)
         {
@@ -41,18 +42,35 @@ namespace NFlags.Commands
         public string Name { get; }
 
         /// <summary>
-        /// Command descriotion
+        /// Command description
         /// </summary>
         public string Description { get; }
+
+        /// <summary>
+        /// Sets function to execute when command is called. Returns exit code.
+        /// </summary>
+        /// <param name="execute">Interface to print to output</param>
+        /// <returns>Command configurator</returns>
+        public CommandConfigurator SetExecute(Func<CommandArgs, IOutput, int> execute)
+        {
+            _execute = execute;
+
+            return this;
+        }
 
         /// <summary>
         /// Sets function to execute when command is called
         /// </summary>
         /// <param name="execute">Interface to print to output</param>
-        /// <returns></returns>
+        /// <returns>Command configurator</returns>
         public CommandConfigurator SetExecute(Action<CommandArgs, IOutput> execute)
         {
-            _execute = execute;
+            _execute = (args, output) =>
+            {
+                execute(args, output);
+
+                return 0;
+            };
 
             return this;
         }
@@ -162,9 +180,10 @@ namespace NFlags.Commands
         /// <param name="description">Option description for help.</param>
         /// <param name="defaultValue">Default option value.</param>
         /// <returns>Self instance</returns>
-        public CommandConfigurator RegisterOption(string name, string abr, string description, string defaultValue)
+        public CommandConfigurator RegisterOption<T>(string name, string abr, string description, T defaultValue)
         {
-            _options.Add(new Option {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue});
+            CheckConverterIsRegistered(typeof(T));
+            _options.Add(new Option {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)});
 
             return this;
         }
@@ -176,9 +195,10 @@ namespace NFlags.Commands
         /// <param name="description">Option description for help.</param>
         /// <param name="defaultValue">Default option value.</param>
         /// <returns>Self instance</returns>
-        public CommandConfigurator RegisterOption(string name, string description, string defaultValue)
+        public CommandConfigurator RegisterOption<T>(string name, string description, T defaultValue)
         {
-            _options.Add(new Option {Name = name, Description = description, DefaultValue = defaultValue});
+            CheckConverterIsRegistered(typeof(T));
+            _options.Add(new Option {Name = name, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)});
 
             return this;
         }
@@ -190,14 +210,16 @@ namespace NFlags.Commands
         /// <param name="description">Option description for help.</param>
         /// <param name="defaultValue">Default option value.</param>
         /// <returns>Self instance</returns>
-        public CommandConfigurator RegisterPersistentOption(string name, string description, string defaultValue)
+        public CommandConfigurator RegisterPersistentOption<T>(string name, string description, T defaultValue)
         {
+            CheckConverterIsRegistered(typeof(T));
             _options.Add(new Option
             {
                 Name = name,
                 Description = description,
                 DefaultValue = defaultValue,
-                IsPersistent = true
+                IsPersistent = true,
+                ValueType = typeof(T),
             });
 
             return this;
@@ -211,9 +233,9 @@ namespace NFlags.Commands
         /// <param name="description">Option description for help.</param>
         /// <param name="defaultValue">Default option value.</param>
         /// <returns>Self instance</returns>
-        public CommandConfigurator RegisterPersistentOption(string name, string abr, string description,
-            string defaultValue)
+        public CommandConfigurator RegisterPersistentOption<T>(string name, string abr, string description, T defaultValue)
         {
+            CheckConverterIsRegistered(typeof(T));
             _options.Add(new Option
             {
                 Name = name,
@@ -233,9 +255,10 @@ namespace NFlags.Commands
         /// <param name="description">Parameter description for help.</param>
         /// <param name="defaultValue">Default parameter value.</param>
         /// <returns>Self instance</returns>
-        public CommandConfigurator RegisterParam(string name, string description, string defaultValue)
+        public CommandConfigurator RegisterParam<T>(string name, string description, T defaultValue)
         {
-            _parameters.Add(new Parameter {Name = name, Description = description, DefaultValue = defaultValue});
+            CheckConverterIsRegistered(typeof(T));
+            _parameters.Add(new Parameter {Name = name, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)});
 
             return this;
         }
@@ -248,7 +271,19 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterParameterSeries(string name, string description)
         {
-            _paramSeries = new ParameterSeries {Name = name, Description = description};
+            return RegisterParameterSeries<string>(name, description);
+        }
+
+        /// <summary>
+        /// Register parameter series for the command
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <param name="description">Parameter description for help.</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterParameterSeries<T>(string name, string description)
+        {
+            CheckConverterIsRegistered(typeof(T));
+            _paramSeries = new ParameterSeries {Name = name, Description = description, ValueType = typeof(T)};
 
             return this;
         }
@@ -286,6 +321,14 @@ namespace NFlags.Commands
             if (parentConfig != null)
                 subcommandOptions.AddRange(parentConfig.Options.Where(f => f.IsPersistent));
             return subcommandOptions;
+        }
+
+        private void CheckConverterIsRegistered(Type type)
+        {
+            if (_nFlagsConfig.ArgumentConverters.Any(argumentConverter => argumentConverter.CanConvert(type)))
+                return;
+
+            throw new MissingConverterException(type);
         }
     }
 }

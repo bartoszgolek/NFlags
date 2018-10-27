@@ -3,7 +3,7 @@ namespace NFlags.Arguments
     /// <summary>
     /// Base class for arguments with abreviation
     /// </summary>
-    public abstract class PrefixedDefaultValueArgument<T> : DefaultValueArgument<T>
+    public abstract class PrefixedDefaultValueArgument : DefaultValueArgument
     {
         /// <summary>
         /// Abreviation name for help printing and shorthand usage.

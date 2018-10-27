@@ -3,11 +3,11 @@ namespace NFlags.Arguments
     /// <summary>
     /// Base class for arguments with default values
     /// </summary>
-    public abstract class DefaultValueArgument<T> : Argument
+    public abstract class DefaultValueArgument : Argument
     {
         /// <summary>
         /// Default value
         /// </summary>
-        public T DefaultValue;
+        public object DefaultValue;
     }
 }

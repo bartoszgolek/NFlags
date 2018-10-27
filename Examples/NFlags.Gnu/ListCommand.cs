@@ -14,9 +14,10 @@ namespace NFlags.Gnu
                 .SetExecute(Execute);
         }
 
-        private static void Execute(CommandArgs commandArgs, IOutput output)
+        private static int Execute(CommandArgs commandArgs, IOutput output)
         {
             output.Write("List: {0}", commandArgs.Parameters[Text]);
+            return 0;
         }
     }
 }

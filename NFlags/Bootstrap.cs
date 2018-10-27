@@ -26,16 +26,17 @@ namespace NFlags
         /// Parse arguments and run requested command
         /// </summary>
         /// <param name="args">Application arguments</param>
-        public void Run(string[] args)
+        public int Run(string[] args)
         {
             try
             {
                 var c = _rootCommand.Read(args);
-                c.Execute?.Invoke(c.Args, _nFlagsConfig.Output);
+                return c.Execute?.Invoke(c.Args, _nFlagsConfig.Output) ?? 1;
             }
             catch (Exception e)
             {
                 _nFlagsConfig.Output.Write(e.ToString());
+                return 1;
             }
         }
     }

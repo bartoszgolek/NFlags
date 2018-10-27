@@ -2,11 +2,11 @@
 {
     public static class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            NFlags.Configure(configurator => configurator
+            return NFlags.Configure(configurator => configurator
                     .SetName("Custom Name")
-                    .SetDescription("moja apka")
+                    .SetDescription("My command app")
                     .SetOutput(Output.Console)
                 )
                 .Root(configurator => configurator
@@ -22,6 +22,8 @@
                         output.WriteLine("Option1: {0}", commandArgs.Options["option1"]);
                         output.WriteLine("Option2: {0}", commandArgs.Options["option2"]);
                         output.WriteLine("Param1: {0}", commandArgs.Parameters["param1"]);
+                        
+                        return 0;
                     })
                 )
                 .Run(args);

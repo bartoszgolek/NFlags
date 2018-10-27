@@ -2,9 +2,9 @@
 {
     public static class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            NFlags.Configure(c => { }).Root(c => { }).Run(args);
+            return NFlags.Configure(c => { }).Root(c => { }).Run(args);
         }
     }
 }

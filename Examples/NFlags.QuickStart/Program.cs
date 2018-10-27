@@ -2,9 +2,9 @@
 {
     public static class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            NFlags.Configure(configure => configure
+            return NFlags.Configure(configure => configure
                 .SetDialect(Dialect.Gnu)
                 .SetName("QuickStart")
                 .SetDescription("This is NFlags")
@@ -14,11 +14,18 @@
                 RegisterOption("option", "o", "Option description", "optionDefaultValue").
                 RegisterParam("param", "Param description", "ParamDefaultValue").
                 RegisterSubcommand("subcommand", "Subcommand Description", sc => sc.
-                        SetExecute((commandArgs, output) => output.WriteLine("This is subcommand: {0}", commandArgs.Parameters["SubParameter"])).
+                        SetExecute((commandArgs, output) =>
+                        {
+                            output.WriteLine("This is subcommand: {0}", commandArgs.Parameters["SubParameter"]);
+                        }).
                         RegisterParam("SubParameter", "SubParameter description", "SubParameterValue")
                 ).
-                RegisterParameterSeries("paramSeries", "paramSeriesDescription").
-                SetExecute((commandArgs, output) => output.WriteLine("This is root command: {0}", commandArgs.Parameters["param"]))
+                RegisterParameterSeries<string>("paramSeries", "paramSeriesDescription").
+                SetExecute((commandArgs, output) =>
+                    {
+                        output.WriteLine("This is root command: {0}", commandArgs.Parameters["param"]);
+                        return 0;
+                    })
             ).
             Run(args);
         }

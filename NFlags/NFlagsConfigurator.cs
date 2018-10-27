@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using NFlags.TypeConverters;
 
 namespace NFlags
 {
@@ -14,9 +17,15 @@ namespace NFlags
         private Dialect _dialect = Dialect.Win;
 
         private IOutput _output = Output.Console;
+        
+        private readonly List<IArgumentConverter> _argumentConverters = new List<IArgumentConverter> {
+            new CommonTypeConverter(),
+            new ConstructorConverter(),
+            new ImplicitOperatorConverter(),
+        };
 
         /// <summary>
-        /// Set name of aplication, for help printing.
+        /// Set name of application, for help printing.
         /// </summary>
         /// <param name="name">Application name</param>
         /// <returns>Self instance</returns>
@@ -28,7 +37,7 @@ namespace NFlags
         }
 
         /// <summary>
-        /// Set description of aplication, for help printing.
+        /// Set description of application, for help printing.
         /// </summary>
         /// <param name="description">Application description</param>
         /// <returns>Self instance</returns>
@@ -63,10 +72,22 @@ namespace NFlags
             return this;
         }
 
+        /// <summary>
+        /// Registers Convrter to convert argument values
+        /// </summary>
+        /// <param name="argumentConverter">Param Converter to register</param>
+        /// <returns>Self instance</returns>
+        public NFlagsConfigurator RegisterConverter(IArgumentConverter argumentConverter)
+        {
+            _argumentConverters.Add(argumentConverter);            
+
+            return this;
+        }
+
         internal NFlags CreateNFlags()
         {
             return new NFlags(
-                new NFlagsConfig( _name, _description, _dialect, _output)
+                new NFlagsConfig( _name, _description, _dialect, _argumentConverters.ToArray(), _output)
             );
         }
     }

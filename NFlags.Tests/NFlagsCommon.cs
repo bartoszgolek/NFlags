@@ -11,7 +11,11 @@ namespace NFlags.Tests
             var rootCmdCalled = false;
 
             NFlags.Configure(c => { })
-                .Root(c => c.SetExecute((args, output) => rootCmdCalled = true))
+                .Root(c => c.SetExecute((args, output) =>
+                {
+                    rootCmdCalled = true;
+                    return 0;
+                }))
                 .Run(Array.Empty<string>());
 
             Assert.True(rootCmdCalled);
@@ -25,7 +29,11 @@ namespace NFlags.Tests
             NFlags.Configure(c => { })
                 .Root(c => c.
                     RegisterSubcommand("sub", "desc", sc => sc.
-                        SetExecute((args, output) => subCmdCalled = true)
+                        SetExecute((args, output) =>
+                        {
+                            subCmdCalled = true;
+                            return 0;
+                        })
                     )
                 )
                 .Run(new[] { "sub" });
@@ -44,7 +52,11 @@ namespace NFlags.Tests
                         RegisterSubcommand("sub1", "desc1", sc1 => sc1.
                             RegisterSubcommand("sub2", "desc2", sc2 => sc2.
                                 RegisterSubcommand("sub3", "desc3", sc3 => sc3.
-                                    SetExecute((args, output) => subCmdCalled = true)
+                                    SetExecute((args, output) =>
+                                    {
+                                        subCmdCalled = true;
+                                        return 0;
+                                    })
                                 )
                             )
                         )
@@ -68,7 +80,11 @@ namespace NFlags.Tests
                                 RegisterSubcommand("sub3", "desc3",
                                     sc3 => { }
                                 )
-                                .SetExecute((args, output) => sub2CmdCalled = true)
+                                .SetExecute((args, output) =>
+                                {
+                                    sub2CmdCalled = true;
+                                    return 0;
+                                })
                             )
                         )
                     )
@@ -119,7 +135,7 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "f1", "", false)
                     .RegisterFlag("flag2", "", false)
-                    .RegisterSubcommand("sub", "subdesc", c => c
+                    .RegisterSubcommand("sub", "subcommand descition", c => c
                         .RegisterOption("option1", "", "")
                         .RegisterOption("option2", "o2", "", "")
                         .RegisterParam("param1", "", "")
@@ -162,7 +178,7 @@ namespace NFlags.Tests
         }
 
         [Fact]
-        public void NFlags_ShouldPrintHelpForPersistentFalgs()
+        public void NFlags_ShouldPrintHelpForPersistentFlags()
         {
             var expectedHelp = "Usage:" + Environment.NewLine +
                                "\ttesthost [FLAGS]..." + Environment.NewLine +
@@ -185,7 +201,7 @@ namespace NFlags.Tests
         }
 
         [Fact]
-        public void NFlags_ShouldPrintHelpForPersistentFalgsAtNthLevelSubCommand()
+        public void NFlags_ShouldPrintHelpForPersistentFlagsAtNthLevelSubCommand()
         {
             var expectedHelp = "Usage:" + Environment.NewLine +
                                "\ttesthost sub sub1 sub2 sub3 [FLAGS]..." + Environment.NewLine +

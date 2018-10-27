@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using NFlags.Arguments;
+using NFlags.TypeConverters;
 using NFlags.Utils;
 
 namespace NFlags.Commands
@@ -40,19 +42,26 @@ namespace NFlags.Commands
                 }
             );
 
-            var commandExecutionContext = new CommandInt(
-                _commandConfig,
-                args
-            ).Read();
+            try
+            {
+                var commandExecutionContext = new CommandInt(
+                    _commandConfig,
+                    args
+                ).Read();
 
-            return commandExecutionContext.Args != null && commandExecutionContext.Args.Flags[HelpFlag]
-                ? new CommandExecutionContext((commandArgs, output) => output.Write(PrintHelp()), null)
-                : commandExecutionContext;
+                return commandExecutionContext.Args != null && commandExecutionContext.Args.Flags[HelpFlag]
+                    ? PrepareHelpCommandExecutionContext()
+                    : commandExecutionContext;
+            }
+            catch (ArgumentValueException e)
+            {
+                return PrepareHelpCommandExecutionContext(e.Message);
+            }
         }
 
-        private string PrintHelp()
+        private PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(string additionalPrefixMessage = "")
         {
-            return new HelpPrinter(_commandConfig).Print();
+            return new PrintHelpCommandExecutionContext(additionalPrefixMessage, _commandConfig);
         }
 
         private class CommandInt
@@ -65,7 +74,8 @@ namespace NFlags.Commands
 
             public CommandInt(
                 CommandConfig commandConfig,
-                string[] args)
+                string[] args
+            )
             {
                 _commandConfig = commandConfig;
                 _parameters = new Shifter<Parameter>(commandConfig.Parameters.ToArray());
@@ -101,7 +111,7 @@ namespace NFlags.Commands
             {
                 var commandArgs = new CommandArgs();
                 foreach (var flag in _commandConfig.Flags)
-                    commandArgs.Flags.Add(flag.Name, flag.DefaultValue);
+                    commandArgs.Flags.Add(flag.Name, flag.GetDefault());
 
                 foreach (var option in _commandConfig.Options)
                     commandArgs.Options.Add(option.Name, option.DefaultValue);
@@ -115,9 +125,12 @@ namespace NFlags.Commands
             private void ReadParam(string arg)
             {
                 if (_parameters.HasData())
-                    _commandArgs.Parameters[_parameters.Shift().Name] = arg;
+                {
+                    var parameter = _parameters.Shift();
+                    _commandArgs.Parameters[parameter.Name] = ConvertValueToExpectedType(arg, parameter.ValueType);
+                }
                 else if (_parameterSeries != null)
-                    _commandArgs.ParameterSeries.Add(arg);
+                    _commandArgs.ParameterSeries.Add(ConvertValueToExpectedType(arg, _parameterSeries.ValueType));
                 else
                     throw new TooManyParametersException(arg);
             }
@@ -131,11 +144,25 @@ namespace NFlags.Commands
                 if (opt == null)
                     return false;
 
-                _commandArgs.Options[opt.Name] = OptionReader
+                var optionValue = OptionReader
                     .GetReader(_commandConfig.NFlagsConfig.Dialect.OptionValueMode)
                     .ReadValue(_args, arg);
 
+                _commandArgs.Options[opt.Name] = ConvertValueToExpectedType(optionValue, opt.ValueType);
+
                 return true;
+            }
+
+            private object ConvertValueToExpectedType(string value, Type expectedType)
+            {
+                if (expectedType == typeof(string))
+                    return value;
+
+                foreach (var converter in _commandConfig.NFlagsConfig.ArgumentConverters)
+                    if (converter.CanConvert(expectedType))
+                        return converter.Convert(expectedType, value);
+                
+                throw new MissingConverterException(expectedType);
             }
 
             private Command GetCommand(string arg)
@@ -154,7 +181,7 @@ namespace NFlags.Commands
                 if (flag == null)
                     return false;
 
-                _commandArgs.Flags[flag.Name] = !flag.DefaultValue;
+                _commandArgs.Flags[flag.Name] = !flag.GetDefault();
 
                 return true;
             }

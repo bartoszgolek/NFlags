@@ -13,9 +13,9 @@ namespace NFlags.Commands
         public CommandArgs()
         {
             Flags = new Dictionary<string, bool>();
-            Options = new Dictionary<string, string>();
-            Parameters = new Dictionary<string, string>();
-            ParameterSeries = new List<string>();
+            Options = new Dictionary<string, object>();
+            Parameters = new Dictionary<string, object>();
+            ParameterSeries = new List<object>();
         }
 
         /// <summary>
@@ -26,16 +26,16 @@ namespace NFlags.Commands
         /// <summary>
         /// All registered options with values
         /// </summary>
-        public Dictionary<string, string> Options { get; }
+        public Dictionary<string, object> Options { get; }
         
         /// <summary>
         /// All registered parameters with values
         /// </summary>
-        public Dictionary<string, string> Parameters { get; }
+        public Dictionary<string, object> Parameters { get; }
         
         /// <summary>
         /// Registered parameter series with values
         /// </summary>
-        public List<string> ParameterSeries { get; }
+        public List<object> ParameterSeries { get; }
     }
 }

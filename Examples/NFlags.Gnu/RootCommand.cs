@@ -23,13 +23,14 @@ namespace NFlags.Gnu
                 .RegisterSubcommand(ListCommand.Name, "List somethig", ListCommand.Configure);
         }
 
-        private static void Execute(CommandArgs commandArgs, IOutput output)
+        private static int Execute(CommandArgs commandArgs, IOutput output)
         {
             output.WriteLine("Verbose: {0}", commandArgs.Flags[Verbose]);
             output.WriteLine("Clear: {0}", commandArgs.Flags[Clear]);
             output.WriteLine("Option1: {0}", commandArgs.Options[Option1]);
             output.WriteLine("Option2: {0}", commandArgs.Options[Option2]);
             output.WriteLine("Param1: {0}", commandArgs.Parameters[Param1]);
+            return 0;
         }
     }
 }

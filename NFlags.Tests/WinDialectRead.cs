@@ -8,14 +8,22 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetOptionValue_IfContainedInArgs()
         {
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
                     .RegisterOption("option", "o", "", "")
-                    .SetExecute((args, output) => Assert.Equal(args.Options["option"], "optValue"))
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"/option=optValue"});
+            
+            Assert.Equal(a.Options["option"], "optValue");
         }
 
         [Fact]
@@ -28,7 +36,11 @@ namespace NFlags.Tests
                 )
                 .Root(configurator => configurator
                     .RegisterOption("option", "o", "", "defaultValue")
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new string[] { });
 
@@ -46,7 +58,11 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterOption("option1", "o1", "", "")
                     .RegisterOption("option2", "o2", "", "")
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"/option1=optionValue1", "/option2=optionValue2"});
             
@@ -64,7 +80,11 @@ namespace NFlags.Tests
                 )
                 .Root(configurator => configurator
                     .RegisterOption("option", "o", "", "")
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"/o=optionValue"});
 
@@ -82,7 +102,11 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterOption("option1", "o1", "", "")
                     .RegisterOption("option2", "o2", "", "")
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"/o1=optionValue1", "/o2=optionValue2"});
             
@@ -101,7 +125,11 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterOption("option1", "", "")
                     .RegisterOption("option2", "", "")
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"/option1=optValue1", "/option2=optValue2"});
 
@@ -119,7 +147,11 @@ namespace NFlags.Tests
                 )
                 .Root(configurator => configurator
                     .RegisterFlag("xFlag", "x", "", false)
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"/xFlag"});
 
@@ -136,7 +168,11 @@ namespace NFlags.Tests
                 )
                 .Root(configurator => configurator
                     .RegisterFlag("yFlag", "y", "", false)
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new string[] { });
 
@@ -167,7 +203,11 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("xFlag1", "x1", "", true)
                     .RegisterFlag("xFlag2", "x2", "", true)
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"/xFlag1", "/xFlag2"});
             
@@ -185,7 +225,11 @@ namespace NFlags.Tests
                 )
                 .Root(configurator => configurator
                     .RegisterFlag("xFlag", "x", "", false)
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"/x"});
 
@@ -203,7 +247,11 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "f1", "", false)
                     .RegisterFlag("flag2", "f2", "", false)
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"/f1", "/f2"});
 
@@ -247,7 +295,11 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterParam("param1", "", "")
                     .RegisterParam("param2", "", "")
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"paramValue1", "paramValue2"});
             
@@ -264,8 +316,12 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
-                    .RegisterParameterSeries("paramSeries1", "")
-                    .SetExecute((args, output) => a = args)
+                    .RegisterParameterSeries<string>("paramSeries1", "")
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"paramValue1"});
             
@@ -281,8 +337,12 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
-                    .RegisterParameterSeries("paramSeries1", "")
-                    .SetExecute((args, output) => a = args)
+                    .RegisterParameterSeries<string>("paramSeries1", "")
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[] {"paramValue1", "paramValue2", "paramValue3"});
             
@@ -306,7 +366,11 @@ namespace NFlags.Tests
                     .RegisterOption("option2", "o2", "", "")
                     .RegisterParam("param1", "", "")
                     .RegisterParam("param2", "", "")
-                    .SetExecute((args, output) => a = args)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
                 )
                 .Run(new[]
                 {

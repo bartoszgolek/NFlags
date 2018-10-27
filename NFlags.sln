@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFlags.Empty", "Examples\NF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFlags.QuickStart", "Examples\NFlags.QuickStart\NFlags.QuickStart.csproj", "{24EDE0F3-45AB-4F5C-8306-9C4C9BDA5E08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFlags.Converters", "Examples\NFlags.Converters\NFlags.Converters.csproj", "{E4E66FF9-D076-4AC8-9D46-11568261043D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{24EDE0F3-45AB-4F5C-8306-9C4C9BDA5E08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24EDE0F3-45AB-4F5C-8306-9C4C9BDA5E08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24EDE0F3-45AB-4F5C-8306-9C4C9BDA5E08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4E66FF9-D076-4AC8-9D46-11568261043D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4E66FF9-D076-4AC8-9D46-11568261043D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4E66FF9-D076-4AC8-9D46-11568261043D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4E66FF9-D076-4AC8-9D46-11568261043D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +62,6 @@ Global
 		{623BCBD5-BDA7-4075-BC34-026B59BC1442} = {95718B1C-2632-42E1-A88A-F0CE18326711}
 		{AD6D315F-C4B7-4141-A862-9CDE938AFBCA} = {95718B1C-2632-42E1-A88A-F0CE18326711}
 		{24EDE0F3-45AB-4F5C-8306-9C4C9BDA5E08} = {95718B1C-2632-42E1-A88A-F0CE18326711}
+		{E4E66FF9-D076-4AC8-9D46-11568261043D} = {95718B1C-2632-42E1-A88A-F0CE18326711}
 	EndGlobalSection
 EndGlobal

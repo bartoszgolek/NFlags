@@ -17,9 +17,10 @@ namespace NFlags.Gnu
                 .RegisterSubcommand("subshow", "Show somethig", SubShowCommand.Configure);
         }
 
-        private static void Execute(CommandArgs commandArgs, IOutput output)
+        private static int Execute(CommandArgs commandArgs, IOutput output)
         {
             output.WriteLine("Show: {0}", commandArgs.Parameters[Text]);
+            return 0;
         }
     }
 }

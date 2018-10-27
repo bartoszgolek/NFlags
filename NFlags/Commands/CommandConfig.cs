@@ -30,7 +30,7 @@ namespace NFlags.Commands
             List<Option> options,
             List<Parameter> parameters,
             ParameterSeries parameterSeries,
-            Action<CommandArgs, IOutput> execute)
+            Func<CommandArgs, IOutput, int> execute)
         {
             NFlagsConfig = nFlagsConfig;
             Name = name;
@@ -79,13 +79,13 @@ namespace NFlags.Commands
         public List<Parameter> Parameters { get; }
 
         /// <summary>
-        /// Registered paramter series
+        /// Registered parameter series
         /// </summary>
         public ParameterSeries ParameterSeries { get; }
 
         /// <summary>
         /// Function to execute when command is called.
         /// </summary>
-        public Action<CommandArgs, IOutput> Execute { get; }
+        public Func<CommandArgs, IOutput, int> Execute { get; }
     }
 }

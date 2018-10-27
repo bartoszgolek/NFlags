@@ -1,3 +1,5 @@
+using NFlags.TypeConverters;
+
 namespace NFlags
 {
     /// <summary>
@@ -11,13 +13,15 @@ namespace NFlags
         /// <param name="name">Application name</param>
         /// <param name="description">Application description</param>
         /// <param name="dialect">NSpec arguments dialect</param>
+        /// <param name="argumentConverters">List of param converters</param>
         /// <param name="output"></param>
-        public NFlagsConfig(string name, string description, Dialect dialect, IOutput output)
+        public NFlagsConfig(string name, string description, Dialect dialect, IArgumentConverter[] argumentConverters, IOutput output)
         {
             Name = name;
             Description = description;
             Dialect = dialect;
             Output = output;
+            ArgumentConverters = argumentConverters;
         }
 
         /// <summary>
@@ -34,6 +38,11 @@ namespace NFlags
         /// NFlags arguments dialect
         /// </summary>
         public Dialect Dialect { get; }
+
+        /// <summary>
+        /// List of parameter converters
+        /// </summary>
+        public IArgumentConverter[] ArgumentConverters { get; }
 
         /// <summary>
         /// NFlags output handler. 

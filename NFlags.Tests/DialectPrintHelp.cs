@@ -213,7 +213,7 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterParam("param1", "Param 1 Description", "")
                     .RegisterParam("param2", "Param 2 Description", "")
-                    .RegisterParameterSeries("paramSeries", "Param series Description")
+                    .RegisterParameterSeries<string>("paramSeries", "Param series Description")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
 
@@ -239,7 +239,7 @@ namespace NFlags.Tests
                     .SetOutput(outputAgregator)
                 )
                 .Root(configurator => configurator
-                    .RegisterParameterSeries("paramSeries", "Param series Description")
+                    .RegisterParameterSeries<string>("paramSeries", "Param series Description")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
 
