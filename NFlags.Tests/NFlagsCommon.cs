@@ -1,10 +1,55 @@
 using System;
+using System.Text;
 using Xunit;
 
 namespace NFlags.Tests
 {
     public class NFlagsCommon
     {
+        [Fact]
+        public void NFlags_ShouldThrowException_IfTooManyArgumentsAndExceptionHandlingIsDisabled()
+        {
+            Assert.Throws<TooManyParametersException>(() =>
+                NFlags.Configure(c => c.DisableExceptionHandling())
+                    .Root(c => { })
+                    .Run(new[] {"s"})
+                );
+        }
+
+        [Fact]
+        public void NFlags_ShouldReturnErrorExitCode_IfTooManyArguments()
+        {
+            const int errorExitCode = 255;
+            var exitCode = NFlags.Configure(c => { })
+                .Root(c => { })
+                .Run(new[] {"s"});
+
+            Assert.Equal(errorExitCode, exitCode);
+        }
+
+        [Fact]
+        public void TestParams_ShouldPrintMessageWithHelp_IfCannotConvertValue()
+        {
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(c => c
+                    .SetOutput(outputAggregator)
+                )
+                .Root(c => { })
+                .Run(new[] {"s"});
+
+            var expectedResultBuilder = new StringBuilder();
+            expectedResultBuilder.AppendLine("Two many parameters. Can't handle s value.");
+            expectedResultBuilder.AppendLine();
+            expectedResultBuilder.AppendLine("Usage:");
+            expectedResultBuilder.AppendLine("\ttesthost [FLAGS]...");
+            expectedResultBuilder.AppendLine();
+            expectedResultBuilder.AppendLine("\tFlags:");
+            expectedResultBuilder.AppendLine("\t/help, /h	Prints this help");
+            expectedResultBuilder.AppendLine();
+
+            Assert.Equal(expectedResultBuilder.ToString(), outputAggregator.ToString());
+        }
+
         [Fact]
         public void NFlags_ShouldRunRootCommand()
         {
@@ -99,14 +144,16 @@ namespace NFlags.Tests
         {
             const string expectedOutput = "";
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
-                .Root(c => { })
+                .Root(c => c
+                    .SetExecute((args, output) => { })
+                )
                 .Run(Array.Empty<string>());
 
-            Assert.Equal(expectedOutput, outputAgregator.ToString());
+            Assert.Equal(expectedOutput, outputAggregator.ToString());
         }
 
         [Fact]
@@ -127,10 +174,10 @@ namespace NFlags.Tests
                                   "\t<param2>\t" + Environment.NewLine +
                                   Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "f1", "", false)
@@ -148,7 +195,7 @@ namespace NFlags.Tests
                     "/h"
                 });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -161,8 +208,8 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
-            NFlags.Configure(c => c.SetOutput(outputAgregator))
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterSubcommand("sub", "desc", sc => sc.
                         RegisterSubcommand("sub1", "desc1", sc1 => sc1.
@@ -174,7 +221,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -189,15 +236,15 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
-            NFlags.Configure(c => c.SetOutput(outputAgregator))
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentFlag("flag1", "f1", "dFlag1", false).
                     RegisterPersistentFlag("flag2", "dFlag2", false)
                 )
                 .Run(new[] { "/h"});
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -212,8 +259,8 @@ namespace NFlags.Tests
                                "\t/help, /h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
-            NFlags.Configure(c => c.SetOutput(outputAgregator))
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentFlag("flag1", "f1", "dFlag1", false).
                     RegisterSubcommand("sub", "desc", sc => sc.
@@ -227,7 +274,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -244,15 +291,15 @@ namespace NFlags.Tests
                                "\t/option2=<option2>\tdOption2" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
-            NFlags.Configure(c => c.SetOutput(outputAgregator))
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentOption("option1", "o1", "dOption1", "").
                     RegisterPersistentOption("option2", "dOption2", "")
                 )
                 .Run(new[] { "/h"});
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -269,8 +316,8 @@ namespace NFlags.Tests
                                "\t/option2=<option2>\tdOption2" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
-            NFlags.Configure(c => c.SetOutput(outputAgregator))
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentOption("option1", "o1", "dOption1", "").
                     RegisterSubcommand("sub", "desc", sc => sc.
@@ -284,7 +331,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
     }
 }

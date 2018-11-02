@@ -1,5 +1,4 @@
-﻿using System;
-using NFlags.Commands;
+﻿using NFlags.Commands;
 
 namespace NFlags
 {
@@ -28,16 +27,11 @@ namespace NFlags
         /// <param name="args">Application arguments</param>
         public int Run(string[] args)
         {
-            try
-            {
-                var c = _rootCommand.Read(args);
-                return c.Execute?.Invoke(c.Args, _nFlagsConfig.Output) ?? 1;
-            }
-            catch (Exception e)
-            {
-                _nFlagsConfig.Output.Write(e.ToString());
-                return 1;
-            }
+            var c = _rootCommand.Read(args);
+            if (c.Execute == null)
+                throw new MissingCommandImplementationException();
+
+            return c.Execute.Invoke(c.Args, _nFlagsConfig.Output);
         }
     }
 }

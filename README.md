@@ -23,10 +23,10 @@ NFlags.Configure(configure => configure
 Root(rc => rc.
     RegisterFlag("flag1", "f", "Flag description", false).
     RegisterOption("option", "o", "Option description", "optionDefaultValue").
-    RegisterParam("param", "Param description", "ParamDefaultValue").
+    RegisterParam<string>("param", "Param description", "ParamDefaultValue").
     RegisterSubcommand("subcommand", "Subcommand Description", sc => sc.
             SetExecute((commandArgs, output) => output("This is subcommand: " + commandArgs.Parameters["SubParameter"])).
-            RegisterParam("SubParameter", "SubParameter description", "SubParameterValue")
+            RegisterParam<string>("SubParameter", "SubParameter description", "SubParameterValue")
     ).
     RegisterParamSeries("paramSeries", "paramSeriesDescription").
     SetExecute((commandArgs, output) => output("This is root command: " + commandArgs.Parameters["param"]))
@@ -123,25 +123,32 @@ NFlags.Configure(c => {}).Root(configurator => configurator.RegisterFlag("flag",
 
 ### Set option
 Option is an prefixed argument with value.
-Flag abreviation can be also set.
+Option abreviation can be also set.
+Values are converted to type T. CLR types, classess with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
 ```c#
-NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption("option", "o", "option description", "defaultOptionValue"));
-NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption("option", "option description", "defaultOptionValue"));
+NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption<T>("option", "o", "option description", "defaultOptionValue"));
+NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption<T>("option", "option description", "defaultOptionValue"));
 ```
 
 ### Set parameter
 Parameter is an unprefixed value argument. Parameters are read by registration order.
+Values are converted to type T. CLR types, classess with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
 ```c#
-NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParam("param", "Param description", "paramDefaultValue"));
+NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParam<T>("param", "Param description", "paramDefaultValue"));
 ```
 
 ### Set parameter series
 Parameter series is a collection of parameters after last named parameter.
-Parameter series can be used to parse unknown count of parameters to process i.e. strings to concat 
- 
+Parameter series can be used to parse unknown count of parameters to process i.e. strings to concat.
+Values are converted to type T. CLR types, classess with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
+
+```c#
+NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries<int>("paramSeries", "Param series description"));
+```
+There is also non-generic method where argument type is string
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries("paramSeries", "Param series description"));
-```
+``` 
 
 ### Attach code to execution
 
@@ -150,6 +157,7 @@ First argument of action contains all registered Flags, Options and Parameters w
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.SetExecute((commandArgs, output) => output("This is command output: " + commandArgs.Parameters["param"]));
 ```
+If execute is of type `Func<CommandArgs, IOutput, int>` result will be returned by `Bootstrap.Run` to be used as exit code.
 
 ### Attach subcommands
 
@@ -274,3 +282,79 @@ Application description
         <param1>        Parameter 1 description
 
 ```
+
+## Converters
+
+Converters are used to convert argument (option or parameter) value to expected type. 
+Converter must implement interface `NFlags.TypeConverters.IArgumentConverter` interface.
+```c#
+    public class UserConverter : IArgumentConverter
+    {
+        public bool CanConvert(Type type)
+        {
+            return typeof(User) == type;
+        }
+
+        public object Convert(Type type, string value)
+        {
+            var strings = value.Split(";");
+            if (strings.Length != 3)
+                throw new ArgumentValueException(type, value);
+
+            return new User
+            {
+                UserName = strings[0],
+                Name = strings[1],
+                Password = strings[2]
+            };
+        }
+    }
+```
+When registering parameter/option, existence of converter is checked, otherwise `NFlags.TypeConverters.MissingConverterException` is thrown.
+When parsing arguments, first matching converter is used (in registration order).
+```c#
+NFlags.Configure(configurator => configurator.RegisterConverter(new UserConverter()));
+```
+
+## Exception handling
+
+Default policy of exception handling in NFlags is to not throw exception when user use CLI incorrectly.
+If Exception is thrown during parsing arguments, exception message and help is printed and exit code 255 is returned.
+For the following aplication:
+```c#
+public static int Main(string[] args)
+{
+    return NFlags
+        .Configure(c => { })
+        .Root(c => c
+            .RegisterParam("param", "param description", 1)
+            .SetExecute((commandArgs, output) => { }))
+        .Run(args);
+}
+```
+Execution of:
+```
+$> dotnet Program.dll asd
+```
+Will print:
+```
+Cannot convert value 'as' to type 'System.Int32'
+
+Usage:
+        NFlags.Empty [FLAGS]... [PARAMETERS]...
+
+        Flags:
+        /help, /h       Prints this help
+
+        Parameters:
+        <param> param description
+
+
+Process finished with exit code 255.
+```
+
+Excpetion handling can be disabled using configuration:
+```c#
+NFlags.Configure(c => c.DisableExceptionHandling());
+```
+If exception handling is disabled NFlags can throw `NFlags.TooManyParametersException` or `NFlags.TypeConverters.ArgumentValueException`.

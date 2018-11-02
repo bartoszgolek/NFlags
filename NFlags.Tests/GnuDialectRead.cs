@@ -47,8 +47,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetMultipleOptionValues_IfContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -62,7 +62,7 @@ namespace NFlags.Tests
                     })
                 )
                 .Run(new[] {"--option1", "optionValue1", "--option2", "optionValue2"});
-            
+
             Assert.Equal(a.Options["option1"], "optionValue1");
             Assert.Equal(a.Options["option2"], "optionValue2");
         }
@@ -70,8 +70,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetOptionValue_IfAbrContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -91,8 +91,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetMultipleOptionValues_IfAbrContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -106,7 +106,7 @@ namespace NFlags.Tests
                     })
                 )
                 .Run(new[] {"-o1", "optionValue1", "-o2", "optionValue2"});
-            
+
             Assert.Equal(a.Options["option1"], "optionValue1");
             Assert.Equal(a.Options["option2"], "optionValue2");
         }
@@ -114,8 +114,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetMultipleOptionValues_IfOptionHasNoAbrAndContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -137,8 +137,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetFlag_IfContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -158,8 +158,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldNotSetFlagValue_IfNotContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -185,6 +185,7 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("xFlag1", "x1", "", false)
                     .RegisterFlag("xFlag2", "x2", "", false)
+                    .SetExecute((args, output) => { })
                 )
                 .Run(new[] {"--xFlag1", "--xFlag2"});
         }
@@ -192,8 +193,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldReverseFlags_IfContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -207,7 +208,7 @@ namespace NFlags.Tests
                     })
                 )
                 .Run(new[] {"--xFlag1", "--xFlag2"});
-            
+
             Assert.False(a.Flags["xFlag1"]);
             Assert.False(a.Flags["xFlag2"]);
         }
@@ -215,8 +216,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetFlag_IfAbrContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -236,8 +237,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetMultipleFlags_IfAbrContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -265,6 +266,7 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "", false)
                     .RegisterFlag("flag2", "", false)
+                    .SetExecute((args, output) => { })
                 )
                 .Run(new[] {"--flag1", "--flag2"});
         }
@@ -277,6 +279,7 @@ namespace NFlags.Tests
                 )
                 .Root(configurator => configurator
                     .RegisterParam("param", "", "")
+                    .SetExecute((args, output) => { })
                 )
                 .Run(new[] {"paramValue"});
         }
@@ -284,8 +287,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetSecondParam_IfContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -299,7 +302,7 @@ namespace NFlags.Tests
                     })
                 )
                 .Run(new[] {"paramValue1", "paramValue2"});
-            
+
             Assert.Equal(a.Parameters["param1"], "paramValue1");
             Assert.Equal(a.Parameters["param2"], "paramValue2");
         }
@@ -307,8 +310,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetParamSeries_IfContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -321,15 +324,15 @@ namespace NFlags.Tests
                     })
                 )
                 .Run(new[] {"paramValue1"});
-            
+
             Assert.Equal(a.ParameterSeries[0], "paramValue1");
         }
 
         [Fact]
         public void TestParams_ShouldSetParamSeriesMultipleValues_IfContainedInArgs()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -342,7 +345,7 @@ namespace NFlags.Tests
                     })
                 )
                 .Run(new[] {"paramValue1", "paramValue2", "paramValue3"});
-            
+
             Assert.Equal(a.ParameterSeries[0], "paramValue1");
             Assert.Equal(a.ParameterSeries[1], "paramValue2");
             Assert.Equal(a.ParameterSeries[2], "paramValue3");
@@ -351,8 +354,8 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetSecondFlagsOptionsAndParams()
         {
-            CommandArgs a = null;  
-            
+            CommandArgs a = null;
+
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
@@ -378,7 +381,7 @@ namespace NFlags.Tests
                     "paramValue1",
                     "paramValue2"
                 });
-            
+
             Assert.Equal(a.Flags["flag1"], true);
             Assert.Equal(a.Flags["flag2"], true);
             Assert.Equal(a.Options["option1"], "optionValue1");

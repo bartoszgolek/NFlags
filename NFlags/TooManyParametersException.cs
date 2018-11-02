@@ -2,6 +2,7 @@ using System;
 
 namespace NFlags
 {
+    /// <inheritdoc />
     /// <summary>
     /// Exception is throwed when there is more parameters provided than registered.
     /// </summary>
@@ -12,8 +13,8 @@ namespace NFlags
         /// </summary>
         /// <param name="value">Value of parameter without registration.</param>
         public TooManyParametersException(string value)
-            :base(string.Format("Two many parameters. Can't handle {0} value.", value))
+            :base($"Two many parameters. Can't handle {value} value.")
         {
         }
-    } 
+    }
 }

@@ -28,17 +28,17 @@ namespace NFlags.Tests
                                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator =>
                 {
                     configurator
                         .SetDialect(_dialect)
-                        .SetOutput(outputAgregator);
+                        .SetOutput(outputAggregator);
                 })
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -51,15 +51,15 @@ namespace NFlags.Tests
                                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -72,16 +72,16 @@ namespace NFlags.Tests
                                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetName("custName")
                     .SetDialect(_dialect)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -96,16 +96,16 @@ namespace NFlags.Tests
                                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDescription("some description")
                     .SetDialect(_dialect)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -120,10 +120,10 @@ namespace NFlags.Tests
                                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "Flag 1 Description", false)
@@ -131,7 +131,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace NFlags.Tests
             var expectedHelp = "Usage:" + Environment.NewLine +
                                "\ttesthost [FLAGS]... [OPTIONS]..." + Environment.NewLine +
                                Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +                               
+                               "\tFlags:" + Environment.NewLine +
                                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine +
                                "\tOptions:" + Environment.NewLine +
@@ -148,10 +148,10 @@ namespace NFlags.Tests
                                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
                 .Root(configurator => configurator
                     .RegisterOption("option1", "Option 1 Description", "")
@@ -159,7 +159,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace NFlags.Tests
             var expectedHelp = "Usage:" + Environment.NewLine +
                                "\ttesthost [FLAGS]... [PARAMETERS]..." + Environment.NewLine +
                                Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +                               
+                               "\tFlags:" + Environment.NewLine +
                                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine +
                                "\tParameters:" + Environment.NewLine +
@@ -176,10 +176,10 @@ namespace NFlags.Tests
                                "\t<param2>\tParam 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
                 .Root(configurator => configurator
                     .RegisterParam("param1", "Param 1 Description", "")
@@ -187,7 +187,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -196,7 +196,7 @@ namespace NFlags.Tests
             var expectedHelp = "Usage:" + Environment.NewLine +
                                "\ttesthost [FLAGS]... [PARAMETERS]..." + Environment.NewLine +
                                Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +                               
+                               "\tFlags:" + Environment.NewLine +
                                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine +
                                "\tParameters:" + Environment.NewLine +
@@ -205,10 +205,10 @@ namespace NFlags.Tests
                                "\t<paramSeries...>\tParam series Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
                 .Root(configurator => configurator
                     .RegisterParam("param1", "Param 1 Description", "")
@@ -217,7 +217,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -226,24 +226,24 @@ namespace NFlags.Tests
             var expectedHelp = "Usage:" + Environment.NewLine +
                                "\ttesthost [FLAGS]... [PARAMETERS]..." + Environment.NewLine +
                                Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +                               
+                               "\tFlags:" + Environment.NewLine +
                                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
                                Environment.NewLine +
                                "\tParameters:" + Environment.NewLine +
                                "\t<paramSeries...>\tParam series Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                 )
                 .Root(configurator => configurator
                     .RegisterParameterSeries<string>("paramSeries", "Param series Description")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
 
         [Fact]
@@ -268,10 +268,10 @@ namespace NFlags.Tests
                                "\t<param2>\tParam 2 Description" + Environment.NewLine +
                                Environment.NewLine;
 
-            var outputAgregator = new OutputAgregator();
+            var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
-                    .SetOutput(outputAgregator)
+                    .SetOutput(outputAggregator)
                     .SetName("custName")
                     .SetDescription("some description")
                 )
@@ -285,7 +285,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAgregator.ToString());
+            Assert.Equal(expectedHelp, outputAggregator.ToString());
         }
     }
 }

@@ -2,10 +2,10 @@
 
 namespace NFlags.Tests
 {
-    public class OutputAgregator : IOutput
+    public class OutputAggregator : IOutput
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();
-        
+
         public void Write(bool value)
         {
             throw new System.NotImplementedException();

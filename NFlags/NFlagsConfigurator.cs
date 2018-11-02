@@ -6,23 +6,27 @@ using NFlags.TypeConverters;
 namespace NFlags
 {
     /// <summary>
-    /// Represents NFlags configuration ability. 
+    /// Represents NFlags configuration ability.
     /// </summary>
     public class NFlagsConfigurator
     {
         private string _name = AppDomain.CurrentDomain.FriendlyName;
-        
+
         private string _description = "";
-        
+
         private Dialect _dialect = Dialect.Win;
 
         private IOutput _output = Output.Console;
-        
-        private readonly List<IArgumentConverter> _argumentConverters = new List<IArgumentConverter> {
+
+        private bool _exceptionHandling = true;
+
+        private readonly List<IArgumentConverter> _baseArgumentConverters = new List<IArgumentConverter> {
             new CommonTypeConverter(),
             new ConstructorConverter(),
             new ImplicitOperatorConverter(),
         };
+
+        private readonly List<IArgumentConverter> _argumentConverters = new List<IArgumentConverter>();
 
         /// <summary>
         /// Set name of application, for help printing.
@@ -79,15 +83,27 @@ namespace NFlags
         /// <returns>Self instance</returns>
         public NFlagsConfigurator RegisterConverter(IArgumentConverter argumentConverter)
         {
-            _argumentConverters.Add(argumentConverter);            
+            _argumentConverters.Add(argumentConverter);
 
+            return this;
+        }
+
+        /// <summary>
+        /// Disables exception handling. Id used NFlags will throw exceptions instead of return exit code;
+        /// </summary>
+        /// <returns>Self instance</returns>
+        public NFlagsConfigurator DisableExceptionHandling()
+        {
+            _exceptionHandling = false;
             return this;
         }
 
         internal NFlags CreateNFlags()
         {
+            var converters = new List<IArgumentConverter>(_argumentConverters);
+            converters.AddRange(_baseArgumentConverters);
             return new NFlags(
-                new NFlagsConfig( _name, _description, _dialect, _argumentConverters.ToArray(), _output)
+                new NFlagsConfig( _name, _description, _dialect, _output, _exceptionHandling, converters.ToArray())
             );
         }
     }

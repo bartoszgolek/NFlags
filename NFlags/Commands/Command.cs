@@ -55,6 +55,16 @@ namespace NFlags.Commands
             }
             catch (ArgumentValueException e)
             {
+                if (!_commandConfig.NFlagsConfig.IsExceptionHandlingEnabled)
+                    throw;
+
+                return PrepareHelpCommandExecutionContext(e.Message);
+            }
+            catch (TooManyParametersException e)
+            {
+                if (!_commandConfig.NFlagsConfig.IsExceptionHandlingEnabled)
+                    throw;
+
                 return PrepareHelpCommandExecutionContext(e.Message);
             }
         }
@@ -161,7 +171,7 @@ namespace NFlags.Commands
                 foreach (var converter in _commandConfig.NFlagsConfig.ArgumentConverters)
                     if (converter.CanConvert(expectedType))
                         return converter.Convert(expectedType, value);
-                
+
                 throw new MissingConverterException(expectedType);
             }
 

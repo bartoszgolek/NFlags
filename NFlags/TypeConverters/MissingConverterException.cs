@@ -2,8 +2,9 @@ using System;
 
 namespace NFlags.TypeConverters
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Exception is throwed when converter not exists for particular type
+    /// Exception is thrown when converter not exists for particular type
     /// </summary>
     public class MissingConverterException : Exception
     {
