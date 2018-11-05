@@ -65,7 +65,8 @@ namespace NFlags.Utils
                 var line = "\t" + _commandConfig.NFlagsConfig.Dialect.Prefix + flag.Name;
                 if (flag.Abr != null)
                     line += ", " + _commandConfig.NFlagsConfig.Dialect.AbrPrefix + flag.Abr;
-                line += "\t" + flag.Description;
+                if (!string.IsNullOrEmpty(flag.Description))
+                    line += "\t" + flag.Description;
                 builder.AppendLine(line);
             }
 
@@ -101,8 +102,8 @@ namespace NFlags.Utils
                 var line = "\t" + optionFormatter.FormatName(option);
                 if (option.Abr != null)
                     line += ", " + optionFormatter.FormatAbr(option);
-
-                line += "\t" + option.Description;
+                if (!string.IsNullOrEmpty(option.Description))
+                    line += "\t" + option.Description;
                 builder.AppendLine(line);
             }
 
@@ -117,15 +118,17 @@ namespace NFlags.Utils
             builder.AppendLine("\tParameters:");
             foreach (var parameter in _commandConfig.Parameters)
             {
-                var line = "\t<" + parameter.Name;
-                line += ">\t" + parameter.Description;
+                var line = "\t<" + parameter.Name + ">";
+                if (!string.IsNullOrEmpty(parameter.Description))
+                    line += "\t" + parameter.Description;
                 builder.AppendLine(line);
             }
 
             if (_commandConfig.ParameterSeries != null)
             {
-                var line = "\t<" + _commandConfig.ParameterSeries.Name + "...";
-                line += ">\t" + _commandConfig.ParameterSeries.Description;
+                var line = "\t<" + _commandConfig.ParameterSeries.Name + "...>";
+                if (!string.IsNullOrEmpty(_commandConfig.ParameterSeries.Description))
+                    line += "\t" + _commandConfig.ParameterSeries.Description;
                 builder.AppendLine(line);
             }
 

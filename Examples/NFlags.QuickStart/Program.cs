@@ -16,14 +16,14 @@
                 RegisterSubcommand("subcommand", "Subcommand Description", sc => sc.
                         SetExecute((commandArgs, output) =>
                         {
-                            output.WriteLine("This is subcommand: {0}", commandArgs.Parameters["SubParameter"]);
+                            output.WriteLine("This is subcommand: {0}", commandArgs.GetParameter<string>("SubParameter"));
                         }).
                         RegisterParam("SubParameter", "SubParameter description", "SubParameterValue")
                 ).
                 RegisterParameterSeries<string>("paramSeries", "paramSeriesDescription").
                 SetExecute((commandArgs, output) =>
                     {
-                        output.WriteLine("This is root command: {0}", commandArgs.Parameters["param"]);
+                        output.WriteLine("This is root command: {0}", commandArgs.GetParameter<string>("param"));
                         return 0;
                     })
             ).

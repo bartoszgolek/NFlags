@@ -1,8 +1,8 @@
-using System.Text;
 using NFlags.Commands;
 using NFlags.Tests.DataTypes;
 using NFlags.TypeConverters;
 using Xunit;
+using NFAssert = NFlags.Tests.Helpers.Assert;
 
 namespace NFlags.Tests
 {
@@ -27,7 +27,7 @@ namespace NFlags.Tests
                 )
                 .Run(new string[] { });
 
-            Assert.Equal(a.Options["option"], 1);
+            Assert.Equal(1, a.GetOption<int>("option"));
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/option=2"});
 
-            Assert.Equal(a.Options["option"], 2);
+            Assert.Equal(2, a.GetOption<int>("option"));
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/option=b"});
 
-            Assert.Equal("b", ((TypeWithConstructor)a.Options["option"]).S);
+            Assert.Equal("b", a.GetOption<TypeWithConstructor>("option").S);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/option=b"});
 
-            Assert.Equal("b", ((TypeWithImplicitOperator)a.Options["option"]).S);
+            Assert.Equal("b", a.GetOption<TypeWithImplicitOperator>("option").S);
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace NFlags.Tests
                 )
                 .Run(new string[] { });
 
-            Assert.Equal(a.Options["option"], 1);
+            Assert.Equal(1, a.GetOption<int>("option"));
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/option=2"});
 
-            Assert.Equal(a.Options["option"], 2);
+            Assert.Equal(2, a.GetOption<int>("option"));
         }
 
         [Fact]
@@ -192,20 +192,20 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/option=asd"});
 
-            var expectedResultBuilder = new StringBuilder();
-            expectedResultBuilder.AppendLine("Cannot convert value 'asd' to type 'System.Int32'");
-            expectedResultBuilder.AppendLine();
-            expectedResultBuilder.AppendLine("Usage:");
-            expectedResultBuilder.AppendLine("\ttesthost [FLAGS]... [OPTIONS]...");
-            expectedResultBuilder.AppendLine();
-            expectedResultBuilder.AppendLine("\tFlags:");
-            expectedResultBuilder.AppendLine("\t/help, /h	Prints this help");
-            expectedResultBuilder.AppendLine();
-            expectedResultBuilder.AppendLine("\tOptions:");
-            expectedResultBuilder.AppendLine("\t/option=<option>\t");
-            expectedResultBuilder.AppendLine();
-
-            Assert.Equal(expectedResultBuilder.ToString(), outputAggregator.ToString());
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Cannot convert value 'asd' to type 'System.Int32'",
+                "",
+                "Usage:",
+                "\ttesthost [FLAGS]... [OPTIONS]...",
+                "",
+                "\tFlags:",
+                "\t/help, /h	Prints this help",
+                "",
+                "\tOptions:",
+                "\t/option=<option>",
+                ""
+            );
         }
     }
 }

@@ -17,11 +17,11 @@
                     .RegisterParam("param1", "Parameter 1 description", ".")
                     .SetExecute((commandArgs, output) =>
                     {
-                        output.WriteLine("Verbose: {0}", commandArgs.Flags["verbose"].ToString());
-                        output.WriteLine("Clear: {0}", commandArgs.Flags["clear"].ToString());
-                        output.WriteLine("Option1: {0}", commandArgs.Options["option1"]);
-                        output.WriteLine("Option2: {0}", commandArgs.Options["option2"]);
-                        output.WriteLine("Param1: {0}", commandArgs.Parameters["param1"]);
+                        output.WriteLine("Verbose: {0}", commandArgs.GetFlag("verbose").ToString());
+                        output.WriteLine("Clear: {0}", commandArgs.GetFlag("clear").ToString());
+                        output.WriteLine("Option1: {0}", commandArgs.GetOption<string>("option1"));
+                        output.WriteLine("Option2: {0}", commandArgs.GetOption<string>("option2"));
+                        output.WriteLine("Param1: {0}", commandArgs.GetParameter<string>("param1"));
                         
                         return 0;
                     })

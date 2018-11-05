@@ -23,7 +23,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/option=optValue"});
 
-            Assert.Equal(a.Options["option"], "optValue");
+            Assert.Equal("optValue", a.GetOption<string>("option"));
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace NFlags.Tests
                 )
                 .Run(new string[] { });
 
-            Assert.Equal(a.Options["option"], "defaultValue");
+            Assert.Equal("defaultValue", a.GetOption<string>("option"));
         }
 
         [Fact]
@@ -66,8 +66,8 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/option1=optionValue1", "/option2=optionValue2"});
 
-            Assert.Equal(a.Options["option1"], "optionValue1");
-            Assert.Equal(a.Options["option2"], "optionValue2");
+            Assert.Equal("optionValue1", a.GetOption<string>("option1"));
+            Assert.Equal("optionValue2", a.GetOption<string>("option2"));
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/o=optionValue"});
 
-            Assert.Equal(a.Options["option"], "optionValue");
+            Assert.Equal("optionValue", a.GetOption<string>("option"));
         }
 
         [Fact]
@@ -110,8 +110,8 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/o1=optionValue1", "/o2=optionValue2"});
 
-            Assert.Equal(a.Options["option1"], "optionValue1");
-            Assert.Equal(a.Options["option2"], "optionValue2");
+            Assert.Equal("optionValue1", a.GetOption<string>("option1"));
+            Assert.Equal("optionValue2", a.GetOption<string>("option2"));
         }
 
         [Fact]
@@ -133,8 +133,8 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/option1=optValue1", "/option2=optValue2"});
 
-            Assert.Equal(a.Options["option1"], "optValue1");
-            Assert.Equal(a.Options["option2"], "optValue2");
+            Assert.Equal("optValue1", a.GetOption<string>("option1"));
+            Assert.Equal("optValue2", a.GetOption<string>("option2"));
         }
 
         [Fact]
@@ -155,7 +155,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/xFlag"});
 
-            Assert.True(a.Flags["xFlag"]);
+            Assert.True(a.GetFlag("xFlag"));
         }
 
         [Fact]
@@ -176,7 +176,7 @@ namespace NFlags.Tests
                 )
                 .Run(new string[] { });
 
-            Assert.False(a.Flags["yFlag"]);
+            Assert.False(a.GetFlag("yFlag"));
         }
 
         [Fact]
@@ -212,8 +212,8 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/xFlag1", "/xFlag2"});
 
-            Assert.False(a.Flags["xFlag1"]);
-            Assert.False(a.Flags["xFlag2"]);
+            Assert.False(a.GetFlag("xFlag1"));
+            Assert.False(a.GetFlag("xFlag2"));
         }
 
         [Fact]
@@ -234,7 +234,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/x"});
 
-            Assert.True(a.Flags["xFlag"]);
+            Assert.True(a.GetFlag("xFlag"));
         }
 
         [Fact]
@@ -256,8 +256,8 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"/f1", "/f2"});
 
-            Assert.True(a.Flags["flag1"]);
-            Assert.True(a.Flags["flag2"]);
+            Assert.True(a.GetFlag("flag1"));
+            Assert.True(a.GetFlag("flag2"));
         }
 
         [Fact]
@@ -306,8 +306,8 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"paramValue1", "paramValue2"});
 
-            Assert.Equal(a.Parameters["param1"], "paramValue1");
-            Assert.Equal(a.Parameters["param2"], "paramValue2");
+            Assert.Equal("paramValue1", a.GetParameter<string>("param1"));
+            Assert.Equal("paramValue2", a.GetParameter<string>("param2"));
         }
 
         [Fact]
@@ -328,7 +328,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"paramValue1"});
 
-            Assert.Equal(a.ParameterSeries[0], "paramValue1");
+            Assert.Equal("paramValue1", a.GetParameterFromSeries<string>(0));
         }
 
         [Fact]
@@ -349,9 +349,9 @@ namespace NFlags.Tests
                 )
                 .Run(new[] {"paramValue1", "paramValue2", "paramValue3"});
 
-            Assert.Equal(a.ParameterSeries[0], "paramValue1");
-            Assert.Equal(a.ParameterSeries[1], "paramValue2");
-            Assert.Equal(a.ParameterSeries[2], "paramValue3");
+            Assert.Equal("paramValue1", a.GetParameterFromSeries<string>(0));
+            Assert.Equal("paramValue2", a.GetParameterFromSeries<string>(1));
+            Assert.Equal("paramValue3", a.GetParameterFromSeries<string>(2));
         }
 
         [Fact]
@@ -385,12 +385,12 @@ namespace NFlags.Tests
                     "paramValue2"
                 });
 
-            Assert.Equal(a.Flags["flag1"], true);
-            Assert.Equal(a.Flags["flag2"], true);
-            Assert.Equal(a.Options["option1"], "optionValue1");
-            Assert.Equal(a.Options["option2"], "optionValue2");
-            Assert.Equal(a.Parameters["param1"], "paramValue1");
-            Assert.Equal(a.Parameters["param2"], "paramValue2");
+            Assert.True(a.GetFlag("flag1"));
+            Assert.True(a.GetFlag("flag2"));
+            Assert.Equal("optionValue1", a.GetOption<string>("option1"));
+            Assert.Equal("optionValue2", a.GetOption<string>("option2"));
+            Assert.Equal("paramValue1", a.GetParameter<string>("param1"));
+            Assert.Equal("paramValue2", a.GetParameter<string>("param2"));
         }
     }
 }

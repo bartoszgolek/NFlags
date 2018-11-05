@@ -14,12 +14,12 @@ namespace NFlags.Gnu
             configurator
                 .RegisterParam(Text, "Text to show", "Default text to show")
                 .SetExecute(Execute)
-                .RegisterSubcommand("subshow", "Show somethig", SubShowCommand.Configure);
+                .RegisterSubcommand("subshow", "Show something", SubShowCommand.Configure);
         }
 
         private static int Execute(CommandArgs commandArgs, IOutput output)
         {
-            output.WriteLine("Show: {0}", commandArgs.Parameters[Text]);
+            output.WriteLine("Show: {0}", commandArgs.GetParameter<string>(Text));
             return 0;
         }
     }

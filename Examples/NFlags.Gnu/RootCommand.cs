@@ -20,16 +20,16 @@ namespace NFlags.Gnu
                 .RegisterParam(Param1, "Parameter 1 description", ".")
                 .SetExecute(Execute)
                 .RegisterSubcommand(ShowCommand.Name, ShowCommand.Description, ShowCommand.Configure)
-                .RegisterSubcommand(ListCommand.Name, "List somethig", ListCommand.Configure);
+                .RegisterSubcommand(ListCommand.Name, "List something", ListCommand.Configure);
         }
 
         private static int Execute(CommandArgs commandArgs, IOutput output)
         {
-            output.WriteLine("Verbose: {0}", commandArgs.Flags[Verbose]);
-            output.WriteLine("Clear: {0}", commandArgs.Flags[Clear]);
-            output.WriteLine("Option1: {0}", commandArgs.Options[Option1]);
-            output.WriteLine("Option2: {0}", commandArgs.Options[Option2]);
-            output.WriteLine("Param1: {0}", commandArgs.Parameters[Param1]);
+            output.WriteLine("Verbose: {0}", commandArgs.GetFlag(Verbose));
+            output.WriteLine("Clear: {0}", commandArgs.GetFlag(Clear));
+            output.WriteLine("Option1: {0}", commandArgs.GetOption<string>(Option1));
+            output.WriteLine("Option2: {0}", commandArgs.GetOption<string>(Option2));
+            output.WriteLine("Param1: {0}", commandArgs.GetParameter<string>(Param1));
             return 0;
         }
     }

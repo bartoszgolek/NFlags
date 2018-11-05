@@ -1,5 +1,5 @@
-using System;
 using Xunit;
+using NFAssert = NFlags.Tests.Helpers.Assert;
 
 namespace NFlags.Tests
 {
@@ -21,13 +21,6 @@ namespace NFlags.Tests
         [Fact]
         public void PrintHelp_ShouldPrintBasicInfoWithDefaultName()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator =>
                 {
@@ -38,19 +31,20 @@ namespace NFlags.Tests
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\ttesthost [FLAGS]...",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                ""
+            );
         }
 
         [Fact]
         public void PrintHelp_ShouldPrintSubCommandBasicInfoWithDefaultName()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
@@ -59,19 +53,20 @@ namespace NFlags.Tests
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
 
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\ttesthost [FLAGS]...",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                ""
+            );
         }
 
         [Fact]
         public void PrintHelp_ShouldPrintBasicInfoWithCustomName()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\tcustName [FLAGS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetName("custName")
@@ -80,22 +75,21 @@ namespace NFlags.Tests
                 )
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
-
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\tcustName [FLAGS]...",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                ""
+            );
         }
 
         [Fact]
         public void PrintHelp_ShouldPrintBasicInfoWithDescription()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "some description" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDescription("some description")
@@ -104,22 +98,23 @@ namespace NFlags.Tests
                 )
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
-
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\ttesthost [FLAGS]...",
+                "",
+                "some description",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                ""
+            );
         }
 
         [Fact]
         public void PrintHelp_ShouldPrintBasicInfoWithFlags()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "flag1\tFlag 1 Description" + Environment.NewLine +
-                               "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
@@ -130,24 +125,23 @@ namespace NFlags.Tests
                     .RegisterFlag("flag2", "f2", "Flag 2 Description", false)
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\ttesthost [FLAGS]...",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "flag1\tFlag 1 Description",
+                "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                ""
+            );
         }
 
         [Fact]
         public void PrintHelp_ShouldPrintBasicInfoWithOptions()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]... [OPTIONS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tOptions:" + Environment.NewLine +
-                               "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description" + Environment.NewLine +
-                               "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
@@ -158,24 +152,25 @@ namespace NFlags.Tests
                     .RegisterOption("option2", "o2", "Option 2 Description", "")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\ttesthost [FLAGS]... [OPTIONS]...",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description",
+                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description",
+                ""
+            );
         }
 
         [Fact]
         public void PrintHelp_ShouldPrintBasicInfoWithParams()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]... [PARAMETERS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tParameters:" + Environment.NewLine +
-                               "\t<param1>\tParam 1 Description" + Environment.NewLine +
-                               "\t<param2>\tParam 2 Description" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
@@ -186,25 +181,25 @@ namespace NFlags.Tests
                     .RegisterParam("param2", "Param 2 Description", "")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\ttesthost [FLAGS]... [PARAMETERS]...",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "",
+                "\tParameters:",
+                "\t<param1>\tParam 1 Description",
+                "\t<param2>\tParam 2 Description",
+                ""
+            );
         }
 
         [Fact]
         public void PrintHelp_ShouldPrintBasicInfoWithParametersAndParameterSeries()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]... [PARAMETERS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tParameters:" + Environment.NewLine +
-                               "\t<param1>\tParam 1 Description" + Environment.NewLine +
-                               "\t<param2>\tParam 2 Description" + Environment.NewLine +
-                               "\t<paramSeries...>\tParam series Description" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
@@ -216,23 +211,26 @@ namespace NFlags.Tests
                     .RegisterParameterSeries<string>("paramSeries", "Param series Description")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\ttesthost [FLAGS]... [PARAMETERS]...",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "",
+                "\tParameters:",
+                "\t<param1>\tParam 1 Description",
+                "\t<param2>\tParam 2 Description",
+                "\t<paramSeries...>\tParam series Description",
+                ""
+            );
         }
 
         [Fact]
         public void PrintHelp_ShouldPrintBasicInfoWithParamSeries()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]... [PARAMETERS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tParameters:" + Environment.NewLine +
-                               "\t<paramSeries...>\tParam series Description" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
@@ -242,32 +240,24 @@ namespace NFlags.Tests
                     .RegisterParameterSeries<string>("paramSeries", "Param series Description")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\ttesthost [FLAGS]... [PARAMETERS]...",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "",
+                "\tParameters:",
+                "\t<paramSeries...>\tParam series Description",
+                ""
+            );
         }
 
         [Fact]
         public void PrintHelp_ShouldPrintBasicInfoWithNameDescriptionFlagsOptionsAndParams()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\tcustName [FLAGS]... [OPTIONS]... [PARAMETERS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "some description" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t" + _longPrefix + "flag1\tFlag 1 Description" + Environment.NewLine +
-                               "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description" + Environment.NewLine +
-                               "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tOptions:" + Environment.NewLine +
-                               "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description" + Environment.NewLine +
-                               "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tParameters:" + Environment.NewLine +
-                               "\t<param1>\tParam 1 Description" + Environment.NewLine +
-                               "\t<param2>\tParam 2 Description" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
@@ -284,8 +274,28 @@ namespace NFlags.Tests
                     .RegisterParam("param2", "Param 2 Description", "")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+                "\tcustName [FLAGS]... [OPTIONS]... [PARAMETERS]...",
+                "",
+                "some description",
+                "",
+                "\tFlags:",
+                "\t" + _longPrefix + "flag1\tFlag 1 Description",
+                "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description",
+                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description",
+                "",
+                "\tParameters:",
+                "\t<param1>\tParam 1 Description",
+                "\t<param2>\tParam 2 Description",
+                ""
+            );
         }
     }
 }

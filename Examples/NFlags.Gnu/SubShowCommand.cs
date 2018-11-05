@@ -13,7 +13,7 @@ namespace NFlags.Gnu
 
         private static int Execute(CommandArgs commandArgs, IOutput output)
         {
-            output.WriteLine(commandArgs.Parameters["text"]);
+            output.WriteLine(commandArgs.GetParameter<string>("text"));
             return 0;
         }
     }

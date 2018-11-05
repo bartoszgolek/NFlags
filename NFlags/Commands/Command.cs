@@ -49,7 +49,7 @@ namespace NFlags.Commands
                     args
                 ).Read();
 
-                return commandExecutionContext.Args != null && commandExecutionContext.Args.Flags[HelpFlag]
+                return commandExecutionContext.Args != null && commandExecutionContext.Args.GetFlag(HelpFlag)
                     ? PrepareHelpCommandExecutionContext()
                     : commandExecutionContext;
             }
@@ -121,13 +121,13 @@ namespace NFlags.Commands
             {
                 var commandArgs = new CommandArgs();
                 foreach (var flag in _commandConfig.Flags)
-                    commandArgs.Flags.Add(flag.Name, flag.GetDefault());
+                    commandArgs.AddFlag(flag.Name, flag.GetDefault());
 
                 foreach (var option in _commandConfig.Options)
-                    commandArgs.Options.Add(option.Name, option.DefaultValue);
+                    commandArgs.AddOption(option.Name, option.DefaultValue);
 
                 foreach (var parameter in _parameters.ToArray())
-                    commandArgs.Parameters.Add(parameter.Name, parameter.DefaultValue);
+                    commandArgs.AddParameter(parameter.Name, parameter.DefaultValue);
 
                 return commandArgs;
             }
@@ -137,10 +137,10 @@ namespace NFlags.Commands
                 if (_parameters.HasData())
                 {
                     var parameter = _parameters.Shift();
-                    _commandArgs.Parameters[parameter.Name] = ConvertValueToExpectedType(arg, parameter.ValueType);
+                    _commandArgs.AddParameter(parameter.Name, ConvertValueToExpectedType(arg, parameter.ValueType));
                 }
                 else if (_parameterSeries != null)
-                    _commandArgs.ParameterSeries.Add(ConvertValueToExpectedType(arg, _parameterSeries.ValueType));
+                    _commandArgs.AddParameterToSeries(ConvertValueToExpectedType(arg, _parameterSeries.ValueType));
                 else
                     throw new TooManyParametersException(arg);
             }
@@ -158,7 +158,7 @@ namespace NFlags.Commands
                     .GetReader(_commandConfig.NFlagsConfig.Dialect.OptionValueMode)
                     .ReadValue(_args, arg);
 
-                _commandArgs.Options[opt.Name] = ConvertValueToExpectedType(optionValue, opt.ValueType);
+                _commandArgs.AddOption(opt.Name, ConvertValueToExpectedType(optionValue, opt.ValueType));
 
                 return true;
             }
@@ -191,7 +191,7 @@ namespace NFlags.Commands
                 if (flag == null)
                     return false;
 
-                _commandArgs.Flags[flag.Name] = !flag.GetDefault();
+                _commandArgs.AddFlag(flag.Name, !flag.GetDefault());
 
                 return true;
             }

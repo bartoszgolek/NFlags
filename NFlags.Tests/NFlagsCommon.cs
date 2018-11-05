@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Xunit;
+using NFAssert = NFlags.Tests.Helpers.Assert;
 
 namespace NFlags.Tests
 {
@@ -159,21 +160,6 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldPrintSubCommandHelp_IfSubCommandCalled()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                                  "\ttesthost sub [FLAGS]... [OPTIONS]... [PARAMETERS]..." + Environment.NewLine +
-                                  Environment.NewLine +
-                                  "\tFlags:" + Environment.NewLine +
-                                  "\t/help, /h\tPrints this help" + Environment.NewLine +
-                                  Environment.NewLine +
-                                  "\tOptions:" + Environment.NewLine +
-                                  "\t/option1=<option1>\t" + Environment.NewLine +
-                                  "\t/option2=<option2>, /o2=<option2>\t" + Environment.NewLine +
-                                  Environment.NewLine +
-                                  "\tParameters:" + Environment.NewLine +
-                                  "\t<param1>\t" + Environment.NewLine +
-                                  "\t<param2>\t" + Environment.NewLine +
-                                  Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
@@ -195,7 +181,23 @@ namespace NFlags.Tests
                     "/h"
                 });
 
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            NFAssert.HelpEquals(
+                outputAggregator.ToString(),
+                "Usage:",
+               "\ttesthost sub [FLAGS]... [OPTIONS]... [PARAMETERS]...",
+               "",
+               "\tFlags:",
+               "\t/help, /h\tPrints this help",
+               "",
+               "\tOptions:",
+               "\t/option1=<option1>",
+               "\t/option2=<option2>, /o2=<option2>",
+               "",
+               "\tParameters:",
+               "\t<param1>",
+               "\t<param2>",
+               ""
+            );
         }
 
         [Fact]

@@ -8,7 +8,7 @@ namespace NFlags.Tests
     public class CustomConverters
     {
         [Fact]
-        public void TestUseCustomConverterForParameter_IfRegistered()
+        public void TestParam_ShouldUseCustomConverterForParameter_IfRegistered()
         {
             CommandArgs args = null;
             NFlags
@@ -19,12 +19,11 @@ namespace NFlags.Tests
                 )
                 .Run(new []{"x"});
 
-            Assert.IsType<CustomType>(args.Parameters["custom"]);
-            Assert.Equal("x", ((CustomType)args.Parameters["custom"]).SomeString);
+            Assert.Equal("x", args.GetParameter<CustomType>("custom").SomeString);
         }
 
         [Fact]
-        public void TestThrowExceptionDuringParameterRegistration_IfConverterIsNotRegistered()
+        public void TestParam_ShouldThrowExceptionDuringParameterRegistration_IfConverterIsNotRegistered()
         {
             Assert.Throws<MissingConverterException>(() =>
             {
@@ -37,7 +36,7 @@ namespace NFlags.Tests
         }
         
         [Fact]
-        public void TestUseCustomConverterForParameterSeries_IfRegistered()
+        public void TestParam_ShouldUseCustomConverterForParameterSeries_IfRegistered()
         {
             CommandArgs args = null;
             NFlags
@@ -48,12 +47,11 @@ namespace NFlags.Tests
                 )
                 .Run(new []{"x"});
 
-            Assert.IsType<CustomType>(args.ParameterSeries[0]);
-            Assert.Equal("x", ((CustomType)args.ParameterSeries[0]).SomeString);
+            Assert.Equal("x", args.GetParameterFromSeries<CustomType>(0).SomeString);
         }
 
         [Fact]
-        public void TestThrowExceptionDuringParameterSeriesRegistration_IfConverterIsNotRegistered()
+        public void TestParam_ShouldThrowExceptionDuringParameterSeriesRegistration_IfConverterIsNotRegistered()
         {
             Assert.Throws<MissingConverterException>(() =>
             {
@@ -66,7 +64,7 @@ namespace NFlags.Tests
         }
         
         [Fact]
-        public void TestUseCustomConverterForOption_IfRegistered()
+        public void TestOption_ShouldUseCustomConverterForOption_IfRegistered()
         {
             CommandArgs args = null;
             NFlags
@@ -77,12 +75,11 @@ namespace NFlags.Tests
                 )
                 .Run(new []{"/custom=x"});
 
-            Assert.IsType<CustomType>(args.Options["custom"]);
-            Assert.Equal("x", ((CustomType)args.Options["custom"]).SomeString);
+            Assert.Equal("x", args.GetOption<CustomType>("custom").SomeString);
         }
 
         [Fact]
-        public void TestThrowExceptionDuringOptionRegistration_IfConverterIsNotRegistered()
+        public void TestOption_ShouldThrowExceptionDuringOptionRegistration_IfConverterIsNotRegistered()
         {
             Assert.Throws<MissingConverterException>(() =>
             {

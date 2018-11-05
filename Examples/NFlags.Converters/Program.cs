@@ -14,13 +14,12 @@
                     .SetExecute((commandArgs, output) =>
                     {
                         var no = 1;
-                        foreach (var parameter in commandArgs.ParameterSeries)
+                        foreach (var user in commandArgs.GetParameterSeries<User>())
                         {
                             output.WriteLine($"No. {no++}");
-                            var u = (User) parameter;
-                            output.WriteLine($"UserName. {u.UserName}");
-                            output.WriteLine($"Name. {u.Name}");
-                            output.WriteLine($"Password. {u.Password}");
+                            output.WriteLine($"UserName. {user.UserName}");
+                            output.WriteLine($"Name. {user.Name}");
+                            output.WriteLine($"Password. {user.Password}");
                             output.WriteLine();
                         }
                     })
