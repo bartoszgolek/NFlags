@@ -20,11 +20,9 @@ namespace NFlags
             return paramReaderConfigurator.CreateNFlags();
         }
 
-        private readonly NFlagsConfig _nFlagsConfig;
-
         internal NFlags(NFlagsConfig nFlagsConfig)
         {
-            _nFlagsConfig = nFlagsConfig;
+            NFlagsConfig = nFlagsConfig;
         }
 
         /// <summary>
@@ -33,10 +31,12 @@ namespace NFlags
         /// <param name="configureRootCommand">Action to configure command using CommandConfigurator</param>
         public Bootstrap Root(Action<CommandConfigurator> configureRootCommand)
         {
-            var commandConfigurator = new CommandConfigurator("", "", _nFlagsConfig);
+            var commandConfigurator = new CommandConfigurator("", "", NFlagsConfig);
             configureRootCommand(commandConfigurator);
 
-            return new Bootstrap(_nFlagsConfig, commandConfigurator.CreateCommand());
+            return new Bootstrap(NFlagsConfig, commandConfigurator.CreateCommand());
         }
+
+        public NFlagsConfig NFlagsConfig { get; }
     }
 }
