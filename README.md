@@ -25,11 +25,11 @@ Root(rc => rc.
     RegisterOption("option", "o", "Option description", "optionDefaultValue").
     RegisterParam<string>("param", "Param description", "ParamDefaultValue").
     RegisterSubcommand("subcommand", "Subcommand Description", sc => sc.
-            SetExecute((commandArgs, output) => output("This is subcommand: " + commandArgs.Parameters["SubParameter"])).
+            SetExecute((commandArgs, output) => output("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter"))).
             RegisterParam<string>("SubParameter", "SubParameter description", "SubParameterValue")
     ).
     RegisterParamSeries("paramSeries", "paramSeriesDescription").
-    SetExecute((commandArgs, output) => output("This is root command: " + commandArgs.Parameters["param"]))
+    SetExecute((commandArgs, output) => output("This is root command: " + commandArgs.GetParameter<string>("param")))
 ).
 Run(args);
 ```
@@ -155,7 +155,7 @@ NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries(
 To attach code to execution by command, simply call `SetExecution` method of command configurator and pass `Action<CommandArgs, Action<string>>` callback.
 First argument of action contains all registered Flags, Options and Parameters with default or given values. The second one is callback to print output from command.
 ```c#
-NFlags.Configure(c => {}).Root(configurator => configurator.SetExecute((commandArgs, output) => output("This is command output: " + commandArgs.Parameters["param"]));
+NFlags.Configure(c => {}).Root(configurator => configurator.SetExecute((commandArgs, output) => output("This is command output: " + commandArgs.GetParameter<string>("param")));
 ```
 If execute is of type `Func<CommandArgs, IOutput, int>` result will be returned by `Bootstrap.Run` to be used as exit code.
 
@@ -167,7 +167,7 @@ The third parameter is a configurator for the subcommand and can be used in the 
 NFlags.Configure(c => {}).
     Root(configurator => configurator.
         RegisterSubcommand("subcommand", "Subcommand Description", sc => sc.
-                SetExecute((commandArgs, output) => output("This is subcommand: " + commandArgs.Parameters["SubParameter"])).
+                SetExecute((commandArgs, output) => output("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter"))).
                 RegisterParam("SubParameter", "SubParameter description", "SubParameterValue")
         )
     );
