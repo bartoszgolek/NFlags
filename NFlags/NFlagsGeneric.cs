@@ -19,6 +19,6 @@ namespace NFlags
             configureRootCommand(commandConfigurator);
 
             return new Bootstrap(nFlags.NFlagsConfig, commandConfigurator.CreateCommand());
-        }      
+        }
     }
 }

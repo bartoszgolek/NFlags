@@ -5,7 +5,7 @@ namespace NFlags.GenericCommandExtension
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class ParameterAttribute : Attribute
     {
-        public ParameterAttribute(string name, string description, bool defaultValue)
+        public ParameterAttribute(string name, string description, object defaultValue)
         {
             Name = name;
             Description = description;
@@ -14,6 +14,6 @@ namespace NFlags.GenericCommandExtension
 
         public string Name { get; }
         public string Description { get; }
-        public bool DefaultValue { get; }
+        public object DefaultValue { get; }
     }
 }

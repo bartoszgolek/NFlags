@@ -4,7 +4,7 @@ namespace NFlags.Tests.Helpers
 {
     public class Assert
     {
-        public static void HelpEquals(string output, params string[] lines)
+        public static void HelpEquals(OutputAggregator output, params string[] lines)
         {
             var expectedResultBuilder = new StringBuilder();
             foreach (var line in lines)
@@ -12,7 +12,7 @@ namespace NFlags.Tests.Helpers
                 expectedResultBuilder.AppendLine(line);                
             }
 
-            Xunit.Assert.Equal(expectedResultBuilder.ToString(), output);
+            Xunit.Assert.Equal(expectedResultBuilder.ToString(), output.ToString());
         }
     }
 }

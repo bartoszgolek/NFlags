@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using NFlags.Arguments;
 using NFlags.TypeConverters;
 

@@ -1,3 +1,6 @@
+# 1.4.0
+ * Generic custom args command registration
+
 # 1.3.1
  * generic options and parameters getters in CommandArgs
 

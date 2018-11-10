@@ -32,7 +32,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
 
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\ttesthost [FLAGS]...",
                 "",
@@ -54,7 +54,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
 
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\ttesthost [FLAGS]...",
                 "",
@@ -77,7 +77,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
             
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\tcustName [FLAGS]...",
                 "",
@@ -100,7 +100,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
             
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\ttesthost [FLAGS]...",
                 "",
@@ -127,7 +127,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
             
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\ttesthost [FLAGS]...",
                 "",
@@ -154,7 +154,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
             
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\ttesthost [FLAGS]... [OPTIONS]...",
                 "",
@@ -183,7 +183,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
             
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\ttesthost [FLAGS]... [PARAMETERS]...",
                 "",
@@ -213,7 +213,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
             
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\ttesthost [FLAGS]... [PARAMETERS]...",
                 "",
@@ -242,7 +242,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
             
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\ttesthost [FLAGS]... [PARAMETERS]...",
                 "",
@@ -276,7 +276,7 @@ namespace NFlags.Tests
                 .Run(new[] { "" + _longPrefix + "help" });
             
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                 "\tcustName [FLAGS]... [OPTIONS]... [PARAMETERS]...",
                 "",

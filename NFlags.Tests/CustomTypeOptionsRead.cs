@@ -193,14 +193,14 @@ namespace NFlags.Tests
                 .Run(new[] {"/option=asd"});
 
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Cannot convert value 'asd' to type 'System.Int32'",
                 "",
                 "Usage:",
                 "\ttesthost [FLAGS]... [OPTIONS]...",
                 "",
                 "\tFlags:",
-                "\t/help, /h	Prints this help",
+                "\t/help, /h\tPrints this help",
                 "",
                 "\tOptions:",
                 "\t/option=<option>",
