@@ -1,7 +1,5 @@
 # 1.3.1
- * generic arguments registration with custom converters
- * exception handling
- * exit codes support
+ * generic options and parameters getters in CommandArgs
 
 # 1.3.0
  * generic arguments registration with custom converters
