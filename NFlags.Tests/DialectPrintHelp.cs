@@ -177,8 +177,8 @@ namespace NFlags.Tests
                     .SetOutput(outputAggregator)
                 )
                 .Root(configurator => configurator
-                    .RegisterParam("param1", "Param 1 Description", "")
-                    .RegisterParam("param2", "Param 2 Description", "")
+                    .RegisterParameter("param1", "Param 1 Description", "")
+                    .RegisterParameter("param2", "Param 2 Description", "")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
             
@@ -206,8 +206,8 @@ namespace NFlags.Tests
                     .SetOutput(outputAggregator)
                 )
                 .Root(configurator => configurator
-                    .RegisterParam("param1", "Param 1 Description", "")
-                    .RegisterParam("param2", "Param 2 Description", "")
+                    .RegisterParameter("param1", "Param 1 Description", "")
+                    .RegisterParameter("param2", "Param 2 Description", "")
                     .RegisterParameterSeries<string>("paramSeries", "Param series Description")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
@@ -270,8 +270,8 @@ namespace NFlags.Tests
                     .RegisterFlag("flag2", "f2", "Flag 2 Description", false)
                     .RegisterOption("option1", "Option 1 Description", "")
                     .RegisterOption("option2", "o2", "Option 2 Description", "")
-                    .RegisterParam("param1", "Param 1 Description", "")
-                    .RegisterParam("param2", "Param 2 Description", "")
+                    .RegisterParameter("param1", "Param 1 Description", "")
+                    .RegisterParameter("param2", "Param 2 Description", "")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
             

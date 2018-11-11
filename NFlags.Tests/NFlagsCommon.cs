@@ -74,7 +74,7 @@ namespace NFlags.Tests
 
             NFlags.Configure(c => { })
                 .Root(c => c.
-                    RegisterSubcommand("sub", "desc", sc => sc.
+                    RegisterCommand("sub", "desc", sc => sc.
                         SetExecute((args, output) =>
                         {
                             subCmdCalled = true;
@@ -94,10 +94,10 @@ namespace NFlags.Tests
 
             NFlags.Configure(c => { })
                 .Root(c => c.
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3", sc3 => sc3.
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3", sc3 => sc3.
                                     SetExecute((args, output) =>
                                     {
                                         subCmdCalled = true;
@@ -120,10 +120,10 @@ namespace NFlags.Tests
 
             NFlags.Configure(c => { })
                 .Root(c => c.
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3",
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3",
                                     sc3 => { }
                                 )
                                 .SetExecute((args, output) =>
@@ -168,11 +168,11 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "f1", "", false)
                     .RegisterFlag("flag2", "", false)
-                    .RegisterSubcommand("sub", "subcommand descition", c => c
+                    .RegisterCommand("sub", "sub command description", c => c
                         .RegisterOption("option1", "", "")
                         .RegisterOption("option2", "o2", "", "")
-                        .RegisterParam("param1", "", "")
-                        .RegisterParam("param2", "", "")
+                        .RegisterParameter("param1", "", "")
+                        .RegisterParameter("param2", "", "")
                     )
                 )
                 .Run(new[]
@@ -206,10 +206,10 @@ namespace NFlags.Tests
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3", sc3 => { })
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3", sc3 => { })
                             )
                         )
                     )
@@ -258,10 +258,10 @@ namespace NFlags.Tests
             NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentFlag("flag1", "f1", "dFlag1", false).
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3", sc3 => { })
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3", sc3 => { })
                             )
                         )
                     ).
@@ -315,10 +315,10 @@ namespace NFlags.Tests
             NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentOption("option1", "o1", "dOption1", "").
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3", sc3 => { })
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3", sc3 => { })
                             )
                         )
                     ).

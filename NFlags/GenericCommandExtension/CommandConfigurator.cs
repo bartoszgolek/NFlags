@@ -20,19 +20,41 @@ namespace NFlags.GenericCommandExtension
             return _commandConfigurator.CreateCommand();
         }
 
-        public void SetExecute(Func<TArguments, IOutput, int> execute)
+        public CommandConfigurator<TArguments> SetExecute(Func<TArguments, IOutput, int> execute)
         {
             _commandConfigurator.SetExecute(
                 (args, output) => execute(Build(args), output));
+
+            return this;
         }
 
-        public void SetExecute(Action<TArguments, IOutput> execute)
+        public CommandConfigurator<TArguments> SetExecute(Action<TArguments, IOutput> execute)
         {
             _commandConfigurator.SetExecute(
                 (args, output) =>
                 {
                     execute(Build(args), output);
                 });
+
+            return this;
+        }
+
+        public CommandConfigurator<TArguments> RegisterCommand<TCommandArguments>(string name, string description,
+            Action<CommandConfigurator<TCommandArguments>> configureCommand)
+        {
+            _commandConfigurator.RegisterCommand(
+                name, 
+                description, 
+                configurator =>
+                {
+                    var commandConfigurator = new CommandConfigurator<TCommandArguments>(configurator);
+                    configureCommand.Invoke(
+                        commandConfigurator
+                    );
+                    commandConfigurator.RegisterArguments();
+                });
+
+            return this;
         }
  
         private void RegisterArguments()

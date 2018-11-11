@@ -17,10 +17,10 @@ namespace NFlags.Gnu
                 .RegisterFlag(Clear, "Clear description", false)
                 .RegisterOption(Option1, "o1", "Option 1 description", "default")
                 .RegisterOption(Option2, "Option 2 description", "default2")
-                .RegisterParam(Param1, "Parameter 1 description", ".")
+                .RegisterParameter(Param1, "Parameter 1 description", ".")
                 .SetExecute(Execute)
-                .RegisterSubcommand(ShowCommand.Name, ShowCommand.Description, ShowCommand.Configure)
-                .RegisterSubcommand(ListCommand.Name, "List something", ListCommand.Configure);
+                .RegisterCommand(ShowCommand.Name, ShowCommand.Description, ShowCommand.Configure)
+                .RegisterCommand(ListCommand.Name, "List something", ListCommand.Configure);
         }
 
         private static int Execute(CommandArgs commandArgs, IOutput output)

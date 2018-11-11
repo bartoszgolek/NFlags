@@ -12,9 +12,9 @@ namespace NFlags.Gnu
         public static void Configure(CommandConfigurator configurator)
         {
             configurator
-                .RegisterParam(Text, "Text to show", "Default text to show")
+                .RegisterParameter(Text, "Text to show", "Default text to show")
                 .SetExecute(Execute)
-                .RegisterSubcommand("subshow", "Show something", SubShowCommand.Configure);
+                .RegisterCommand("subshow", "Show something", SubShowCommand.Configure);
         }
 
         private static int Execute(CommandArgs commandArgs, IOutput output)

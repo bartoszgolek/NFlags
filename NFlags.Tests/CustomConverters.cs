@@ -14,7 +14,7 @@ namespace NFlags.Tests
             NFlags
                 .Configure(c => c.RegisterConverter(new CustomTypeConverter()))
                 .Root(c => c
-                    .RegisterParam<CustomType>("custom", "CustomType", null)
+                    .RegisterParameter<CustomType>("custom", "CustomType", null)
                     .SetExecute((commandArgs, output) => { args = commandArgs; })
                 )
                 .Run(new []{"x"});
@@ -30,7 +30,7 @@ namespace NFlags.Tests
                 NFlags
                     .Configure(c => { })
                     .Root(c => c
-                        .RegisterParam<CustomType>("custom", "CustomType", null)
+                        .RegisterParameter<CustomType>("custom", "CustomType", null)
                     );
             });
         }

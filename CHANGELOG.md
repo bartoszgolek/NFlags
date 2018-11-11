@@ -1,5 +1,6 @@
 # 1.4.0
  * Generic custom args command registration
+ * Method RegisterSubcommand marked as obsolete and RegisterCommand method introduced.
 
 # 1.3.1
  * generic options and parameters getters in CommandArgs

@@ -7,7 +7,7 @@ namespace NFlags.Gnu
         public static void Configure(CommandConfigurator configurator)
         {
             configurator
-                .RegisterParam("text2", "Text to show", "Default new text to show")
+                .RegisterParameter("text2", "Text to show", "Default new text to show")
                 .SetExecute(Execute);
         }
 
