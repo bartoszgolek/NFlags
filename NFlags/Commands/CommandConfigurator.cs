@@ -14,10 +14,12 @@ namespace NFlags.Commands
         private readonly List<string> _parents;
         private readonly NFlagsConfig _nFlagsConfig;
         private readonly List<CommandConfigurator> _commands = new List<CommandConfigurator>();
+        private CommandConfigurator _defaultCommand;
         private readonly List<Parameter> _parameters = new List<Parameter>();
         private readonly List<Flag> _flags = new List<Flag>();
         private readonly List<Option> _options = new List<Option>();
         private ParameterSeries _paramSeries;
+        private bool _printHelpOnExecute;
         private Func<CommandArgs, IOutput, int> _execute;
 
         private CommandConfigurator(string name, List<string> parents, string description, NFlagsConfig nFlagsConfig)
@@ -75,6 +77,13 @@ namespace NFlags.Commands
             return this;
         }
 
+        public CommandConfigurator PrintHelpOnExecute()
+        {
+            _printHelpOnExecute = true;
+
+            return this;
+        }
+
         /// <summary>
         /// Register sub command for the command
         /// </summary>
@@ -99,11 +108,37 @@ namespace NFlags.Commands
         public CommandConfigurator RegisterCommand(string name, string description,
             Action<CommandConfigurator> configureCommand)
         {
+            RegisterNewCommand(name, description, configureCommand);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register sub command for the command and set it as default.
+        /// </summary>
+        /// <param name="name">Command name</param>
+        /// <param name="description">Command description for help.</param>
+        /// <param name="configureCommand">Command configuration callback</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterDefaultCommand(string name, string description,
+            Action<CommandConfigurator> configureCommand)
+        {
+            if (_defaultCommand != null)
+                throw new TooManyDefaultCommandsException();
+
+            var commandConfigurator = RegisterNewCommand(name, description, configureCommand);
+            _defaultCommand = commandConfigurator;
+
+            return this;
+        }
+
+        private CommandConfigurator RegisterNewCommand(string name, string description, Action<CommandConfigurator> configureCommand)
+        {
             var commandConfigurator = new CommandConfigurator(name, GetCommandParents(), description, _nFlagsConfig);
             configureCommand(commandConfigurator);
             _commands.Add(commandConfigurator);
 
-            return this;
+            return commandConfigurator;
         }
 
         private List<string> GetCommandParents()
@@ -321,8 +356,10 @@ namespace NFlags.Commands
                 new CommandConfig(
                     _nFlagsConfig,
                     Name,
+                    _printHelpOnExecute,
                     _parents,
                     _commands,
+                    _defaultCommand,
                     GetCommandFlags(parentConfig),
                     GetCommandOptions(parentConfig),
                     _parameters,

@@ -24,8 +24,10 @@ namespace NFlags.Commands
         public CommandConfig(
             NFlagsConfig nFlagsConfig,
             string name,
+            bool printHelpOnExecute,
             List<string> parents,
             List<CommandConfigurator> commands,
+            CommandConfigurator defaultCommand,
             List<Flag> flags,
             List<Option> options,
             List<Parameter> parameters,
@@ -40,6 +42,8 @@ namespace NFlags.Commands
             Parameters = parameters;
             ParameterSeries = parameterSeries;
             Execute = execute;
+            PrintHelpOnExecute = printHelpOnExecute;
+            DefaultCommand = defaultCommand;
             Commands = commands;
         }
 
@@ -57,6 +61,8 @@ namespace NFlags.Commands
         /// Command name
         /// </summary>
         public string Name { get; }
+
+        public bool PrintHelpOnExecute { get; }
 
         /// <summary>
         /// Command parents list
@@ -87,5 +93,7 @@ namespace NFlags.Commands
         /// Function to execute when command is called.
         /// </summary>
         public Func<CommandArgs, IOutput, int> Execute { get; }
+
+        public CommandConfigurator DefaultCommand { get; }
     }
 }
