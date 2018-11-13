@@ -15,6 +15,10 @@ namespace NFlags.Utils
             return _array[_current++];
         }
 
+        public T ShiftBack() {
+            return _array[--_current];
+        }
+
         public bool HasData() {
             return _current < _array.Length;
         }

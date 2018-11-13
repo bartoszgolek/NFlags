@@ -38,7 +38,12 @@ namespace NFlags.Commands
                     cmd = GetCommand(arg);
 
                 if (cmd == null)
+                {
                     cmd = GetDefaultCommand();
+
+                    if (cmd != null)
+                        _args.ShiftBack();
+                }
 
                 if (cmd != null)
                     return cmd.Read(_args.ToArray());
@@ -48,8 +53,11 @@ namespace NFlags.Commands
                     ReadParam(arg);
 
             }
-
-            return new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
+            
+            var noArgsDefaultCommand = GetDefaultCommand();
+            return noArgsDefaultCommand != null 
+                ? noArgsDefaultCommand.Read(_args.ToArray())
+                : new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
         }
 
         private CommandArgs InitDefaultCommandArgs()
