@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Reflection;
 using NFlags.Commands;
@@ -25,7 +24,7 @@ namespace NFlags.GenericCommandExtension
         {
             var method = typeof(CommandConfigurator).GetMethod("RegisterParam");
             var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member));
-            generic.Invoke(_commandConfigurator, new object[] {parameterAttribute.Name, parameterAttribute.Description, parameterAttribute.DefaultValue});
+            generic.Invoke(_commandConfigurator, new[] {parameterAttribute.Name, parameterAttribute.Description, parameterAttribute.DefaultValue});
         }
 
         public void RegisterFlag(MemberInfo member, FlagAttribute flagAttribute)

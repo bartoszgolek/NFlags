@@ -113,7 +113,7 @@ namespace NFlags.Commands
         }
 
         /// <summary>
-        /// Add paraemter to parameters series
+        /// Add parameter to parameters series
         /// </summary>
         /// <param name="value">Parameter value</param>
         /// <typeparam name="T">Type of parameter</typeparam>
@@ -136,7 +136,7 @@ namespace NFlags.Commands
         /// <summary>
         /// Iterator over all parameters in series 
         /// </summary>
-        /// <typeparam name="T">Type of paraemter</typeparam>
+        /// <typeparam name="T">Type of parameter</typeparam>
         /// <returns>Parameter series enumerable</returns>
         public IEnumerable<T> GetParameterSeries<T>()
         {

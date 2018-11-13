@@ -7,7 +7,22 @@ namespace NFlags.Tests
     public class DefaultCommandExecute
     {
         [Fact]
-        public void TestParam_ShouldRunDefaultCommandWithParams()
+        public void TestCommandConfigurator_ShouldThrowTooManyDefaultCommandsException_IfTryingToRegisterMultipleDefaultCommands()
+        {
+            Assert.Throws<TooManyDefaultCommandsException>(() =>
+            {
+                NFlags
+                    .Configure(c => { })
+                    .Root(c => c
+                        .RegisterDefaultCommand("defaultCommand", "defaultCommandDescription", dc => { })
+                        .RegisterDefaultCommand("defaultCommand2", "defaultCommandDescription", dc => { })
+                    )
+                    .Run(new[] {"ff"});
+            });
+        }
+
+        [Fact]
+        public void TestRun_ShouldRunDefaultCommandWithParams()
         {
             CommandArgs a = null;
             NFlags
@@ -26,7 +41,7 @@ namespace NFlags.Tests
         }
 
         [Fact]
-        public void TestParam_ShouldRunDefaultCommandWithDefaults()
+        public void TestRun_ShouldRunDefaultCommandWithDefaults()
         {
             CommandArgs a = null;
             NFlags

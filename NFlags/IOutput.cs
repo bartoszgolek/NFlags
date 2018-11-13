@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NFlags
+﻿namespace NFlags
 {
     /// <summary>
     /// Represents ability to write output.
@@ -30,7 +28,7 @@ namespace NFlags
 
         /// <summary>Writes the text representation of the specified <see cref="T:System.Decimal"></see> value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
-        void Write(Decimal value);
+        void Write(decimal value);
 
         /// <summary>Writes the text representation of the specified double-precision floating-point value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
@@ -97,7 +95,7 @@ namespace NFlags
 
         /// <summary>Writes the text representation of the specified <see cref="T:System.Decimal"></see> value, followed by the current line terminator.</summary>
         /// <param name="value">The value to write.</param>
-        void WriteLine(Decimal value);
+        void WriteLine(decimal value);
 
         /// <summary>Writes the text representation of the specified double-precision floating-point value, followed by the current line terminator.</summary>
         /// <param name="value">The value to write.</param>

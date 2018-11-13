@@ -1,5 +1,6 @@
 namespace NFlags.Arguments
 {
+    /// <inheritdoc />
     /// <summary>
     /// Base class for arguments with default values
     /// </summary>

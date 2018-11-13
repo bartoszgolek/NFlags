@@ -8,6 +8,7 @@ namespace NFlags
     /// </summary>
     public class MissingCommandImplementationException : Exception
     {
+        /// <inheritdoc />
         /// <summary>
         /// Create new MissingCommandImplementationException
         /// </summary>

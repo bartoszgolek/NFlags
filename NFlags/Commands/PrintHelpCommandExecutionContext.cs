@@ -1,17 +1,16 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using NFlags.Utils;
 
 namespace NFlags.Commands
 {
-    class PrintHelpCommandExecutionContext : CommandExecutionContext
+    internal class PrintHelpCommandExecutionContext : CommandExecutionContext
     {
         private const int ErrorExitCode = 255;
 
         public PrintHelpCommandExecutionContext(string additionalPrefixMessage, CommandConfig commandConfig)
             : base((commandArgs, output) =>
             {
-                int exitCode = 0;
+                var exitCode = 0;
                 var stringBuilder = new StringBuilder();
 
                 if (additionalPrefixMessage != "")

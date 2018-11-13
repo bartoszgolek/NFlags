@@ -13,7 +13,7 @@ namespace NFlags
         public abstract string Prefix { get; }
 
         /// <summary>
-        /// Defines prefix for options and flags abreviations.
+        /// Defines prefix for options and flags abbreviations.
         /// </summary>
         public abstract string AbrPrefix { get; }
         

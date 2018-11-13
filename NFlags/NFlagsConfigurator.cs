@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NFlags.TypeConverters;
 
 namespace NFlags
@@ -23,7 +22,7 @@ namespace NFlags
         private readonly List<IArgumentConverter> _baseArgumentConverters = new List<IArgumentConverter> {
             new CommonTypeConverter(),
             new ConstructorConverter(),
-            new ImplicitOperatorConverter(),
+            new ImplicitOperatorConverter()
         };
 
         private readonly List<IArgumentConverter> _argumentConverters = new List<IArgumentConverter>();
@@ -77,7 +76,7 @@ namespace NFlags
         }
 
         /// <summary>
-        /// Registers Convrter to convert argument values
+        /// Registers Converter to convert argument values
         /// </summary>
         /// <param name="argumentConverter">Param Converter to register</param>
         /// <returns>Self instance</returns>

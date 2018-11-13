@@ -8,8 +8,8 @@ namespace NFlags
     {
         private static readonly Dictionary<OptionValueMode, OptionReader> Readers = new Dictionary<OptionValueMode, OptionReader>
         {
-            { OptionValueMode.NextArgument, new ArgSeparatorOptionReder() },
-            { OptionValueMode.AfterEqual, new EqualityOptionReder() }
+            { OptionValueMode.NextArgument, new ArgSeparatorOptionReader() },
+            { OptionValueMode.AfterEqual, new EqualityOptionReader() }
             
         };
         

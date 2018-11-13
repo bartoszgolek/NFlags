@@ -2,7 +2,7 @@ namespace NFlags.Tests.DataTypes
 {
     public class TypeWithConstructor
     {
-        public string S;
+        public readonly string S;
 
         public TypeWithConstructor(string s)
         {

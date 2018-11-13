@@ -1,8 +1,8 @@
 using System;
-using NFlags.Commands;
 
 namespace NFlags.TypeConverters
 {
+    /// <inheritdoc />
     /// <summary>
     /// Converter to convert to common language types
     /// </summary>

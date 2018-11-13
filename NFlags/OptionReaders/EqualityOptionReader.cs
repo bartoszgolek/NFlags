@@ -2,7 +2,7 @@
 
 namespace NFlags.OptionReaders
 {
-    internal class EqualityOptionReder : OptionReader
+    internal class EqualityOptionReader : OptionReader
     {
         private const char EqualitySign = '=';
 

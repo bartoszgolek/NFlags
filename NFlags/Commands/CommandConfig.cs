@@ -14,8 +14,10 @@ namespace NFlags.Commands
         /// </summary>
         /// <param name="nFlagsConfig">NFlags config</param>
         /// <param name="name">Command name</param>
+        /// <param name="printHelpOnExecute">If True command will print help instead of running execute method</param>
         /// <param name="parents">Command parents list</param>
         /// <param name="commands">List of registered commands</param>
+        /// <param name="defaultCommand">Default command to run where subcommand is not defined in params</param>
         /// <param name="flags">List of registered flags</param>
         /// <param name="options">List of registered options</param>
         /// <param name="parameters">List of registered parameters</param>
@@ -62,6 +64,9 @@ namespace NFlags.Commands
         /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// If True command will print help instead of running execute method 
+        /// </summary>
         public bool PrintHelpOnExecute { get; }
 
         /// <summary>
@@ -94,6 +99,9 @@ namespace NFlags.Commands
         /// </summary>
         public Func<CommandArgs, IOutput, int> Execute { get; }
 
+        /// <summary>
+        /// Default command to run where subcommand is not defined in params 
+        /// </summary>
         public CommandConfigurator DefaultCommand { get; }
     }
 }

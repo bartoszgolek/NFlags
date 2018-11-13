@@ -268,7 +268,7 @@ namespace NFlags.Commands
                 Description = description,
                 DefaultValue = defaultValue,
                 IsPersistent = true,
-                ValueType = typeof(T),
+                ValueType = typeof(T)
             });
 
             return this;

@@ -14,7 +14,7 @@ namespace NFlags.Gnu
             configurator
                 .RegisterParameter(Text, "Text to show", "Default text to show")
                 .SetExecute(Execute)
-                .RegisterCommand("subshow", "Show something", SubShowCommand.Configure);
+                .RegisterCommand("sub_show", "Show something", SubShowCommand.Configure);
         }
 
         private static int Execute(CommandArgs commandArgs, IOutput output)

@@ -80,7 +80,7 @@ namespace NFlags.Tests
                         a = args;
                     })
                 )
-                .Run(new string[]
+                .Run(new[]
                 {
                     "--flag1",
                     "-f2",
@@ -91,7 +91,7 @@ namespace NFlags.Tests
                     "2,53",
                     "5",
                     "6",
-                    "7",
+                    "7"
                 });
             
             Assert.Equal(3, a.Option1);

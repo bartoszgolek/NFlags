@@ -1,5 +1,6 @@
 namespace NFlags.Arguments
 {
+    /// <inheritdoc />
     /// <summary>
     /// Represents registered application parameter series.
     /// </summary>

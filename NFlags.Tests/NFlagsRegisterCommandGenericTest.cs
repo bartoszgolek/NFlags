@@ -100,7 +100,7 @@ namespace NFlags.Tests
                     "2,53",
                     "5",
                     "6",
-                    "7",
+                    "7"
                 });
             
             Assert.Equal(3, a.Option1);

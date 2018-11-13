@@ -1,6 +1,6 @@
 using System;
 
-namespace NFlags.GenericCommandExtension
+namespace NFlags
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class OptionAttribute : Attribute

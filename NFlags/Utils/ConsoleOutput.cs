@@ -8,6 +8,7 @@ namespace NFlags.Utils
     /// </summary>
     public class ConsoleOutput : IOutput
     {
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified Boolean value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -16,6 +17,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the specified Unicode character value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -24,6 +26,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the specified array of Unicode characters to the standard output stream.</summary>
         /// <param name="buffer">A Unicode character array.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -32,6 +35,7 @@ namespace NFlags.Utils
             Console.Write(buffer);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the specified subarray of Unicode characters to the standard output stream.</summary>
         /// <param name="buffer">An array of Unicode characters.</param>
         /// <param name="index">The starting position in buffer.</param>
@@ -45,14 +49,16 @@ namespace NFlags.Utils
             Console.Write(buffer, index, count);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified <see cref="T:System.Decimal"></see> value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
-        public void Write(Decimal value)
+        public void Write(decimal value)
         {
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified double-precision floating-point value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -61,6 +67,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified 32-bit signed integer value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -69,6 +76,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified 64-bit signed integer value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -77,6 +85,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified object to the standard output stream.</summary>
         /// <param name="value">The value to write, or null.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -85,6 +94,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified single-precision floating-point value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -93,6 +103,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the specified string value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -101,6 +112,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified array of objects to the standard output stream using the specified format information.</summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="arg">An array of objects to write using format.</param>
@@ -112,6 +124,7 @@ namespace NFlags.Utils
             Console.Write(format, arg);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified 32-bit unsigned integer value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -120,6 +133,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified 64-bit unsigned integer value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -128,6 +142,7 @@ namespace NFlags.Utils
             Console.Write(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the current line terminator to the standard output stream.</summary>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
         public void WriteLine()
@@ -135,6 +150,7 @@ namespace NFlags.Utils
             Console.WriteLine();
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified Boolean value, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -143,6 +159,7 @@ namespace NFlags.Utils
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the specified Unicode character, followed by the current line terminator, value to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -151,6 +168,7 @@ namespace NFlags.Utils
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the specified array of Unicode characters, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="buffer">A Unicode character array.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -159,6 +177,7 @@ namespace NFlags.Utils
             Console.WriteLine(buffer);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the specified subarray of Unicode characters, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="buffer">An array of Unicode characters.</param>
         /// <param name="index">The starting position in buffer.</param>
@@ -172,14 +191,16 @@ namespace NFlags.Utils
             Console.WriteLine(buffer, index, count);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified <see cref="T:System.Decimal"></see> value, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
-        public void WriteLine(Decimal value)
+        public void WriteLine(decimal value)
         {
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified double-precision floating-point value, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -188,6 +209,7 @@ namespace NFlags.Utils
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified 32-bit signed integer value, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -196,6 +218,7 @@ namespace NFlags.Utils
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified 64-bit signed integer value, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -204,6 +227,7 @@ namespace NFlags.Utils
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified object, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -212,6 +236,7 @@ namespace NFlags.Utils
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified single-precision floating-point value, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -220,6 +245,7 @@ namespace NFlags.Utils
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the specified string value, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -228,6 +254,7 @@ namespace NFlags.Utils
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified array of objects, followed by the current line terminator, to the standard output stream using the specified format information.</summary>
         /// <param name="format">A composite format string.</param>
         /// <param name="arg">An array of objects to write using format.</param>
@@ -239,6 +266,7 @@ namespace NFlags.Utils
             Console.WriteLine(format, arg);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified 32-bit unsigned integer value, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
@@ -247,6 +275,7 @@ namespace NFlags.Utils
             Console.WriteLine(value);
         }
     
+        /// <inheritdoc />
         /// <summary>Writes the text representation of the specified 64-bit unsigned integer value, followed by the current line terminator, to the standard output stream.</summary>
         /// <param name="value">The value to write.</param>
         /// <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>

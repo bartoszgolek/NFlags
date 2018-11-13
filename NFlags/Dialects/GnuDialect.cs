@@ -1,5 +1,6 @@
 namespace NFlags.Dialects
 {
+    /// <inheritdoc />
     /// <summary>
     /// Predefined dialect following Gnu standards.
     /// </summary>

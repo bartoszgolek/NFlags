@@ -1,5 +1,6 @@
 namespace NFlags.Arguments
 {
+    /// <inheritdoc />
     /// <summary>
     /// Represents registered application flag.
     /// </summary>
@@ -19,7 +20,7 @@ namespace NFlags.Arguments
         /// <returns>Default value of flag</returns>
         public bool GetDefault()
         {
-            return (bool)this.DefaultValue;
+            return (bool)DefaultValue;
         }
     }
 }

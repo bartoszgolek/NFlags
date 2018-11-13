@@ -1,7 +1,6 @@
-using System;
-
 namespace NFlags.Arguments
 {
+    /// <inheritdoc />
     /// <summary>
     /// Represents registered application option.
     /// </summary>
