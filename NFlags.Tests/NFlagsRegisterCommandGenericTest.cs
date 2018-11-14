@@ -8,6 +8,72 @@ namespace NFlags.Tests
     public class NFlagsRegisterCommandGenericTest
     {
         [Fact]
+        public void RegisterCommandT_ShouldThrowIncorrectFlagMemberTypeException_IfMemberWithFlagAttributeIsNotBoolean()
+        {
+            Assert.Throws<IncorrectFlagMemberTypeException>(() =>
+            {
+                NFlags
+                    .Configure(c => { })
+                    .Root<NotBooleanFlag>(c => { });
+            });
+        }
+        
+        [Fact]
+        public void RegisterCommandT_ShouldThrowIncorrectParameterSeriesMemberTypeException_IfMemberWithParameterSeriesAttributeIsNotBoolean()
+        {
+            Assert.Throws<IncorrectParameterSeriesMemberTypeException>(() =>
+            {
+                NFlags
+                    .Configure(c => { })
+                    .Root<NotArrayParameterSeries>(c => { });
+            });
+        }
+        
+        [Fact]
+        public void RegisterCommandT_ShouldThrowPropertyWithoutSetterException_IfPropertyWithParameterSeriesAttributeHasNoSetter()
+        {
+            Assert.Throws<PropertyWithoutSetterException>(() =>
+            {
+                NFlags
+                    .Configure(c => { })
+                    .Root<ParameterSeriesWithoutSetter>(c => { });
+            });
+        }
+        
+        [Fact]
+        public void RegisterCommandT_ShouldThrowPropertyWithoutSetterException_IfPropertyWithFlagAttributeHasNoSetter()
+        {
+            Assert.Throws<PropertyWithoutSetterException>(() =>
+            {
+                NFlags
+                    .Configure(c => { })
+                    .Root<FlagWithoutSetter>(c => { });
+            });
+        }
+        
+        [Fact]
+        public void RegisterCommandT_ShouldThrowPropertyWithoutSetterException_IfPropertyWithOptionAttributeHasNoSetter()
+        {
+            Assert.Throws<PropertyWithoutSetterException>(() =>
+            {
+                NFlags
+                    .Configure(c => { })
+                    .Root<OptionWithoutSetter>(c => { });
+            });
+        }
+        
+        [Fact]
+        public void RegisterCommandT_ShouldThrowPropertyWithoutSetterException_IfPropertyWithParameterAttributeHasNoSetter()
+        {
+            Assert.Throws<PropertyWithoutSetterException>(() =>
+            {
+                NFlags
+                    .Configure(c => { })
+                    .Root<ParameterWithoutSetter>(c => { });
+            });
+        }
+        
+        [Fact]
         public void RegisterCommandT_ShouldPrintParametersOptionsFlagsAndParameterSeriesInHelp()
         {
             var outputAggregator = new OutputAggregator();

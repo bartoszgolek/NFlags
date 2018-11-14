@@ -46,11 +46,8 @@ namespace NFlags.Commands
                     args
                 ).GetFromArgs();
 
-                if (_commandConfig.PrintHelpOnExecute)
-                    return PrepareHelpCommandExecutionContext();
-
                 return commandExecutionContext.Args != null && commandExecutionContext.Args.GetFlag(HelpFlag)
-                    ? PrepareHelpCommandExecutionContext()
+                    ? CommandExecutionContextProvider.PrepareHelpCommandExecutionContext(_commandConfig)
                     : commandExecutionContext;
             }
             catch (ArgumentValueException e)
@@ -58,20 +55,15 @@ namespace NFlags.Commands
                 if (!_commandConfig.NFlagsConfig.IsExceptionHandlingEnabled)
                     throw;
 
-                return PrepareHelpCommandExecutionContext(e.Message);
+                return CommandExecutionContextProvider.PrepareHelpCommandExecutionContext(_commandConfig, e.Message);
             }
             catch (TooManyParametersException e)
             {
                 if (!_commandConfig.NFlagsConfig.IsExceptionHandlingEnabled)
                     throw;
 
-                return PrepareHelpCommandExecutionContext(e.Message);
+                return CommandExecutionContextProvider.PrepareHelpCommandExecutionContext(_commandConfig, e.Message);
             }
-        }
-
-        private PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(string additionalPrefixMessage = "")
-        {
-            return new PrintHelpCommandExecutionContext(additionalPrefixMessage, _commandConfig);
         }
     }
 }

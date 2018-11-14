@@ -2,10 +2,6 @@ using NFlags.GenericCommandExtension;
 
 namespace NFlags.Tests.DataTypes
 {
-    public class EmptyArgumentsType
-    {
-    }
-
     public class ArgumentsType
     {
         [Option("option1", "option desc", 1)]

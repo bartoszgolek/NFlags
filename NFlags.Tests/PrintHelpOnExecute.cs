@@ -45,6 +45,30 @@ namespace NFlags.Tests
         }
 
         [Fact]
+        public void TestRun_ShouldPrintSubCommandHelp_IfPrintHelpOnExecuteIsSetForSubCommand()
+        {
+            var outputAggregator = new OutputAggregator();
+            NFlags
+                .Configure(c => c.SetOutput(outputAggregator))
+                .Root<EmptyArgumentsType>(c => c
+                    .PrintHelpOnExecute()
+                    .RegisterCommand<EmptyArgumentsType>("command", "description", configurator => configurator
+                        .PrintHelpOnExecute()
+                    )
+                )
+                .Run(new [] { "command" });
+
+                NFAssert.HelpEquals(outputAggregator,
+                    "Usage:",
+                    "\ttesthost command [FLAGS]...",
+                    "",
+                    "\tFlags:",
+                    "\t/help, /h\tPrints this help",
+                    ""
+                );
+        }
+
+        [Fact]
         public void TestRun_ShouldThrowMissingCommandImplementationException_IfBothPrintHelpOnExecuteAndSetExecuteAreNotSet()
         {
             Assert.Throws<MissingCommandImplementationException>(() =>

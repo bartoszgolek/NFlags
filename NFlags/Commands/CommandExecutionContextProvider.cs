@@ -48,6 +48,9 @@ namespace NFlags.Commands
                 if (cmd != null)
                     return cmd.Read(_args.ToArray());
 
+                if (_commandConfig.PrintHelpOnExecute)
+                    return PrepareHelpCommandExecutionContext(_commandConfig);
+
                 cmdAllowed = false;
                 if (!ReadOpt(arg) && !ReadFlag(arg))
                     ReadParam(arg);
@@ -55,10 +58,19 @@ namespace NFlags.Commands
             }
             
             var noArgsDefaultCommand = GetDefaultCommand();
-            return noArgsDefaultCommand != null 
-                ? noArgsDefaultCommand.Read(_args.ToArray())
+            if (noArgsDefaultCommand != null)
+                return noArgsDefaultCommand.Read(_args.ToArray());
+
+            return _commandConfig.PrintHelpOnExecute 
+                ? PrepareHelpCommandExecutionContext(_commandConfig) 
                 : new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
         }
+
+
+        public static PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(CommandConfig commandConfig, string additionalPrefixMessage = "")
+        {
+            return new PrintHelpCommandExecutionContext(additionalPrefixMessage, commandConfig);
+        }        
 
         private CommandArgs InitDefaultCommandArgs()
         {
