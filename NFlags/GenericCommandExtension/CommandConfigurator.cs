@@ -94,6 +94,32 @@ namespace NFlags.GenericCommandExtension
             return this;
         }
 
+        /// <summary>
+        /// Register default sub command for the command
+        /// </summary>
+        /// <param name="name">Command name</param>
+        /// <param name="description">Command description for help.</param>
+        /// <param name="configureCommand">Command configuration callback</param>
+        /// <typeparam name="TCommandArguments">Type of callback arguments type.</typeparam>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator<TArguments> RegisterDefaultCommand<TCommandArguments>(string name, string description,
+            Action<CommandConfigurator<TCommandArguments>> configureCommand)
+        {
+            _commandConfigurator.RegisterDefaultCommand(
+                name,
+                description,
+                configurator =>
+                {
+                    var commandConfigurator = new CommandConfigurator<TCommandArguments>(configurator);
+                    configureCommand.Invoke(
+                        commandConfigurator
+                    );
+                    commandConfigurator.RegisterArguments();
+                });
+
+            return this;
+        }
+
         private void RegisterArguments()
         {
             ProcessTArgsTemplate.Process<TArguments>(
