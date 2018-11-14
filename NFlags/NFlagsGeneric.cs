@@ -4,6 +4,9 @@ using NFlags.GenericCommandExtension;
 
 namespace NFlags
 {
+    /// <summary>
+    /// NFlags extension to register root command with custom args type.
+    /// </summary>
     public static class NFlagsGeneric
     {
         /// <summary>

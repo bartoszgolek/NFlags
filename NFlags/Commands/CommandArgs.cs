@@ -89,7 +89,7 @@ namespace NFlags.Commands
         {
             return (T)_options[name];
         }
-        
+
         /// <summary>
         /// Add parameter
         /// </summary>
@@ -123,18 +123,18 @@ namespace NFlags.Commands
         }
 
         /// <summary>
-        /// 
+        /// Returns parameter of index 'index' from parameter series.
         /// </summary>
-        /// <param name="index"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <param name="index">Index of parameter series</param>
+        /// <typeparam name="T">Type of parameter value</typeparam>
+        /// <returns>Value of parameter under 'index'</returns>
         public T GetParameterFromSeries<T>(int index)
         {
             return (T)_parameterSeries[index];
         }
 
         /// <summary>
-        /// Iterator over all parameters in series 
+        /// Iterator over all parameters in series
         /// </summary>
         /// <typeparam name="T">Type of parameter</typeparam>
         /// <returns>Parameter series enumerable</returns>

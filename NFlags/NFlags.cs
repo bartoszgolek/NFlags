@@ -37,6 +37,9 @@ namespace NFlags
             return new Bootstrap(NFlagsConfig, commandConfigurator.CreateCommand());
         }
 
+        /// <summary>
+        /// Configuration of NFlags
+        /// </summary>
         public NFlagsConfig NFlagsConfig { get; }
     }
 }

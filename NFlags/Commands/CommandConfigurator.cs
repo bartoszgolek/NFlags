@@ -49,10 +49,10 @@ namespace NFlags.Commands
         public string Description { get; }
 
         /// <summary>
-        /// Sets function to execute when command is called. Returns exit code.
+        /// Sets function to execute when command is called.
         /// </summary>
-        /// <param name="execute">Interface to print to output</param>
-        /// <returns>Command configurator</returns>
+        /// <param name="execute">Function invoked when executing command. Returns exit code.</param>
+        /// <returns>Self instance</returns>
         public CommandConfigurator SetExecute(Func<CommandArgs, IOutput, int> execute)
         {
             _execute = execute;
@@ -63,8 +63,8 @@ namespace NFlags.Commands
         /// <summary>
         /// Sets function to execute when command is called
         /// </summary>
-        /// <param name="execute">Interface to print to output</param>
-        /// <returns>Command configurator</returns>
+        /// <param name="execute">Action invoked when executing command.</param>
+        /// <returns>Self instance</returns>
         public CommandConfigurator SetExecute(Action<CommandArgs, IOutput> execute)
         {
             _execute = (args, output) =>
@@ -77,6 +77,10 @@ namespace NFlags.Commands
             return this;
         }
 
+        /// <summary>
+        /// Configures command to print help when executed. Useful when command is a bucket to group sub commands and not require implementation.
+        /// </summary>
+        /// <returns>Self instance</returns>
         public CommandConfigurator PrintHelpOnExecute()
         {
             _printHelpOnExecute = true;

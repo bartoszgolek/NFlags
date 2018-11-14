@@ -14,7 +14,7 @@ namespace NFlags
         /// <param name="description">Application description</param>
         /// <param name="dialect">NSpec arguments dialect</param>
         /// <param name="output">Output writing interface</param>
-        /// <param name="isExceptionHandlingEnabled"></param>
+        /// <param name="isExceptionHandlingEnabled">Is Exception handling enabled. Use exit code if enabled, otherwise throw exceptions. Default False</param>
         /// <param name="argumentConverters">List of param converters</param>
         public NFlagsConfig(string name, string description, Dialect dialect, IOutput output, bool isExceptionHandlingEnabled, IArgumentConverter[] argumentConverters)
         {
@@ -42,7 +42,7 @@ namespace NFlags
         public Dialect Dialect { get; }
 
         /// <summary>
-        /// Is Exception handling enabled. Use exit code if enabled, otherwise throw exceptions.
+        /// Is Exception handling enabled. Use exit code if enabled, otherwise throw exceptions. Default False.
         /// </summary>
         public bool IsExceptionHandlingEnabled { get; }
 
