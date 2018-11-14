@@ -1,3 +1,4 @@
+using System.Globalization;
 using NFlags.Tests.DataTypes;
 using Xunit;
 using NFAssert = NFlags.Tests.Helpers.Assert;
@@ -56,7 +57,7 @@ namespace NFlags.Tests
                     })
                 )
                 .Run(new string[] { });
-            
+
             Assert.Equal(1, a.Option1);
             Assert.Equal("asd", a.Option2);
             Assert.True(a.Flag1);
@@ -88,12 +89,12 @@ namespace NFlags.Tests
                     "3",
                     "-o2",
                     "xyz",
-                    "2,53",
+                    2.53.ToString(CultureInfo.CurrentCulture),
                     "5",
                     "6",
                     "7"
                 });
-            
+
             Assert.Equal(3, a.Option1);
             Assert.Equal("xyz", a.Option2);
             Assert.False(a.Flag1);
