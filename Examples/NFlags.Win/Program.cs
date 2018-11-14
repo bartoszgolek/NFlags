@@ -14,7 +14,7 @@
                     .RegisterFlag("clear", "Clear description", false)
                     .RegisterOption("option1", "o1", "Option 1 description", "default")
                     .RegisterOption("option2", "Option 2 description", "default1")
-                    .RegisterParam("param1", "Parameter 1 description", ".")
+                    .RegisterParameter("param1", "Parameter 1 description", ".")
                     .SetExecute((commandArgs, output) =>
                     {
                         output.WriteLine("Verbose: {0}", commandArgs.GetFlag("verbose").ToString());

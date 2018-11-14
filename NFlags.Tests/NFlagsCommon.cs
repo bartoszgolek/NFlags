@@ -74,7 +74,7 @@ namespace NFlags.Tests
 
             NFlags.Configure(c => { })
                 .Root(c => c.
-                    RegisterSubcommand("sub", "desc", sc => sc.
+                    RegisterCommand("sub", "desc", sc => sc.
                         SetExecute((args, output) =>
                         {
                             subCmdCalled = true;
@@ -94,10 +94,10 @@ namespace NFlags.Tests
 
             NFlags.Configure(c => { })
                 .Root(c => c.
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3", sc3 => sc3.
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3", sc3 => sc3.
                                     SetExecute((args, output) =>
                                     {
                                         subCmdCalled = true;
@@ -120,10 +120,10 @@ namespace NFlags.Tests
 
             NFlags.Configure(c => { })
                 .Root(c => c.
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3",
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3",
                                     sc3 => { }
                                 )
                                 .SetExecute((args, output) =>
@@ -168,11 +168,11 @@ namespace NFlags.Tests
                 .Root(configurator => configurator
                     .RegisterFlag("flag1", "f1", "", false)
                     .RegisterFlag("flag2", "", false)
-                    .RegisterSubcommand("sub", "subcommand descition", c => c
+                    .RegisterCommand("sub", "sub command description", c => c
                         .RegisterOption("option1", "", "")
                         .RegisterOption("option2", "o2", "", "")
-                        .RegisterParam("param1", "", "")
-                        .RegisterParam("param2", "", "")
+                        .RegisterParameter("param1", "", "")
+                        .RegisterParameter("param2", "", "")
                     )
                 )
                 .Run(new[]
@@ -182,7 +182,7 @@ namespace NFlags.Tests
                 });
 
             NFAssert.HelpEquals(
-                outputAggregator.ToString(),
+                outputAggregator,
                 "Usage:",
                "\ttesthost sub [FLAGS]... [OPTIONS]... [PARAMETERS]...",
                "",
@@ -203,41 +203,33 @@ namespace NFlags.Tests
         [Fact]
         public void NFlags_ShouldPrintHelpForNthLevelSubCommand()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost sub sub1 sub2 sub3 [FLAGS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t/help, /h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3", sc3 => { })
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3", sc3 => { })
                             )
                         )
                     )
                 )
                 .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\ttesthost sub sub1 sub2 sub3 [FLAGS]...",
+                "",
+                "\tFlags:",
+                "\t/help, /h\tPrints this help",
+                ""
+            );
         }
 
         [Fact]
         public void NFlags_ShouldPrintHelpForPersistentFlags()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t/flag1, /f1\tdFlag1" + Environment.NewLine +
-                               "\t/flag2\tdFlag2" + Environment.NewLine +
-                               "\t/help, /h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
@@ -246,29 +238,30 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "/h"});
 
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+               "\ttesthost [FLAGS]...",
+               "",
+               "\tFlags:",
+               "\t/flag1, /f1\tdFlag1",
+               "\t/flag2\tdFlag2",
+               "\t/help, /h\tPrints this help",
+               ""
+            );
         }
 
         [Fact]
         public void NFlags_ShouldPrintHelpForPersistentFlagsAtNthLevelSubCommand()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost sub sub1 sub2 sub3 [FLAGS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t/flag1, /f1\tdFlag1" + Environment.NewLine +
-                               "\t/flag2\tdFlag2" + Environment.NewLine +
-                               "\t/help, /h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentFlag("flag1", "f1", "dFlag1", false).
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3", sc3 => { })
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3", sc3 => { })
                             )
                         )
                     ).
@@ -276,23 +269,22 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+               "\ttesthost sub sub1 sub2 sub3 [FLAGS]...",
+               "",
+               "\tFlags:",
+               "\t/flag1, /f1\tdFlag1",
+               "\t/flag2\tdFlag2",
+               "\t/help, /h\tPrints this help",
+               ""
+            );
         }
 
         [Fact]
         public void NFlags_ShouldPrintHelpForPersistentOptions()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost [FLAGS]... [OPTIONS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t/help, /h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tOptions:" + Environment.NewLine +
-                               "\t/option1=<option1>, /o1=<option1>\tdOption1" + Environment.NewLine +
-                               "\t/option2=<option2>\tdOption2" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
@@ -301,31 +293,32 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "/h"});
 
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\ttesthost [FLAGS]... [OPTIONS]...",
+                "",
+                "\tFlags:",
+                "\t/help, /h\tPrints this help",
+                "",
+                "\tOptions:",
+                "\t/option1=<option1>, /o1=<option1>\tdOption1",
+                "\t/option2=<option2>\tdOption2",
+                ""
+            );
         }
 
         [Fact]
         public void NFlags_ShouldPrintHelpForPersistentOptionsAtNthLevelSubCommand()
         {
-            var expectedHelp = "Usage:" + Environment.NewLine +
-                               "\ttesthost sub sub1 sub2 sub3 [FLAGS]... [OPTIONS]..." + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tFlags:" + Environment.NewLine +
-                               "\t/help, /h\tPrints this help" + Environment.NewLine +
-                               Environment.NewLine +
-                               "\tOptions:" + Environment.NewLine +
-                               "\t/option1=<option1>, /o1=<option1>\tdOption1" + Environment.NewLine +
-                               "\t/option2=<option2>\tdOption2" + Environment.NewLine +
-                               Environment.NewLine;
-
             var outputAggregator = new OutputAggregator();
             NFlags.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentOption("option1", "o1", "dOption1", "").
-                    RegisterSubcommand("sub", "desc", sc => sc.
-                        RegisterSubcommand("sub1", "desc1", sc1 => sc1.
-                            RegisterSubcommand("sub2", "desc2", sc2 => sc2.
-                                RegisterSubcommand("sub3", "desc3", sc3 => { })
+                    RegisterCommand("sub", "desc", sc => sc.
+                        RegisterCommand("sub1", "desc1", sc1 => sc1.
+                            RegisterCommand("sub2", "desc2", sc2 => sc2.
+                                RegisterCommand("sub3", "desc3", sc3 => { })
                             )
                         )
                     ).
@@ -333,7 +326,19 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "sub", "sub1", "sub2", "sub3", "/h"});
 
-            Assert.Equal(expectedHelp, outputAggregator.ToString());
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\ttesthost sub sub1 sub2 sub3 [FLAGS]... [OPTIONS]...",
+                "",
+                "\tFlags:",
+                "\t/help, /h\tPrints this help",
+                "",
+                "\tOptions:",
+                "\t/option1=<option1>, /o1=<option1>\tdOption1",
+                "\t/option2=<option2>\tdOption2",
+                ""
+            );
         }
     }
 }

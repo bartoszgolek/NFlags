@@ -281,7 +281,7 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
-                    .RegisterParam("param", "", "")
+                    .RegisterParameter("param", "", "")
                     .SetExecute((args, output) => { })
                 )
                 .Run(new[] {"paramValue"});
@@ -296,8 +296,8 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
-                    .RegisterParam("param1", "", "")
-                    .RegisterParam("param2", "", "")
+                    .RegisterParameter("param1", "", "")
+                    .RegisterParameter("param2", "", "")
                     .SetExecute((args, output) =>
                     {
                         a = args;
@@ -367,8 +367,8 @@ namespace NFlags.Tests
                     .RegisterFlag("flag2", "", false)
                     .RegisterOption("option1", "", "")
                     .RegisterOption("option2", "o2", "", "")
-                    .RegisterParam("param1", "", "")
-                    .RegisterParam("param2", "", "")
+                    .RegisterParameter("param1", "", "")
+                    .RegisterParameter("param2", "", "")
                     .SetExecute((args, output) =>
                     {
                         a = args;

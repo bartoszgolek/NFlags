@@ -8,6 +8,7 @@ namespace NFlags.TypeConverters
     /// </summary>
     public class MissingConverterException : Exception
     {
+        /// <inheritdoc />
         /// <summary>
         /// Creates new exception instance.
         /// </summary>

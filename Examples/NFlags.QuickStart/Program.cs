@@ -12,13 +12,13 @@
             Root(rc => rc.
                 RegisterFlag("flag1", "f", "Flag description", false).
                 RegisterOption("option", "o", "Option description", "optionDefaultValue").
-                RegisterParam("param", "Param description", "ParamDefaultValue").
-                RegisterSubcommand("subcommand", "Subcommand Description", sc => sc.
+                RegisterParameter("param", "Param description", "ParamDefaultValue").
+                RegisterCommand("command", "Sub command Description", sc => sc.
                         SetExecute((commandArgs, output) =>
                         {
-                            output.WriteLine("This is subcommand: {0}", commandArgs.GetParameter<string>("SubParameter"));
+                            output.WriteLine("This is sub command: {0}", commandArgs.GetParameter<string>("Parameter"));
                         }).
-                        RegisterParam("SubParameter", "SubParameter description", "SubParameterValue")
+                        RegisterParameter("Parameter", "Sub parameter description", "SubParameterValue")
                 ).
                 RegisterParameterSeries<string>("paramSeries", "paramSeriesDescription").
                 SetExecute((commandArgs, output) =>

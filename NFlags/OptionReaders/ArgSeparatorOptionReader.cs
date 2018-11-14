@@ -2,7 +2,7 @@
 
 namespace NFlags.OptionReaders
 {
-    internal class ArgSeparatorOptionReder : OptionReader
+    internal class ArgSeparatorOptionReader : OptionReader
     {
         public override string ReadValue(Shifter<string> args, string arg)
         {

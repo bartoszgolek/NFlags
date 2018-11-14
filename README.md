@@ -24,12 +24,12 @@ Root(rc => rc.
     RegisterFlag("flag1", "f", "Flag description", false).
     RegisterOption("option", "o", "Option description", "optionDefaultValue").
     RegisterParam<string>("param", "Param description", "ParamDefaultValue").
-    RegisterSubcommand("subcommand", "Subcommand Description", sc => sc.
-            SetExecute((commandArgs, output) => output("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter"))).
+    RegisterCommand("subcommand", "Subcommand Description", sc => sc.
+            SetExecute((commandArgs, output) => output.WriteLine("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter"))).
             RegisterParam<string>("SubParameter", "SubParameter description", "SubParameterValue")
     ).
     RegisterParamSeries("paramSeries", "paramSeriesDescription").
-    SetExecute((commandArgs, output) => output("This is root command: " + commandArgs.GetParameter<string>("param")))
+    SetExecute((commandArgs, output) => output.WriteLine("This is root command: " + commandArgs.GetParameter<string>("param")))
 ).
 Run(args);
 ```
@@ -84,14 +84,14 @@ $>
 ### Global NFlags Configuration
 
 #### Set app name
-Name set with folowing code, will be printed in help.
+Name set with following code, will be printed in help.
 By default `AppDomain.CurrentDomain.FriendlyName` is used.
 ```c#
 NFlags.Configure(configurator => configurator.SetName("Custom Name"));
 ```
 
 #### Set app description
-Description set with folowing code, will be printed in help.
+Description set with following code, will be printed in help.
 ```c#
 NFlags.Configure(configurator => configurator.SetDescription("App description"));
 ```
@@ -114,8 +114,8 @@ NFlags always has at least one root command
 
 #### Set flag
 Flag is an prefixed argument without value. It can be turned on or off.
-Flag abreviation can be also set.
-There is also default value which will be inversed when flag will be passed as argument.
+Flag abbreviation can be also set.
+There is also default value which will be negated when flag will be passed as argument.
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterFlag("flag", "f", "Flag description", true));
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterFlag("flag", "Flag description", false));
@@ -123,8 +123,8 @@ NFlags.Configure(c => {}).Root(configurator => configurator.RegisterFlag("flag",
 
 ### Set option
 Option is an prefixed argument with value.
-Option abreviation can be also set.
-Values are converted to type T. CLR types, classess with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
+Option abbreviation can be also set.
+Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption<T>("option", "o", "option description", "defaultOptionValue"));
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption<T>("option", "option description", "defaultOptionValue"));
@@ -132,7 +132,7 @@ NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption<T>("o
 
 ### Set parameter
 Parameter is an unprefixed value argument. Parameters are read by registration order.
-Values are converted to type T. CLR types, classess with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
+Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParam<T>("param", "Param description", "paramDefaultValue"));
 ```
@@ -140,7 +140,7 @@ NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParam<T>("pa
 ### Set parameter series
 Parameter series is a collection of parameters after last named parameter.
 Parameter series can be used to parse unknown count of parameters to process i.e. strings to concat.
-Values are converted to type T. CLR types, classess with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
+Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
 
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries<int>("paramSeries", "Param series description"));
@@ -155,26 +155,38 @@ NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries(
 To attach code to execution by command, simply call `SetExecution` method of command configurator and pass `Action<CommandArgs, Action<string>>` callback.
 First argument of action contains all registered Flags, Options and Parameters with default or given values. The second one is callback to print output from command.
 ```c#
-NFlags.Configure(c => {}).Root(configurator => configurator.SetExecute((commandArgs, output) => output("This is command output: " + commandArgs.GetParameter<string>("param")));
+NFlags.Configure(c => {}).Root(configurator => configurator.SetExecute((commandArgs, output) => output.WriteLine("This is command output: " + commandArgs.GetParameter<string>("param")));
 ```
 If execute is of type `Func<CommandArgs, IOutput, int>` result will be returned by `Bootstrap.Run` to be used as exit code.
 
-### Attach subcommands
+### Attach sub commands
 
-To attach subcommand, call `RegisterSubcommand` method of command configurator.
-The third parameter is a configurator for the subcommand and can be used in the same Way as the one for root command..
+To attach subcommand, call `RegisterCommand` method of command configurator.
+The third parameter is a configurator for the sub command and can be used in the same Way as the one for root command..
 ```c#
 NFlags.Configure(c => {}).
     Root(configurator => configurator.
-        RegisterSubcommand("subcommand", "Subcommand Description", sc => sc.
-                SetExecute((commandArgs, output) => output("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter"))).
+        RegisterCommand("subcommand", "Subcommand Description", sc => sc.
+                SetExecute((commandArgs, output) => output.WriteLine("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter"))).
                 RegisterParam("SubParameter", "SubParameter description", "SubParameterValue")
         )
     );
 ```
 
+
+### Define default command
+Default command can be defined, when registering command with `RegisterDefaultCommand`. If default command is registered, it will be executed, when application is called to execute parent command. 
+```c#
+NFlags.Configure(c => {}).
+    Root(configurator => configurator.
+        RegisterDefaultCommand("default", "Default command Description", sc => sc.
+                SetExecute((commandArgs, output) => output.WriteLine("This is default command"))
+        )
+    );
+```
+
 ### Parsing arguments
-To parse arguments and call requested command call:
+To parse arguments and execute requested command call:
 ```c#
 NFlags.Configure(c => {}).Root(configurator => {}).Run(args);
 ```
@@ -182,14 +194,14 @@ NFlags.Configure(c => {}).Root(configurator => {}).Run(args);
 
 ## Dialects
 Dialect defines how flags and options are prefixed and how option value follows option.
-By default 2 dialect are suported: **Gnu**, **Win**
+By default 2 dialect are supported: **Gnu**, **Win**
 
 Dialect can be set (default is Win) using:
 ```c#
 NFlags.Configure(configurator => configurator.SetDialect(Dialect.Gnu));
 ```
 
-Dialects can be easly extended. 
+Dialects can be easily extended. 
 To create new dialect simply create new class inherited from Dialect class.
 
 ```c#
@@ -209,26 +221,26 @@ NFlags.Configure(configurator => configurator.SetDialect(new CustomDialect()));
 
 ### Win dialect
 
-Win dialect, follows MS Windows standards for definig console app arguments:
+Win dialect, follows MS Windows standards for defining console app arguments:
 
-- Flags and flags abreviations are prefixed by '/' 
-- Options and options abreviations are prefixed by '/' 
+- Flags and flags abbreviations are prefixed by '/' 
+- Options and options abbreviations are prefixed by '/' 
 - Value follow option after '='
 
 
 ### Gnu dialect
 
-Gnu dialect, follows Gnu Linux standards for definig console app arguments:
+Gnu dialect, follows Gnu Linux standards for defining console app arguments:
 
 - Flags are prefixed by '--' 
-- Flags abreviations are prefixed by '-' 
+- Flags abbreviations are prefixed by '-' 
 - Options are prefixed by '--' 
-- Options abreviations are prefixed by '-' 
+- Options abbreviations are prefixed by '-' 
 - Value follow option as next argument after option
 
 ## Help
 
-Help generation is suported "out of box" and it follows dialect rules.
+Help generation is supported "out of box" and it follows dialect rules.
 To print help use:
 ```c#
 Console.WriteLine(NFlags.Configure(configurator => {}).PrintHelp());
@@ -283,6 +295,82 @@ Application description
 
 ```
 
+Command can be also configured to print help on execute. This is useful when creating command who aggregates set of sub commands.
+The following code:
+```c#
+NFlags
+    .Configure(c => c.SetDialect(Dialect.Gnu))
+    .Root<RootCommandArguments>(c => c.PrintHelpOnExecute())
+    .Run(args);
+```
+will print following output:
+```
+$> dotnet NFlags.Generics.dll
+Usage:
+        NFlags.Generics [FLAGS]... [OPTIONS]... [PARAMETERS]...
+
+        Flags:
+        --flag, -f      flag description
+        --help, -h      Prints this help
+
+        Options:
+        --option <option>, -o <option>  option description
+
+        Parameters:
+        <parameter>     parameter description
+        <parameterSeries...>    parameter series description
+```
+
+## Generics
+Generics are an alternative method of registering commands arguments. Generic cannot be mixed with basic methods to configure command.
+To use generic way of registering commands with arguments custom type with fields or set properties with dedicated attributes is required.
+```c#
+    public class RootCommandArguments
+    {
+        [Option("option", "o", "option description", 3)]
+        public int Option;
+
+        [Flag("flag", "f", "flag description", true)]
+        public bool Flag;
+
+        [Parameter("parameter", "parameter description", 1.1)]
+        public double Parameter;
+
+        [ParameterSeries("parameterSeries", "parameter series description")]
+        public int[] ParameterSeries;
+    }
+    
+    public class Command2Arguments
+    {
+        [Option("option2", "o2", "option description", 3)]
+        public int Option { get; set; }
+
+        [Flag("flag2", "f2", "flag description", true)]
+        public bool Flag { get; set; }
+
+        [Parameter("parameter2", "parameter description", 1.1)]
+        public double Parameter { get; set; }
+
+        [ParameterSeries("parameterSeries2", "parameter series description")]
+        public int[] ParameterSeries { get; set; }
+    }
+```
+Then command can be configured using generic versions of methods:
+```c#
+NFlags
+    .Configure(c => c
+        .SetDialect(Dialect.Gnu)
+    )
+    .Root<RootCommandArguments>(c => c
+        .PrintHelpOnExecute()
+        .RegisterCommand<RootCommandArguments>("command1", "this is command 1", configurator => configurator
+            .PrintHelpOnExecute()
+        )
+    )
+```
+
+See `NFlags.Generics` example. 
+
 ## Converters
 
 Converters are used to convert argument (option or parameter) value to expected type. 
@@ -320,7 +408,7 @@ NFlags.Configure(configurator => configurator.RegisterConverter(new UserConverte
 
 Default policy of exception handling in NFlags is to not throw exception when user use CLI incorrectly.
 If Exception is thrown during parsing arguments, exception message and help is printed and exit code 255 is returned.
-For the following aplication:
+For the following application:
 ```c#
 public static int Main(string[] args)
 {
@@ -353,7 +441,7 @@ Usage:
 Process finished with exit code 255.
 ```
 
-Excpetion handling can be disabled using configuration:
+Exception handling can be disabled using configuration:
 ```c#
 NFlags.Configure(c => c.DisableExceptionHandling());
 ```

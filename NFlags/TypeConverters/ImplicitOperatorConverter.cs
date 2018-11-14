@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
-using NFlags.Commands;
 
 namespace NFlags.TypeConverters
 {
+    /// <inheritdoc />
     /// <summary>
     /// Convert string to type using implicit operator.
     /// </summary>
@@ -27,7 +27,7 @@ namespace NFlags.TypeConverters
             throw new ArgumentValueException(type, value);
         }
 
-        private static MethodInfo GetImplicitOperatorInfo(Type type)
+        private static MethodInfo GetImplicitOperatorInfo(IReflect type)
         {
             return type.GetMethod(
                 ImplicitOperatorMethodName,

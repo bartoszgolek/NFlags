@@ -31,15 +31,15 @@ namespace NFlags
         public bool IsFlagMatching(Flag flag, string arg)
         {
             return arg == GetPrefixedName(flag) ||
-                   flag.Abr != null && arg == GetPrefixedAbreviation(flag);
+                   flag.Abr != null && arg == GetPrefixedAbbreviation(flag);
         }
 
-        private string GetPrefixedAbreviation(Flag flag)
+        private string GetPrefixedAbbreviation(PrefixedDefaultValueArgument flag)
         {
             return $"{Dialect.AbrPrefix}{flag.Abr}";
         }
 
-        private string GetPrefixedName(Flag flag)
+        private string GetPrefixedName(Argument flag)
         {
             return $"{Dialect.Prefix}{flag.Name}";
         }

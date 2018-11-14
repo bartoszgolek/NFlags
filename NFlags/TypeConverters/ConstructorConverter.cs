@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
-using NFlags.Commands;
 
 namespace NFlags.TypeConverters
 {
+    /// <inheritdoc />
     /// <summary>
     /// Convert string to type using constructor.
     /// </summary>

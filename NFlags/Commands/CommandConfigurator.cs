@@ -14,10 +14,12 @@ namespace NFlags.Commands
         private readonly List<string> _parents;
         private readonly NFlagsConfig _nFlagsConfig;
         private readonly List<CommandConfigurator> _commands = new List<CommandConfigurator>();
+        private CommandConfigurator _defaultCommand;
         private readonly List<Parameter> _parameters = new List<Parameter>();
         private readonly List<Flag> _flags = new List<Flag>();
         private readonly List<Option> _options = new List<Option>();
         private ParameterSeries _paramSeries;
+        private bool _printHelpOnExecute;
         private Func<CommandArgs, IOutput, int> _execute;
 
         private CommandConfigurator(string name, List<string> parents, string description, NFlagsConfig nFlagsConfig)
@@ -47,10 +49,10 @@ namespace NFlags.Commands
         public string Description { get; }
 
         /// <summary>
-        /// Sets function to execute when command is called. Returns exit code.
+        /// Sets function to execute when command is called.
         /// </summary>
-        /// <param name="execute">Interface to print to output</param>
-        /// <returns>Command configurator</returns>
+        /// <param name="execute">Function invoked when executing command. Returns exit code.</param>
+        /// <returns>Self instance</returns>
         public CommandConfigurator SetExecute(Func<CommandArgs, IOutput, int> execute)
         {
             _execute = execute;
@@ -61,8 +63,8 @@ namespace NFlags.Commands
         /// <summary>
         /// Sets function to execute when command is called
         /// </summary>
-        /// <param name="execute">Interface to print to output</param>
-        /// <returns>Command configurator</returns>
+        /// <param name="execute">Action invoked when executing command.</param>
+        /// <returns>Self instance</returns>
         public CommandConfigurator SetExecute(Action<CommandArgs, IOutput> execute)
         {
             _execute = (args, output) =>
@@ -76,28 +78,79 @@ namespace NFlags.Commands
         }
 
         /// <summary>
-        /// Register sub command for the command
+        /// Configures command to print help when executed. Useful when command is a bucket to group sub commands and not require implementation.
         /// </summary>
-        /// <param name="name">Subcommand name</param>
-        /// <param name="description">Subcommand description for help.</param>
-        /// <param name="configureCommand">Command configuration callback</param>
         /// <returns>Self instance</returns>
-        public CommandConfigurator RegisterSubcommand(string name, string description,
-            Action<CommandConfigurator> configureCommand)
+        public CommandConfigurator PrintHelpOnExecute()
         {
-            var commandConfigurator = new CommandConfigurator(name, GetSubcommandParents(), description, _nFlagsConfig);
-            configureCommand(commandConfigurator);
-            _commands.Add(commandConfigurator);
+            _printHelpOnExecute = true;
 
             return this;
         }
 
-        private List<string> GetSubcommandParents()
+        /// <summary>
+        /// Register sub command for the command
+        /// </summary>
+        /// <param name="name">Command name</param>
+        /// <param name="description">Command description for help.</param>
+        /// <param name="configureCommand">Command configuration callback</param>
+        /// <returns>Self instance</returns>
+        [Obsolete("RegisterSubcommand method is obsolete. Use RegisterCommand instead.")]
+        public CommandConfigurator RegisterSubcommand(string name, string description,
+            Action<CommandConfigurator> configureCommand)
         {
-            var subcommandParents = new List<string>(_parents.Count + 1);
-            subcommandParents.AddRange(_parents);
-            subcommandParents.Add(Name);
-            return subcommandParents;
+            return RegisterCommand(name, description, configureCommand);
+        }
+
+        /// <summary>
+        /// Register sub command for the command
+        /// </summary>
+        /// <param name="name">Command name</param>
+        /// <param name="description">Command description for help.</param>
+        /// <param name="configureCommand">Command configuration callback</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterCommand(string name, string description,
+            Action<CommandConfigurator> configureCommand)
+        {
+            RegisterNewCommand(name, description, configureCommand);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register sub command for the command and set it as default.
+        /// </summary>
+        /// <param name="name">Command name</param>
+        /// <param name="description">Command description for help.</param>
+        /// <param name="configureCommand">Command configuration callback</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterDefaultCommand(string name, string description,
+            Action<CommandConfigurator> configureCommand)
+        {
+            if (_defaultCommand != null)
+                throw new TooManyDefaultCommandsException();
+
+            var commandConfigurator = RegisterNewCommand(name, description, configureCommand);
+            _defaultCommand = commandConfigurator;
+
+            return this;
+        }
+
+        private CommandConfigurator RegisterNewCommand(string name, string description, Action<CommandConfigurator> configureCommand)
+        {
+            var commandConfigurator = new CommandConfigurator(name, GetCommandParents(), description, _nFlagsConfig);
+            configureCommand(commandConfigurator);
+            _commands.Add(commandConfigurator);
+
+            return commandConfigurator;
+        }
+
+        private List<string> GetCommandParents()
+        {
+            var commandParents = new List<string>(_parents.Count + 1);
+            commandParents.AddRange(_parents);
+            commandParents.Add(Name);
+            return commandParents;
         }
 
         /// <summary>
@@ -130,7 +183,7 @@ namespace NFlags.Commands
         }
 
         /// <summary>
-        /// Register flag for the command and subcommands
+        /// Register flag for the command and sub commands
         /// </summary>
         /// <param name="name">Flag name</param>
         /// <param name="abr">Flag shorthand</param>
@@ -153,7 +206,7 @@ namespace NFlags.Commands
         }
 
         /// <summary>
-        /// Register flag for the command and subcommands
+        /// Register flag for the command and sub commands
         /// </summary>
         /// <param name="name">Flag name</param>
         /// <param name="description">Flag description for help.</param>
@@ -204,7 +257,7 @@ namespace NFlags.Commands
         }
 
         /// <summary>
-        /// Register option for the command and subcommands
+        /// Register option for the command and sub commands
         /// </summary>
         /// <param name="name">Option name</param>
         /// <param name="description">Option description for help.</param>
@@ -219,14 +272,14 @@ namespace NFlags.Commands
                 Description = description,
                 DefaultValue = defaultValue,
                 IsPersistent = true,
-                ValueType = typeof(T),
+                ValueType = typeof(T)
             });
 
             return this;
         }
 
         /// <summary>
-        /// Register option for the command and subcommands
+        /// Register option for the command and sub commands
         /// </summary>
         /// <param name="name">Option name</param>
         /// <param name="abr">Option shorthand</param>
@@ -255,7 +308,20 @@ namespace NFlags.Commands
         /// <param name="description">Parameter description for help.</param>
         /// <param name="defaultValue">Default parameter value.</param>
         /// <returns>Self instance</returns>
+        [Obsolete("RegisterParam method is obsolete. Use RegisterParameter instead.")]
         public CommandConfigurator RegisterParam<T>(string name, string description, T defaultValue)
+        {
+            return RegisterParameter(name, description, defaultValue);
+        }
+
+        /// <summary>
+        /// Register parameter for the command
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <param name="description">Parameter description for help.</param>
+        /// <param name="defaultValue">Default parameter value.</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterParameter<T>(string name, string description, T defaultValue)
         {
             CheckConverterIsRegistered(typeof(T));
             _parameters.Add(new Parameter {Name = name, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)});
@@ -294,10 +360,12 @@ namespace NFlags.Commands
                 new CommandConfig(
                     _nFlagsConfig,
                     Name,
+                    _printHelpOnExecute,
                     _parents,
                     _commands,
-                    GetSubcommandFlags(parentConfig),
-                    GetSubcommandOptions(parentConfig),
+                    _defaultCommand,
+                    GetCommandFlags(parentConfig),
+                    GetCommandOptions(parentConfig),
                     _parameters,
                     _paramSeries,
                     _execute
@@ -305,22 +373,22 @@ namespace NFlags.Commands
             );
         }
 
-        private List<Flag> GetSubcommandFlags(CommandConfig parentConfig)
+        private List<Flag> GetCommandFlags(CommandConfig parentConfig)
         {
-            var subcommandFlags = new List<Flag>();
-            subcommandFlags.AddRange(_flags);
+            var commandFlags = new List<Flag>();
+            commandFlags.AddRange(_flags);
             if (parentConfig != null)
-                subcommandFlags.AddRange(parentConfig.Flags.Where(f => f.IsPersistent));
-            return subcommandFlags;
+                commandFlags.AddRange(parentConfig.Flags.Where(f => f.IsPersistent));
+            return commandFlags;
         }
 
-        private List<Option> GetSubcommandOptions(CommandConfig parentConfig)
+        private List<Option> GetCommandOptions(CommandConfig parentConfig)
         {
-            var subcommandOptions = new List<Option>();
-            subcommandOptions.AddRange(_options);
+            var commandOptions = new List<Option>();
+            commandOptions.AddRange(_options);
             if (parentConfig != null)
-                subcommandOptions.AddRange(parentConfig.Options.Where(f => f.IsPersistent));
-            return subcommandOptions;
+                commandOptions.AddRange(parentConfig.Options.Where(f => f.IsPersistent));
+            return commandOptions;
         }
 
         private void CheckConverterIsRegistered(Type type)
