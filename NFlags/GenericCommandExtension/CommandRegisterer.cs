@@ -18,7 +18,7 @@ namespace NFlags.GenericCommandExtension
             ValidatePropertySetter(member);
             ValidateParameterSeriesMemberType(member);
 
-            var method = typeof(CommandConfigurator).GetMethods().Single(m => m.IsGenericMethod && m.Name == "RegisterParameterSeries");
+            var method = typeof(CommandConfigurator).GetMethod("RegisterParameterSeriesInstance", BindingFlags.Instance | BindingFlags.NonPublic);
             var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member).GetElementType());
             generic.Invoke(_commandConfigurator, new object[] {parameterSeriesAttribute.Name, parameterSeriesAttribute.Description});
         }
@@ -26,7 +26,7 @@ namespace NFlags.GenericCommandExtension
         public void RegisterParameter(MemberInfo member, ParameterAttribute parameterAttribute)
         {
             ValidatePropertySetter(member);
-                
+
             var method = typeof(CommandConfigurator).GetMethod("RegisterParam");
             var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member));
             generic.Invoke(_commandConfigurator, new[] {parameterAttribute.Name, parameterAttribute.Description, parameterAttribute.DefaultValue});
@@ -46,7 +46,7 @@ namespace NFlags.GenericCommandExtension
         public void RegisterOption(MemberInfo member, OptionAttribute optionAttribute)
         {
             ValidatePropertySetter(member);
-            
+
             var parametersCount = optionAttribute.Abr != null ? 4 : 3;
             var method = typeof(CommandConfigurator).GetMethods()
                 .Single(info => info.Name == "RegisterOption" && info.IsGenericMethod && info.GetParameters().Length == parametersCount);
