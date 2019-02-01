@@ -323,7 +323,8 @@ namespace NFlags.Commands
                     Abr = abr,
                     Description = description,
                     DefaultValue = defaultValue,
-                    IsPersistent = true
+                    IsPersistent = true,
+                    ValueType = typeof(T)
                 }
             );
         }
