@@ -19,7 +19,7 @@ namespace NFlags.Tests
         }
         
         [Fact]
-        public void RegisterCommandT_ShouldThrowIncorrectParameterSeriesMemberTypeException_IfMemberWithParameterSeriesAttributeIsNotBoolean()
+        public void RegisterCommandT_ShouldThrowIncorrectParameterSeriesMemberTypeException_IfMemberWithParameterSeriesAttributeIsNotArray()
         {
             Assert.Throws<IncorrectParameterSeriesMemberTypeException>(() =>
             {

@@ -8,7 +8,7 @@ namespace NFlags.Arguments
     {
         private string _name;
         private string _description;
-        private bool _defaultValue;
+        private T _defaultValue;
         private string _environmentVariable;
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace NFlags.Arguments
         /// </summary>
         /// <param name="defaultValue">Default value of the argument</param>
         /// <returns>Self instance</returns>
-        public ParameterBuilder<T> DefaultValue(bool defaultValue)
+        public ParameterBuilder<T> DefaultValue(T defaultValue)
         {
             _defaultValue = defaultValue;
 
