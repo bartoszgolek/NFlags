@@ -156,6 +156,20 @@ namespace NFlags.Commands
         /// <summary>
         /// Register flag for the command
         /// </summary>
+        /// <param name="buildFlag">Action to configure flag using builder</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterFlag(Action<FlagBuilder> buildFlag)
+        {
+            var flagBuilder = new FlagBuilder();
+            buildFlag(flagBuilder);
+            _flags.Add(flagBuilder.Build());
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register flag for the command
+        /// </summary>
         /// <param name="name">Flag name</param>
         /// <param name="description">Flag description for help.</param>
         /// <param name="defaultValue">Default flag value.</param>
@@ -237,6 +251,21 @@ namespace NFlags.Commands
         {
             CheckConverterIsRegistered(typeof(T));
             _options.Add(new Option {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)});
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register option for the command
+        /// </summary>
+        /// <param name="buildOption">Action to configure option using builder</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterOption<T>(Action<OptionBuilder<T>> buildOption)
+        {
+            CheckConverterIsRegistered(typeof(T));
+            var optionBuilder = new OptionBuilder<T>();
+            buildOption(optionBuilder);
+            _options.Add(optionBuilder.Build());
 
             return this;
         }
@@ -330,6 +359,22 @@ namespace NFlags.Commands
         }
 
         /// <summary>
+        /// Register parameter for the command
+        /// </summary>
+        /// <param name="buildParameter">Action to configure flag using builder</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterParameter<T>(Action<ParameterBuilder<T>> buildParameter)
+        {
+            CheckConverterIsRegistered(typeof(T));
+
+            var parameterBuilder = new ParameterBuilder<T>();
+            buildParameter(parameterBuilder);
+            _parameters.Add(parameterBuilder.Build());
+
+            return this;
+        }
+
+        /// <summary>
         /// Register parameter series for the command
         /// </summary>
         /// <param name="name">Parameter name</param>
@@ -350,6 +395,22 @@ namespace NFlags.Commands
         {
             CheckConverterIsRegistered(typeof(T));
             _paramSeries = new ParameterSeries {Name = name, Description = description, ValueType = typeof(T)};
+
+            return this;
+        }
+
+        /// <summary>
+        /// Register parameter series for the command
+        /// </summary>
+        /// <param name="buildParameterSeries">Action to configure parameter series using builder</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterParameterSeries<T>(Action<ParameterSeriesBuilder<T>> buildParameterSeries)
+        {
+            CheckConverterIsRegistered(typeof(T));
+
+            var parameterSeriesBuilder = new ParameterSeriesBuilder<T>();
+            buildParameterSeries(parameterSeriesBuilder);
+            _paramSeries = parameterSeriesBuilder.Build();
 
             return this;
         }

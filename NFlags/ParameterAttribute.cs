@@ -24,6 +24,22 @@ namespace NFlags
             DefaultValue = defaultValue;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// Creates new instance of ParameterAttribute
+        /// </summary>
+        /// <param name="name">Name of parameter</param>
+        /// <param name="description">Description of parameter for help</param>
+        /// <param name="environmentVariable">Name of environment variable to use before defaultValue when argument is not passed.</param>
+        /// <param name="defaultValue">Default value if parameter is not passed trough arguments</param>
+        public ParameterAttribute(string name, string description, string environmentVariable, object defaultValue)
+        {
+            Name = name;
+            Description = description;
+            EnvironmentVariable = environmentVariable;
+            DefaultValue = defaultValue;
+        }
+
         /// <summary>
         /// Name of parameter
         /// </summary>
@@ -33,6 +49,11 @@ namespace NFlags
         /// Description of parameter for help
         /// </summary>
         public string Description { get; }
+
+        /// <summary>
+        /// Name of environment variable to use before defaultValue when argument is not passed.
+        /// </summary>
+        public string EnvironmentVariable { get; }
 
         /// <summary>
         /// Default value if parameter is not passed trough arguments

@@ -5,6 +5,6 @@ namespace NFlags.Arguments
     /// Represents registered application option.
     /// </summary>
     public class Option : PrefixedDefaultValueArgument
-    {        
+    {
     }
 }

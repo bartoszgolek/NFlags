@@ -31,6 +31,24 @@ namespace NFlags
         /// Creates new instance of OptionAttribute
         /// </summary>
         /// <param name="name">Name of option</param>
+        /// <param name="abr">Abbreviation of option</param>
+        /// <param name="description">Description of option for help</param>
+        /// <param name="environmentVariable">Name of environment variable to use before defaultValue when argument is not passed.</param>
+        /// <param name="defaultValue">Default value if option is not passed trough arguments</param>
+        public OptionAttribute(string name, string abr, string description, string environmentVariable, object defaultValue)
+        {
+            Name = name;
+            Abr = abr;
+            Description = description;
+            EnvironmentVariable = environmentVariable;
+            DefaultValue = defaultValue;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Creates new instance of OptionAttribute
+        /// </summary>
+        /// <param name="name">Name of option</param>
         /// <param name="description">Description of option for help</param>
         /// <param name="defaultValue">Default value if option is not passed trough arguments</param>
         public OptionAttribute(string name, string description, object defaultValue)
@@ -54,6 +72,11 @@ namespace NFlags
         /// Description of option for help
         /// </summary>
         public string Description { get; }
+
+        /// <summary>
+        /// Name of environment variable to use before defaultValue when argument is not passed.
+        /// </summary>
+        public string EnvironmentVariable { get; }
 
         /// <summary>
         /// Default value if option is not passed trough arguments

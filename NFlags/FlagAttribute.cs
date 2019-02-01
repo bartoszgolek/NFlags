@@ -40,6 +40,24 @@ namespace NFlags
             DefaultValue = defaultValue;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// Creates new instance of FlagAttribute
+        /// </summary>
+        /// <param name="name">Name of flag</param>
+        /// <param name="abr">Abbreviation of flag</param>
+        /// <param name="description">Description of flag for help.</param>
+        /// <param name="environmentVariable">Name of environment variable to use before defaultValue when argument is not passed.</param>
+        /// <param name="defaultValue">Default value if flag is not passed trough arguments.</param>
+        public FlagAttribute(string name, string abr, string description, string environmentVariable, bool defaultValue)
+        {
+            Name = name;
+            Abr = abr;
+            Description = description;
+            EnvironmentVariable = environmentVariable;
+            DefaultValue = defaultValue;
+        }
+
         /// <summary>
         /// Name of flag
         /// </summary>
@@ -54,6 +72,11 @@ namespace NFlags
         /// Description of flag for help
         /// </summary>
         public string Description { get; }
+
+        /// <summary>
+        /// Name of environment variable to use before defaultValue when argument is not passed.
+        /// </summary>
+        public string EnvironmentVariable { get; }
 
         /// <summary>
         /// Default value if flag is not passed trough arguments
