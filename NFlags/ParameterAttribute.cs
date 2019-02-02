@@ -14,6 +14,14 @@ namespace NFlags
         /// <summary>
         /// Creates new instance of ParameterAttribute
         /// </summary>
+        public ParameterAttribute()
+        {
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Creates new instance of ParameterAttribute
+        /// </summary>
         /// <param name="name">Name of parameter</param>
         /// <param name="description">Description of parameter for help</param>
         /// <param name="defaultValue">Default value if parameter is not passed trough arguments</param>
@@ -24,19 +32,40 @@ namespace NFlags
             DefaultValue = defaultValue;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// Creates new instance of ParameterAttribute
+        /// </summary>
+        /// <param name="name">Name of parameter</param>
+        /// <param name="description">Description of parameter for help</param>
+        /// <param name="environmentVariable">Name of environment variable to use before defaultValue when argument is not passed.</param>
+        /// <param name="defaultValue">Default value if parameter is not passed trough arguments</param>
+        public ParameterAttribute(string name, string description, string environmentVariable, object defaultValue)
+        {
+            Name = name;
+            Description = description;
+            EnvironmentVariable = environmentVariable;
+            DefaultValue = defaultValue;
+        }
+
         /// <summary>
         /// Name of parameter
         /// </summary>
-        public string Name { get; }
+        public string Name { get;  set; }
 
         /// <summary>
         /// Description of parameter for help
         /// </summary>
-        public string Description { get; }
+        public string Description { get;  set; }
+
+        /// <summary>
+        /// Name of environment variable to use before defaultValue when argument is not passed.
+        /// </summary>
+        public string EnvironmentVariable { get;  set; }
 
         /// <summary>
         /// Default value if parameter is not passed trough arguments
         /// </summary>
-        public object DefaultValue { get; }
+        public object DefaultValue { get;  set; }
     }
 }

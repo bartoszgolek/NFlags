@@ -1,5 +1,6 @@
-using System.Linq;
+using System;
 using System.Reflection;
+using NFlags.Arguments;
 using NFlags.Commands;
 
 namespace NFlags.GenericCommandExtension
@@ -18,59 +19,83 @@ namespace NFlags.GenericCommandExtension
             ValidatePropertySetter(member);
             ValidateParameterSeriesMemberType(member);
 
-            var method = typeof(CommandConfigurator).GetMethods().Single(m => m.IsGenericMethod && m.Name == "RegisterParameterSeries");
-            var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member).GetElementType());
-            generic.Invoke(_commandConfigurator, new object[] {parameterSeriesAttribute.Name, parameterSeriesAttribute.Description});
+            const string parameterSeriesRegistrationType = "ParameterSeries";
+            RegisterArgumentInstance(
+                parameterSeriesRegistrationType, 
+                TypeHelper.GetMemberType(member).GetElementType(), 
+                new ParameterSeries
+                {
+                    Name = parameterSeriesAttribute.Name, 
+                    Description = parameterSeriesAttribute.Description,
+                    ValueType = TypeHelper.GetMemberType(member).GetElementType()
+                }
+            );
         }
 
         public void RegisterParameter(MemberInfo member, ParameterAttribute parameterAttribute)
         {
             ValidatePropertySetter(member);
-                
-            var method = typeof(CommandConfigurator).GetMethod("RegisterParam");
-            var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member));
-            generic.Invoke(_commandConfigurator, new[] {parameterAttribute.Name, parameterAttribute.Description, parameterAttribute.DefaultValue});
+
+            const string parameterRegistrationType = "Parameter";
+            RegisterArgumentInstance(
+                parameterRegistrationType, 
+                TypeHelper.GetMemberType(member), 
+                new Parameter
+                {
+                    Name = parameterAttribute.Name,
+                    Description = parameterAttribute.Description,
+                    DefaultValue = parameterAttribute.DefaultValue,
+                    EnvironmentVariable = parameterAttribute.EnvironmentVariable,
+                    ValueType = TypeHelper.GetMemberType(member)
+                }
+            );
         }
 
         public void RegisterFlag(MemberInfo member, FlagAttribute flagAttribute)
         {
             ValidatePropertySetter(member);
             ValidateFlagMemberType(member);
+            
+            var flag = new Flag
+            {
+                Name = flagAttribute.Name,
+                Abr = flagAttribute.Abr,
+                Description = flagAttribute.Description,
+                ValueType = typeof(bool),
+                DefaultValue = flagAttribute.DefaultValue,
+                EnvironmentVariable = flagAttribute.EnvironmentVariable
+            }; 
 
-            if (flagAttribute.Abr != null)
-                _commandConfigurator.RegisterFlag(flagAttribute.Name, flagAttribute.Abr, flagAttribute.Description, flagAttribute.DefaultValue);
-            else
-                _commandConfigurator.RegisterFlag(flagAttribute.Name, flagAttribute.Description, flagAttribute.DefaultValue);
+            _commandConfigurator.RegisterFlagInstance(flag);
         }
 
         public void RegisterOption(MemberInfo member, OptionAttribute optionAttribute)
         {
             ValidatePropertySetter(member);
-            
-            var parametersCount = optionAttribute.Abr != null ? 4 : 3;
-            var method = typeof(CommandConfigurator).GetMethods()
-                .Single(info => info.Name == "RegisterOption" && info.IsGenericMethod && info.GetParameters().Length == parametersCount);
-
-            var parameters = new[]
-            {
-                optionAttribute.Name,
-                optionAttribute.Description,
-                optionAttribute.DefaultValue
-            };
-
-            if (optionAttribute.Abr != null)
-            {
-                parameters = new[]
+            const string optionRegistrationType = "Option";
+            RegisterArgumentInstance(
+                optionRegistrationType, 
+                TypeHelper.GetMemberType(member), 
+                new Option
                 {
-                    optionAttribute.Name,
-                    optionAttribute.Abr,
-                    optionAttribute.Description,
-                    optionAttribute.DefaultValue
-                };
-            }
+                    Name = optionAttribute.Name,
+                    Description = optionAttribute.Description,
+                    DefaultValue = optionAttribute.DefaultValue,
+                    Abr = optionAttribute.Abr,
+                    EnvironmentVariable = optionAttribute.EnvironmentVariable,
+                    ValueType = TypeHelper.GetMemberType(member)
+                }
+            );
+        }
 
-            var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member));
-            generic.Invoke(_commandConfigurator, parameters);
+        private void RegisterArgumentInstance(string registrationType, Type memberType, object value)
+        {
+            typeof(CommandConfigurator)
+                .GetMethod("Register" + registrationType + "Instance", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.MakeGenericMethod(memberType)
+                .Invoke(
+                    _commandConfigurator,
+                    new[] {value});
         }
 
         private static void ValidatePropertySetter(MemberInfo member)

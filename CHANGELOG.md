@@ -1,3 +1,8 @@
+# 1.5.0
+ * Introduced Flag/Option/Paraemter/ParameterSeries builders
+ * Flag/Option/Paraemter/ParameterSeries Attributes changed to support named arguments
+ * Introduced support for binding Environment Variables
+
 # 1.4.0
  * Generic custom args command registration
  * Method RegisterSubcommand marked as obsolete and RegisterCommand method introduced

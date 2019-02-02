@@ -19,17 +19,17 @@ NFlags.Configure(configure => configure
     .SetDialect(Dialect.Gnu)
     .SetName("QuickStart")
     .SetDescription("This is NFlags")
-).
-Root(rc => rc.
-    RegisterFlag("flag1", "f", "Flag description", false).
-    RegisterOption("option", "o", "Option description", "optionDefaultValue").
-    RegisterParam<string>("param", "Param description", "ParamDefaultValue").
-    RegisterCommand("subcommand", "Subcommand Description", sc => sc.
-            SetExecute((commandArgs, output) => output.WriteLine("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter"))).
-            RegisterParam<string>("SubParameter", "SubParameter description", "SubParameterValue")
-    ).
-    RegisterParamSeries("paramSeries", "paramSeriesDescription").
-    SetExecute((commandArgs, output) => output.WriteLine("This is root command: " + commandArgs.GetParameter<string>("param")))
+)
+.Root(rc => rc
+    .RegisterFlag("flag1", "f", "Flag description", false)
+    .RegisterOption("option", "o", "Option description", "optionDefaultValue")
+    .RegisterParameter("param", "Param description", "ParamDefaultValue")
+    .RegisterCommand("subcommand", "Subcommand Description", sc => sc
+            .SetExecute((commandArgs, output) => output.WriteLine("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter")))
+            .RegisterParameter("SubParameter", "SubParameter description", "SubParameterValue")
+    )
+    .RegisterParamSeries("paramSeries", "paramSeriesDescription")
+    .SetExecute((commandArgs, output) => output.WriteLine("This is root command: " + commandArgs.GetParameter<string>("param")))
 ).
 Run(args);
 ```
@@ -97,9 +97,16 @@ NFlags.Configure(configurator => configurator.SetDescription("App description"))
 ```
 
 #### Set output
-Output action set by this method is used to produce output. Default `Console.Write` is used.
+Output adapter set by this method is used to produce output. Default `Console` is used.
 ```c#
-NFlags.Configure(configurator => configurator.SetOutpu(Console.WriteLine));
+NFlags.Configure(configurator => configurator.SetOutput(Output.Console));
+```
+
+#### Set environment
+Environmant adapter set by this method is used to read environment variables. Default `System` is used.
+Additional Prefixed adapter is provided within library and can be used when all variabels should by started with same prefix to not define prefixed name in every usage.
+```c#
+NFlags.Configure(configurator => configurator.SetEnvironment(Environment.System);
 ```
 
 #### Set dialect
@@ -121,20 +128,66 @@ NFlags.Configure(c => {}).Root(configurator => configurator.RegisterFlag("flag",
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterFlag("flag", "Flag description", false));
 ```
 
+Alternative way of setting flag is to use flagBuilder.
+```c#
+NFlags
+    .Configure(c => {})
+    .Root(configurator => configurator
+        .RegisterFlag(flagBuilder => flagBuilder
+            .Name("flag")
+            .Abr("f")
+            .Description("Flag description")
+            .EnvironmentVariable("NFLAGS_FLAG")
+            .Persistent()
+            .DefaultValue(true)
+        )
+    );
+```
+
 ### Set option
 Option is an prefixed argument with value.
 Option abbreviation can be also set.
 Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
 ```c#
-NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption<T>("option", "o", "option description", "defaultOptionValue"));
-NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption<T>("option", "option description", "defaultOptionValue"));
+NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption("option", "o", "option description", "defaultOptionValue"));
+NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption("option", "option description", "defaultOptionValue"));
+```
+
+Alternative way of setting option is to use optionBuilder.
+```c#
+NFlags
+    .Configure(c => {})
+    .Root(configurator => configurator
+        .RegisterOption<double>(optionBuilder => optionBuilder
+            .Name("option")
+            .Abr("o")
+            .Description("option description")
+            .EnvironmentVariable("NFLAGS_OPTION")
+            .Persistent()
+            .DefaultValue(1.1)
+        )
+    );
 ```
 
 ### Set parameter
 Parameter is an unprefixed value argument. Parameters are read by registration order.
 Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
 ```c#
-NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParam<T>("param", "Param description", "paramDefaultValue"));
+NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParameter("param", "Param description", "paramDefaultValue"));
+```
+
+Alternative way of setting parameter is to use parameterBuilder.
+```c#
+NFlags
+    .Configure(c => {})
+    .Root(configurator => configurator
+        .RegisterParameter<double>(parameterBuilder => parameterBuilder
+            .Name("parameter")
+            .Description("parameter description")
+            .EnvironmentVariable("NFLAGS_PARAMETER")
+            .DefaultValue(1.2)
+        )
+    );
 ```
 
 ### Set parameter series

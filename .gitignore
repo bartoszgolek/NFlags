@@ -2,6 +2,7 @@ bin/
 obj/
 
 .idea/
+.vscode/
 
 *.nupkg
 *.DotSettings.user

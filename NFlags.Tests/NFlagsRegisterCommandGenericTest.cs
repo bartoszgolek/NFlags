@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using NFlags.Tests.DataTypes;
 using Xunit;
@@ -19,7 +20,7 @@ namespace NFlags.Tests
         }
         
         [Fact]
-        public void RegisterCommandT_ShouldThrowIncorrectParameterSeriesMemberTypeException_IfMemberWithParameterSeriesAttributeIsNotBoolean()
+        public void RegisterCommandT_ShouldThrowIncorrectParameterSeriesMemberTypeException_IfMemberWithParameterSeriesAttributeIsNotArray()
         {
             Assert.Throws<IncorrectParameterSeriesMemberTypeException>(() =>
             {
@@ -136,6 +137,39 @@ namespace NFlags.Tests
             Assert.False(a.Flag2);
             Assert.Equal(1.1, a.Parameter1);
             Assert.Equal(1, a.Parameter2);
+            Assert.Empty(a.ParameterSeries);
+        }
+
+        [Fact]
+        public void RegisterCommandT_ShouldPassEnvironmentVariableToExecute_IfEnvironemntVariableIsSet()
+        {
+            var testEnvironment = new TestEnvironment()
+                .SetEnvironmentVariable("NFLAG_TEST_OPTION1", "54")
+                .SetEnvironmentVariable("NFLAG_TEST_FLAG1", "false")
+                .SetEnvironmentVariable("NFLAG_TEST_PARAMETER2", "89");
+            
+            ArgumentsType a = null;
+            NFlags
+                .Configure(c => c
+                    .SetDialect(Dialect.Gnu)
+                    .SetEnvironment(testEnvironment)
+                )
+                .Root<ArgumentsType>(c => c
+                    .RegisterCommand<ArgumentsType>("sub", "sub command ", rc => rc
+                        .SetExecute((args, output) =>
+                        {
+                            a = args;
+                        }))
+                    .SetExecute((type, output) => { })
+                )
+                .Run(new[] { "sub" });
+
+            Assert.Equal(54, a.Option1);
+            Assert.Equal("asd", a.Option2);
+            Assert.False(a.Flag1);
+            Assert.False(a.Flag2);
+            Assert.Equal(1.1, a.Parameter1);
+            Assert.Equal(89, a.Parameter2);
             Assert.Empty(a.ParameterSeries);
         }
 

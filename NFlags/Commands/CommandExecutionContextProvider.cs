@@ -56,13 +56,13 @@ namespace NFlags.Commands
                     ReadParam(arg);
 
             }
-            
+
             var noArgsDefaultCommand = GetDefaultCommand();
             if (noArgsDefaultCommand != null)
                 return noArgsDefaultCommand.Read(_args.ToArray());
 
-            return _commandConfig.PrintHelpOnExecute 
-                ? PrepareHelpCommandExecutionContext(_commandConfig) 
+            return _commandConfig.PrintHelpOnExecute
+                ? PrepareHelpCommandExecutionContext(_commandConfig)
                 : new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
         }
 
@@ -70,21 +70,32 @@ namespace NFlags.Commands
         public static PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(CommandConfig commandConfig, string additionalPrefixMessage = "")
         {
             return new PrintHelpCommandExecutionContext(additionalPrefixMessage, commandConfig);
-        }        
+        }
 
         private CommandArgs InitDefaultCommandArgs()
         {
             var commandArgs = new CommandArgs();
             foreach (var flag in _commandConfig.Flags)
-                commandArgs.AddFlag(flag.Name, flag.GetDefault());
+                commandArgs.AddFlag(flag.Name, (bool)GetEnvironmentOrDefaultValue(flag));
 
             foreach (var option in _commandConfig.Options)
-                commandArgs.AddOption(option.Name, option.DefaultValue);
+                commandArgs.AddOption(option.Name, GetEnvironmentOrDefaultValue(option));
 
             foreach (var parameter in _parameters.ToArray())
-                commandArgs.AddParameter(parameter.Name, parameter.DefaultValue);
+                commandArgs.AddParameter(parameter.Name, GetEnvironmentOrDefaultValue(parameter));
 
             return commandArgs;
+        }
+
+        private object GetEnvironmentOrDefaultValue(DefaultValueArgument argument)
+        {
+            if (argument.EnvironmentVariable == null)
+                return argument.DefaultValue;
+
+            var environmentVariable = _commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable);
+            return environmentVariable != null
+                ? ConvertValueToExpectedType(environmentVariable, argument.ValueType)
+                : argument.DefaultValue;
         }
 
         private void ReadParam(string arg)
@@ -151,7 +162,7 @@ namespace NFlags.Commands
             if (flag == null)
                 return false;
 
-            _commandArgs.AddFlag(flag.Name, !flag.GetDefault());
+            _commandArgs.AddFlag(flag.Name, !(bool)flag.DefaultValue);
 
             return true;
         }

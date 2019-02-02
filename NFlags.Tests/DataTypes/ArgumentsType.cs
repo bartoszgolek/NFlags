@@ -4,13 +4,13 @@ namespace NFlags.Tests.DataTypes
 {
     public class ArgumentsType
     {
-        [Option("option1", "option desc", 1)]
+        [Option(Name = "option1", Description = "option desc", DefaultValue = 1, EnvironmentVariable = "NFLAG_TEST_OPTION1")]
         public int Option1;
 
         [Option("option2", "o2", "option2 desc", "asd")]
         public string Option2 { get; set; }
 
-        [Flag("flag1", "flag desc", true)]
+        [Flag(Name = "flag1", Description = "flag desc", DefaultValue = true, EnvironmentVariable = "NFLAG_TEST_FLAG1")]
         public bool Flag1;
 
         [Flag("flag2", "f2", "flag2 desc", false)]
@@ -19,10 +19,10 @@ namespace NFlags.Tests.DataTypes
         [Parameter("parameter1", "parameter desc", 1.1)]
         public double Parameter1;
 
-        [Parameter("parameter2", "parameter2 desc", 1)]
+        [Parameter(Name = "parameter2", Description = "parameter2 desc", DefaultValue = 1, EnvironmentVariable = "NFLAG_TEST_PARAMETER2")]
         public int Parameter2 { get; set; }
 
-            [ParameterSeries("parameterSeries", "parameter series desc")]
+        [ParameterSeries(Name = "parameterSeries", Description = "parameter series desc")]
         public int[] ParameterSeries { get; set; }
     }
 }

@@ -156,15 +156,28 @@ namespace NFlags.Commands
         /// <summary>
         /// Register flag for the command
         /// </summary>
+        /// <param name="buildFlag">Action to configure flag using builder</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterFlag(Action<FlagBuilder> buildFlag)
+        {
+            var flagBuilder = new FlagBuilder();
+            buildFlag(flagBuilder);
+
+            return RegisterFlagInstance(flagBuilder.Build());
+        }
+
+        /// <summary>
+        /// Register flag for the command
+        /// </summary>
         /// <param name="name">Flag name</param>
         /// <param name="description">Flag description for help.</param>
         /// <param name="defaultValue">Default flag value.</param>
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterFlag(string name, string description, bool defaultValue)
         {
-            _flags.Add(new Flag {Name = name, Description = description, DefaultValue = defaultValue});
-
-            return this;
+            return RegisterFlagInstance(
+                new Flag {Name = name, Description = description, DefaultValue = defaultValue}
+            );
         }
 
         /// <summary>
@@ -177,9 +190,9 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterFlag(string name, string abr, string description, bool defaultValue)
         {
-            _flags.Add(new Flag {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue});
-
-            return this;
+            return RegisterFlagInstance(
+                new Flag {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue}
+            );
         }
 
         /// <summary>
@@ -193,16 +206,16 @@ namespace NFlags.Commands
         public CommandConfigurator RegisterPersistentFlag(string name, string abr, string description,
             bool defaultValue)
         {
-            _flags.Add(new Flag
-            {
-                Name = name,
-                Abr = abr,
-                Description = description,
-                DefaultValue = defaultValue,
-                IsPersistent = true
-            });
-
-            return this;
+            return RegisterFlagInstance(
+                new Flag
+                {
+                    Name = name,
+                    Abr = abr,
+                    Description = description,
+                    DefaultValue = defaultValue,
+                    IsPersistent = true
+                }
+            );
         }
 
         /// <summary>
@@ -214,13 +227,20 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterPersistentFlag(string name, string description, bool defaultValue)
         {
-            _flags.Add(new Flag
-            {
-                Name = name,
-                Description = description,
-                DefaultValue = defaultValue,
-                IsPersistent = true
-            });
+            return RegisterFlagInstance(
+                new Flag
+                {
+                    Name = name,
+                    Description = description,
+                    DefaultValue = defaultValue,
+                    IsPersistent = true
+                }
+            );
+        }
+
+        internal CommandConfigurator RegisterFlagInstance(Flag flag)
+        {
+            _flags.Add(flag);
 
             return this;
         }
@@ -235,10 +255,22 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterOption<T>(string name, string abr, string description, T defaultValue)
         {
-            CheckConverterIsRegistered(typeof(T));
-            _options.Add(new Option {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)});
+            return RegisterOptionInstance<T>(
+                new Option {Name = name, Abr = abr, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)}
+            );
+        }
 
-            return this;
+        /// <summary>
+        /// Register option for the command
+        /// </summary>
+        /// <param name="buildOption">Action to configure option using builder</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterOption<T>(Action<OptionBuilder<T>> buildOption)
+        {
+            var optionBuilder = new OptionBuilder<T>();
+            buildOption(optionBuilder);
+
+            return RegisterOptionInstance<T>(optionBuilder.Build());
         }
 
         /// <summary>
@@ -250,10 +282,9 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterOption<T>(string name, string description, T defaultValue)
         {
-            CheckConverterIsRegistered(typeof(T));
-            _options.Add(new Option {Name = name, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)});
-
-            return this;
+            return RegisterOptionInstance<T>(
+                new Option {Name = name, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)}
+            );
         }
 
         /// <summary>
@@ -265,8 +296,7 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterPersistentOption<T>(string name, string description, T defaultValue)
         {
-            CheckConverterIsRegistered(typeof(T));
-            _options.Add(new Option
+            return RegisterOptionInstance<T>(new Option
             {
                 Name = name,
                 Description = description,
@@ -274,8 +304,6 @@ namespace NFlags.Commands
                 IsPersistent = true,
                 ValueType = typeof(T)
             });
-
-            return this;
         }
 
         /// <summary>
@@ -288,15 +316,23 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterPersistentOption<T>(string name, string abr, string description, T defaultValue)
         {
+            return RegisterOptionInstance<T>(
+                new Option
+                {
+                    Name = name,
+                    Abr = abr,
+                    Description = description,
+                    DefaultValue = defaultValue,
+                    IsPersistent = true,
+                    ValueType = typeof(T)
+                }
+            );
+        }
+
+        internal CommandConfigurator RegisterOptionInstance<T>(Option option)
+        {
             CheckConverterIsRegistered(typeof(T));
-            _options.Add(new Option
-            {
-                Name = name,
-                Abr = abr,
-                Description = description,
-                DefaultValue = defaultValue,
-                IsPersistent = true
-            });
+            _options.Add(option);
 
             return this;
         }
@@ -323,8 +359,25 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterParameter<T>(string name, string description, T defaultValue)
         {
+            return RegisterParameterInstance<T>(new Parameter {Name = name, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)});
+        }
+
+        /// <summary>
+        /// Register parameter for the command
+        /// </summary>
+        /// <param name="buildParameter">Action to configure flag using builder</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterParameter<T>(Action<ParameterBuilder<T>> buildParameter)
+        {
+            var parameterBuilder = new ParameterBuilder<T>();
+            buildParameter(parameterBuilder);
+            return RegisterParameterInstance<T>(parameterBuilder.Build());
+        }
+
+        internal CommandConfigurator RegisterParameterInstance<T>(Parameter parameter)
+        {
             CheckConverterIsRegistered(typeof(T));
-            _parameters.Add(new Parameter {Name = name, Description = description, DefaultValue = defaultValue, ValueType = typeof(T)});
+            _parameters.Add(parameter);
 
             return this;
         }
@@ -348,9 +401,28 @@ namespace NFlags.Commands
         /// <returns>Self instance</returns>
         public CommandConfigurator RegisterParameterSeries<T>(string name, string description)
         {
-            CheckConverterIsRegistered(typeof(T));
-            _paramSeries = new ParameterSeries {Name = name, Description = description, ValueType = typeof(T)};
+            var parameterSeries = new ParameterSeries {Name = name, Description = description, ValueType = typeof(T)};
 
+            return RegisterParameterSeriesInstance<T>(parameterSeries);
+        }
+
+        /// <summary>
+        /// Register parameter series for the command
+        /// </summary>
+        /// <param name="buildParameterSeries">Action to configure parameter series using builder</param>
+        /// <returns>Self instance</returns>
+        public CommandConfigurator RegisterParameterSeries<T>(Action<ParameterSeriesBuilder<T>> buildParameterSeries)
+        {
+            var parameterSeriesBuilder = new ParameterSeriesBuilder<T>();
+            buildParameterSeries(parameterSeriesBuilder);
+
+            return RegisterParameterSeriesInstance<T>(parameterSeriesBuilder.Build());
+        }
+
+        internal CommandConfigurator RegisterParameterSeriesInstance<T>(ParameterSeries parameterSeries)
+        {
+            CheckConverterIsRegistered(typeof(T));
+            _paramSeries = parameterSeries;
             return this;
         }
 
