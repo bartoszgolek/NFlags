@@ -10,10 +10,13 @@ namespace NFlags.Tests
         [Fact]
         public void RegisterCommandT_ShouldPassDefaultValuesToExecute()
         {
+            var testEnvironment = new TestEnvironment();
+
             CommandArgs a = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
+                    .SetEnvironment(testEnvironment)
                 )
                 .Root(c => c
                     .RegisterCommand("sub", "sub command ", rc => rc
