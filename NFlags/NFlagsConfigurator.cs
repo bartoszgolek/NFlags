@@ -16,6 +16,8 @@ namespace NFlags
         private Dialect _dialect = Dialect.Win;
 
         private IOutput _output = Output.Console;
+        
+        private IEnvironment _environment = Environment.System;
 
         private bool _exceptionHandling = true;
 
@@ -76,6 +78,18 @@ namespace NFlags
         }
 
         /// <summary>
+        /// Sets NFlags environment variables provider.
+        /// </summary>
+        /// <param name="environment">Environment variables provider</param>
+        /// <returns>Self instance</returns>
+        public NFlagsConfigurator SetEnvironment(IEnvironment environment)
+        {
+            _environment = environment;
+
+            return this;
+        }
+
+        /// <summary>
         /// Registers Converter to convert argument values
         /// </summary>
         /// <param name="argumentConverter">Param Converter to register</param>
@@ -102,7 +116,7 @@ namespace NFlags
             var converters = new List<IArgumentConverter>(_argumentConverters);
             converters.AddRange(_baseArgumentConverters);
             return new NFlags(
-                new NFlagsConfig( _name, _description, _dialect, _output, _exceptionHandling, converters.ToArray())
+                new NFlagsConfig( _name, _description, _dialect, _output, _environment, _exceptionHandling, converters.ToArray())
             );
         }
     }

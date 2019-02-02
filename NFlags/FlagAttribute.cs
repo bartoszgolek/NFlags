@@ -14,6 +14,14 @@ namespace NFlags
         /// <summary>
         /// Creates new instance of FlagAttribute
         /// </summary>
+        public FlagAttribute()
+        {
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Creates new instance of FlagAttribute
+        /// </summary>
         /// <param name="name">Name of flag</param>
         /// <param name="abr">Abbreviation of flag</param>
         /// <param name="description">Description of flag for help.</param>
@@ -61,26 +69,26 @@ namespace NFlags
         /// <summary>
         /// Name of flag
         /// </summary>
-        public string Name { get; }
+        public string Name { get;  set; }
 
         /// <summary>
         /// Abbreviation of flag
         /// </summary>
-        public string Abr { get; }
+        public string Abr { get;  set; }
 
         /// <summary>
         /// Description of flag for help
         /// </summary>
-        public string Description { get; }
+        public string Description { get;  set; }
 
         /// <summary>
         /// Name of environment variable to use before defaultValue when argument is not passed.
         /// </summary>
-        public string EnvironmentVariable { get; }
+        public string EnvironmentVariable { get;  set; }
 
         /// <summary>
         /// Default value if flag is not passed trough arguments
         /// </summary>
-        public bool DefaultValue { get; }
+        public bool DefaultValue { get;  set; }
     }
 }

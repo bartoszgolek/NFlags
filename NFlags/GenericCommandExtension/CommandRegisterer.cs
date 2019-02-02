@@ -55,11 +55,18 @@ namespace NFlags.GenericCommandExtension
         {
             ValidatePropertySetter(member);
             ValidateFlagMemberType(member);
+            
+            var flag = new Flag
+            {
+                Name = flagAttribute.Name,
+                Abr = flagAttribute.Abr,
+                Description = flagAttribute.Description,
+                ValueType = typeof(bool),
+                DefaultValue = flagAttribute.DefaultValue,
+                EnvironmentVariable = flagAttribute.EnvironmentVariable
+            }; 
 
-            if (flagAttribute.Abr != null)
-                _commandConfigurator.RegisterFlag(flagAttribute.Name, flagAttribute.Abr, flagAttribute.Description, flagAttribute.DefaultValue);
-            else
-                _commandConfigurator.RegisterFlag(flagAttribute.Name, flagAttribute.Description, flagAttribute.DefaultValue);
+            _commandConfigurator.RegisterFlagInstance(flag);
         }
 
         public void RegisterOption(MemberInfo member, OptionAttribute optionAttribute)

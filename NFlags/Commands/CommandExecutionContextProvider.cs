@@ -92,7 +92,7 @@ namespace NFlags.Commands
             if (argument.EnvironmentVariable == null)
                 return argument.DefaultValue;
 
-            var environmentVariable = Environment.GetEnvironmentVariable(argument.EnvironmentVariable);
+            var environmentVariable = _commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable);
             return environmentVariable != null
                 ? ConvertValueToExpectedType(environmentVariable, argument.ValueType)
                 : argument.DefaultValue;

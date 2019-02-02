@@ -14,6 +14,14 @@ namespace NFlags
         /// <summary>
         /// Creates new instance of parameter series
         /// </summary>
+        public ParameterSeriesAttribute()
+        {
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Creates new instance of parameter series
+        /// </summary>
         /// <param name="name">Name of parameter series</param>
         /// <param name="description">Description of parameter series used in help</param>
         public ParameterSeriesAttribute(string name, string description)
@@ -25,11 +33,11 @@ namespace NFlags
         /// <summary>
         /// Name of parameter series
         /// </summary>
-        public string Name { get; }
+        public string Name { get;  set; }
 
         /// <summary>
         /// Description of parameter series used in help
         /// </summary>
-        public string Description { get; }
+        public string Description { get;  set; }
     }
 }

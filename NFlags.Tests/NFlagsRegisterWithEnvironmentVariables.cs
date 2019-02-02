@@ -1,8 +1,5 @@
-using System;
 using System.Globalization;
-using System.Linq;
 using NFlags.Commands;
-using NFlags.Tests.DataTypes;
 using Xunit;
 using NFAssert = NFlags.Tests.Helpers.Assert;
 
@@ -45,17 +42,19 @@ namespace NFlags.Tests
         [Fact]
         public void RegisterCommandT_ShouldPassEnvironmentVariablesToValuesToExecute()
         {
-            Environment.SetEnvironmentVariable("NFLAG_TEST_FLAG1", "false");
-            Environment.SetEnvironmentVariable("NFLAG_TEST_FLAG2", "true");
-            Environment.SetEnvironmentVariable("NFLAG_TEST_OPTION1", "3");
-            Environment.SetEnvironmentVariable("NFLAG_TEST_OPTION2", "xyz");
-            Environment.SetEnvironmentVariable("NFLAG_TEST_PARAMETER1", 2.53.ToString(CultureInfo.CurrentCulture));
-            Environment.SetEnvironmentVariable("NFLAG_TEST_PARAMETER2", "5");
+            var testEnvironment = new TestEnvironment()
+                .SetEnvironmentVariable("NFLAG_TEST_FLAG1", "false")
+                .SetEnvironmentVariable("NFLAG_TEST_FLAG2", "true")
+                .SetEnvironmentVariable("NFLAG_TEST_OPTION1", "3")
+                .SetEnvironmentVariable("NFLAG_TEST_OPTION2", "xyz")
+                .SetEnvironmentVariable("NFLAG_TEST_PARAMETER1", 2.53.ToString(CultureInfo.CurrentCulture))
+                .SetEnvironmentVariable("NFLAG_TEST_PARAMETER2", "5");
             
             CommandArgs a = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
+                    .SetEnvironment(testEnvironment)
                 )
                 .Root(c => c
                     .RegisterCommand("sub", "sub command ", rc => rc
@@ -84,15 +83,17 @@ namespace NFlags.Tests
         [Fact]
         public void RegisterCommandT_ShouldPassArgumentsToValuesToExecute_EvenIfEnvironmentVariablesAreSet()
         {
-            Environment.SetEnvironmentVariable("NFLAG_TEST_OPTION1", "3");
-            Environment.SetEnvironmentVariable("NFLAG_TEST_OPTION2", "xyz");
-            Environment.SetEnvironmentVariable("NFLAG_TEST_PARAMETER1", 2.53.ToString(CultureInfo.CurrentCulture));
-            Environment.SetEnvironmentVariable("NFLAG_TEST_PARAMETER2", "5");
+            var testEnvironment = new TestEnvironment()
+                .SetEnvironmentVariable("NFLAG_TEST_OPTION1", "3")
+                .SetEnvironmentVariable("NFLAG_TEST_OPTION2", "xyz")
+                .SetEnvironmentVariable("NFLAG_TEST_PARAMETER1", 2.53.ToString(CultureInfo.CurrentCulture))
+                .SetEnvironmentVariable("NFLAG_TEST_PARAMETER2", "5");
             
             CommandArgs a = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
+                    .SetEnvironment(testEnvironment)
                 )
                 .Root(c => c
                     .RegisterCommand("sub", "sub command ", rc => rc
