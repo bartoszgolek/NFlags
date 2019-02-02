@@ -19,17 +19,17 @@ NFlags.Configure(configure => configure
     .SetDialect(Dialect.Gnu)
     .SetName("QuickStart")
     .SetDescription("This is NFlags")
-).
-Root(rc => rc.
-    RegisterFlag("flag1", "f", "Flag description", false).
-    RegisterOption("option", "o", "Option description", "optionDefaultValue").
-    RegisterParameter("param", "Param description", "ParamDefaultValue").
-    RegisterCommand("subcommand", "Subcommand Description", sc => sc.
-            SetExecute((commandArgs, output) => output.WriteLine("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter"))).
-            RegisterParameter("SubParameter", "SubParameter description", "SubParameterValue")
-    ).
-    RegisterParamSeries("paramSeries", "paramSeriesDescription").
-    SetExecute((commandArgs, output) => output.WriteLine("This is root command: " + commandArgs.GetParameter<string>("param")))
+)
+.Root(rc => rc
+    .RegisterFlag("flag1", "f", "Flag description", false)
+    .RegisterOption("option", "o", "Option description", "optionDefaultValue")
+    .RegisterParameter("param", "Param description", "ParamDefaultValue")
+    .RegisterCommand("subcommand", "Subcommand Description", sc => sc
+            .SetExecute((commandArgs, output) => output.WriteLine("This is subcommand: " + commandArgs.GetParameter<string>("SubParameter")))
+            .RegisterParameter("SubParameter", "SubParameter description", "SubParameterValue")
+    )
+    .RegisterParamSeries("paramSeries", "paramSeriesDescription")
+    .SetExecute((commandArgs, output) => output.WriteLine("This is root command: " + commandArgs.GetParameter<string>("param")))
 ).
 Run(args);
 ```
