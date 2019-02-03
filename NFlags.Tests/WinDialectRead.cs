@@ -92,6 +92,27 @@ namespace NFlags.Tests
         }
 
         [Fact]
+        public void TestParams_ShouldSetOptionValue_IfWordAbrContainedInArgs()
+        {
+            CommandArgs a = null;
+
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(Dialect.Win)
+                )
+                .Root(configurator => configurator
+                    .RegisterOption("option", "op", "", "")
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
+                )
+                .Run(new[] {"/op=optionValue"});
+
+            Assert.Equal("optionValue", a.GetOption<string>("option"));
+        }
+
+        [Fact]
         public void TestParams_ShouldSetMultipleOptionValues_IfAbrContainedInArgs()
         {
             CommandArgs a = null;
@@ -233,6 +254,27 @@ namespace NFlags.Tests
                     })
                 )
                 .Run(new[] {"/x"});
+
+            Assert.True(a.GetFlag("xFlag"));
+        }
+
+        [Fact]
+        public void TestParams_ShouldSetFlag_IfWordAbrContainedInArgs()
+        {
+            CommandArgs a = null;
+
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(Dialect.Win)
+                )
+                .Root(configurator => configurator
+                    .RegisterFlag("xFlag", "xf", "", false)
+                    .SetExecute((args, output) =>
+                    {
+                        a = args;
+                        return 0;
+                    })
+                )
+                .Run(new[] {"/xf"});
 
             Assert.True(a.GetFlag("xFlag"));
         }
