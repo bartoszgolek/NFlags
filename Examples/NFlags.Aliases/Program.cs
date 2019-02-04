@@ -29,7 +29,7 @@ namespace NFlags.Aliases
                         .Name("option-alias")
                         .Abr("oa")
                         .DefaultValue("asd")
-                        .Target("flag")
+                        .Target("option")
                     )
                     .SetExecute((arguments, output) =>
                     {
