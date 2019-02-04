@@ -15,5 +15,10 @@ namespace NFlags.Arguments
         /// Defines if flag persist for sub commands
         /// </summary>
         public bool IsPersistent;
+
+        /// <summary>
+        /// Describes type of argument value
+        /// </summary>
+        public string Target;
     }
 }

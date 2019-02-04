@@ -7,7 +7,7 @@ namespace NFlags
     /// Mark field or property as option to register in command
     /// </summary>
     /// <remarks>If property, then has to be settable.</remarks>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
     public class OptionAttribute : Attribute
     {
         /// <inheritdoc />

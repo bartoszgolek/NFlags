@@ -7,7 +7,7 @@ namespace NFlags
     /// Mark field or property as flag to register in command
     /// </summary>
     /// <remarks>If property, then has to be settable.</remarks>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
     public class FlagAttribute : Attribute
     {
         /// <inheritdoc />

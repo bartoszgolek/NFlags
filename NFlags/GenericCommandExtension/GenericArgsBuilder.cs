@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NFlags.Commands;
@@ -10,6 +11,8 @@ namespace NFlags.GenericCommandExtension
     {
         private readonly CommandArgs _args;
         private readonly TArguments _tArgs;
+        private readonly ICollection<string> _flagsSet = new HashSet<string>();
+        private readonly ICollection<string> _optionsSet = new HashSet<string>();
 
         public GenericArgsBuilder(CommandArgs args, TArguments tArgs)
         {
@@ -19,15 +22,23 @@ namespace NFlags.GenericCommandExtension
 
         public void SetOptionValue(MemberInfo member, OptionAttribute optionAttribute)
         {
+            if (_optionsSet.Contains(member.Name))
+                return;
+
             var method = typeof(CommandArgs).GetMethod("GetOption");
             var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member));
             var value = generic.Invoke(_args, new object[] {optionAttribute.Name});
             TypeHelper.SetValue(member, _tArgs, value);
+            _optionsSet.Add(member.Name);
         }
 
         public void SetFlagValue(MemberInfo member, FlagAttribute flagAttribute)
         {
+            if (_flagsSet.Contains(member.Name))
+                return;
+
             TypeHelper.SetValue(member, _tArgs, _args.GetFlag(flagAttribute.Name));
+            _flagsSet.Add(member.Name);
         }
 
         public void SetParameterValue(MemberInfo member, ParameterAttribute parameterAttribute)

@@ -12,6 +12,7 @@ namespace NFlags.Arguments
         private bool _isPersistent;
         private T _defaultValue;
         private string _environmentVariable;
+        private string _target;
 
         /// <summary>
         /// Set name of the argument.
@@ -85,6 +86,18 @@ namespace NFlags.Arguments
         }
 
         /// <summary>
+        /// Set target name for the argument value
+        /// </summary>
+        /// <param name="target">Target to use when setting value in command args collection.</param>
+        /// <returns>Self instance</returns>
+        public OptionBuilder<T> Target(string target)
+        {
+            _target = target;
+
+            return this;
+        }
+
+        /// <summary>
         /// Build option
         /// </summary>
         /// <returns>Option</returns>
@@ -98,7 +111,8 @@ namespace NFlags.Arguments
                 DefaultValue = _defaultValue,
                 EnvironmentVariable = _environmentVariable,
                 Abr = _abr,
-                IsPersistent = _isPersistent
+                IsPersistent = _isPersistent,
+                Target = _target
             };
         }
     }

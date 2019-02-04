@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NFlags.Arguments;
 using NFlags.TypeConverters;
@@ -13,6 +14,8 @@ namespace NFlags.Commands
         private readonly ParameterSeries _parameterSeries;
         private readonly Shifter<string> _args;
         private readonly CommandArgs _commandArgs;
+        private readonly ICollection<string> _flagsSet = new HashSet<string>();
+        private readonly ICollection<string> _optionsSet = new HashSet<string>();
 
         public CommandExecutionContextProvider(
             CommandConfig commandConfig,
@@ -120,11 +123,16 @@ namespace NFlags.Commands
             if (opt == null)
                 return false;
 
+            var optionTarget = opt.Target ?? opt.Name;
+            if (_optionsSet.Contains(optionTarget))
+                return true;
+
             var optionValue = OptionReader
                 .GetReader(_commandConfig.NFlagsConfig.Dialect.OptionValueMode)
                 .ReadValue(_args, arg);
 
-            _commandArgs.AddOption(opt.Name, ConvertValueToExpectedType(optionValue, opt.ValueType));
+            _commandArgs.AddOption(optionTarget, ConvertValueToExpectedType(optionValue, opt.ValueType));
+            _optionsSet.Add(optionTarget);
 
             return true;
         }
@@ -162,7 +170,12 @@ namespace NFlags.Commands
             if (flag == null)
                 return false;
 
-            _commandArgs.AddFlag(flag.Name, !(bool)flag.DefaultValue);
+            var flagTarget = flag.Target ?? flag.Name;
+            if (_flagsSet.Contains(flagTarget))
+                return true;
+
+            _commandArgs.AddFlag(flagTarget, !(bool)flag.DefaultValue);
+            _flagsSet.Add(flagTarget);
 
             return true;
         }

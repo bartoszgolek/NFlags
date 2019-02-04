@@ -16,20 +16,26 @@ namespace NFlags.GenericCommandExtension
 
             foreach (var member in members)
             {
-                var flagAttribute = member.GetCustomAttribute<FlagAttribute>();
-                if (flagAttribute != null)
+                var flagRegistered = false;
+                var flagAttributes = member.GetCustomAttributes<FlagAttribute>();
+                foreach (var flagAttribute in flagAttributes)
                 {
                     flagAction(member, flagAttribute);
-                    continue;
+                    flagRegistered = true;
                 }
+                if (flagRegistered)
+                    continue;
 
 
-                var optionAttribute = member.GetCustomAttribute<OptionAttribute>();
-                if (optionAttribute != null)
+                var optionRegistered = false;
+                var optionAttributes = member.GetCustomAttributes<OptionAttribute>();
+                foreach (var optionAttribute in optionAttributes)
                 {
+                    optionRegistered = true;
                     optionAction(member, optionAttribute);
-                    continue;
                 }
+                if (optionRegistered)
+                    continue;
 
 
                 var parameterAttribute = member.GetCustomAttribute<ParameterAttribute>();
