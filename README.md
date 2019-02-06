@@ -4,8 +4,8 @@
 [![NuGet](https://img.shields.io/nuget/dt/NFlags.svg)](https://www.nuget.org/packages/NFlags)
 [![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/labstack/echo/master/LICENSE)
 
-Simple library to made parsing CLI arguments easy.
-Library allows to print usage help "out of box".
+Simple yet powerfull library to made parsing CLI arguments easy. 
+Library also allow to print usage help "out of box".
 
 For example of usage check **Examples** directory.
 
