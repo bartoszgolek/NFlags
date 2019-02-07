@@ -12,6 +12,7 @@ namespace NFlags.Arguments
         private bool _isPersistent;
         private T _defaultValue;
         private string _environmentVariable;
+        private string _config;
 
         /// <summary>
         /// Set name of the argument.
@@ -85,6 +86,18 @@ namespace NFlags.Arguments
         }
 
         /// <summary>
+        /// Set environment variable name for the argument value
+        /// </summary>
+        /// <param name="config">Config value path for the argument value</param>
+        /// <returns>Self instance</returns>
+        public OptionBuilder<T> Config(string config)
+        {
+            _config = config;
+
+            return this;
+        }
+
+        /// <summary>
         /// Build option
         /// </summary>
         /// <returns>Option</returns>
@@ -97,6 +110,7 @@ namespace NFlags.Arguments
                 ValueType = typeof(T),
                 DefaultValue = _defaultValue,
                 EnvironmentVariable = _environmentVariable,
+                Config = _config,
                 Abr = _abr,
                 IsPersistent = _isPersistent
             };

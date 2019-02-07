@@ -15,9 +15,10 @@ namespace NFlags
         /// <param name="dialect">NSpec arguments dialect</param>
         /// <param name="output">Output writing interface</param>
         /// <param name="environment">Environment variables provider</param>
+        /// <param name="config">Configuration values provider</param>
         /// <param name="isExceptionHandlingEnabled">Is Exception handling enabled. Use exit code if enabled, otherwise throw exceptions. Default False</param>
         /// <param name="argumentConverters">List of param converters</param>
-        public NFlagsConfig(string name, string description, Dialect dialect, IOutput output, IEnvironment environment, bool isExceptionHandlingEnabled, IArgumentConverter[] argumentConverters)
+        public NFlagsConfig(string name, string description, Dialect dialect, IOutput output, IEnvironment environment, IConfig config, bool isExceptionHandlingEnabled, IArgumentConverter[] argumentConverters)
         {
             Name = name;
             Description = description;
@@ -25,6 +26,7 @@ namespace NFlags
             IsExceptionHandlingEnabled = isExceptionHandlingEnabled;
             Output = output;
             Environment = environment;
+            Config = config;
             ArgumentConverters = argumentConverters;
         }
 
@@ -62,5 +64,10 @@ namespace NFlags
         /// Environments variable provider
         /// </summary>
         public IEnvironment Environment { get; }
+
+        /// <summary>
+        /// Configuration values provider
+        /// </summary>
+        public IConfig Config { get; }
     }
 }

@@ -11,6 +11,7 @@ namespace NFlags.Arguments
         private bool _isPersistent;
         private bool _defaultValue;
         private string _environmentVariable;
+        private string _config;
 
         /// <summary>
         /// Set name of the argument.
@@ -84,6 +85,18 @@ namespace NFlags.Arguments
         }
 
         /// <summary>
+        /// Set config value path for the argument value
+        /// </summary>
+        /// <param name="config">Config value path for the argument value</param>
+        /// <returns>Self instance</returns>
+        public FlagBuilder Config(string config)
+        {
+            _config = config;
+
+            return this;
+        }
+
+        /// <summary>
         /// Build flag
         /// </summary>
         /// <returns>Flag</returns>
@@ -95,6 +108,7 @@ namespace NFlags.Arguments
                 Description = _description,
                 DefaultValue = _defaultValue,
                 EnvironmentVariable = _environmentVariable,
+                Config = _config,
                 Abr = _abr,
                 IsPersistent = _isPersistent
             };

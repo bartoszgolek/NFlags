@@ -76,26 +76,36 @@ namespace NFlags.Commands
         {
             var commandArgs = new CommandArgs();
             foreach (var flag in _commandConfig.Flags)
-                commandArgs.AddFlag(flag.Name, (bool)GetEnvironmentOrDefaultValue(flag));
+                commandArgs.AddFlag(flag.Name, (bool)GetDefaultValueInPrecedence(flag));
 
             foreach (var option in _commandConfig.Options)
-                commandArgs.AddOption(option.Name, GetEnvironmentOrDefaultValue(option));
+                commandArgs.AddOption(option.Name, GetDefaultValueInPrecedence(option));
 
             foreach (var parameter in _parameters.ToArray())
-                commandArgs.AddParameter(parameter.Name, GetEnvironmentOrDefaultValue(parameter));
+                commandArgs.AddParameter(parameter.Name, GetDefaultValueInPrecedence(parameter));
 
             return commandArgs;
         }
 
-        private object GetEnvironmentOrDefaultValue(DefaultValueArgument argument)
+        private object GetDefaultValueInPrecedence(DefaultValueArgument argument)
         {
-            if (argument.EnvironmentVariable == null)
-                return argument.DefaultValue;
+            var result = argument.DefaultValue;
+            if (argument.Config != null)
+            {
+                var config = _commandConfig.NFlagsConfig.Config;
+                var value = config?.Get(argument.Config);
+                if (value != null)
+                    result = ConvertValueToExpectedType(value, argument.ValueType);
+            }
 
-            var environmentVariable = _commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable);
-            return environmentVariable != null
-                ? ConvertValueToExpectedType(environmentVariable, argument.ValueType)
-                : argument.DefaultValue;
+            if (argument.EnvironmentVariable != null)
+            {
+                var environmentVariable = _commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable);
+                if (environmentVariable != null)
+                    result = ConvertValueToExpectedType(environmentVariable, argument.ValueType);
+            }
+
+            return result;
         }
 
         private void ReadParam(string arg)
