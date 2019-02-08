@@ -6,27 +6,29 @@ using NFAssert = NFlags.Tests.Helpers.Assert;
 
 namespace NFlags.Tests
 {
-    public class NFlagsRegisterWithEnvironmentVariables
+    public class NFlagsRegisterWithConfigValues
     {
         [Fact]
         public void RegisterCommand_ShouldPassDefaultValuesToExecute()
         {
-            var testEnvironment = new TestEnvironment();
+            var testConfig = new TestConfig();
 
             CommandArgs a = null;
             NFlags
-                .Configure(c => c
-                    .SetDialect(Dialect.Gnu)
-                    .SetEnvironment(testEnvironment)
-                )
+                .Configure(c =>
+                {
+                    c
+                        .SetDialect(Dialect.Gnu)
+                        .SetConfiguration(testConfig);
+                })
                 .Root(c => c
                     .RegisterCommand("sub", "sub command ", rc => rc
-                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).EnvironmentVariable("NFLAG_TEST_OPTION1"))
-                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").EnvironmentVariable("NFLAG_TEST_OPTION2"))
-                        .RegisterFlag(b => b.Name("flag1").Description("flag desc").DefaultValue(true).EnvironmentVariable("NFLAG_TEST_FLAG1"))
-                        .RegisterFlag(b => b.Name("flag2").Abr("f2").Description("flag2 desc").EnvironmentVariable("NFLAG_TEST_FLAG2"))
-                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).EnvironmentVariable("NFLAG_TEST_PARAMETER1"))
-                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).EnvironmentVariable("NFLAG_TEST_PARAMETER2"))
+                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).Config("NFLAG_TEST_OPTION1"))
+                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").Config("NFLAG_TEST_OPTION2"))
+                        .RegisterFlag(b => b.Name("flag1").Description("flag desc").DefaultValue(true).Config("NFLAG_TEST_FLAG1"))
+                        .RegisterFlag(b => b.Name("flag2").Abr("f2").Description("flag2 desc").Config("NFLAG_TEST_FLAG2"))
+                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).Config("NFLAG_TEST_PARAMETER1"))
+                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).Config("NFLAG_TEST_PARAMETER2"))
                         .SetExecute((args, output) =>
                         {
                             a = args;
@@ -46,28 +48,28 @@ namespace NFlags.Tests
         [Fact]
         public void RegisterCommand_ShouldPassEnvironmentVariablesToValuesToExecute()
         {
-            var testEnvironment = new TestEnvironment()
-                .SetEnvironmentVariable("NFLAG_TEST_FLAG1", "false")
-                .SetEnvironmentVariable("NFLAG_TEST_FLAG2", "true")
-                .SetEnvironmentVariable("NFLAG_TEST_OPTION1", "3")
-                .SetEnvironmentVariable("NFLAG_TEST_OPTION2", "xyz")
-                .SetEnvironmentVariable("NFLAG_TEST_PARAMETER1", 2.53.ToString(CultureInfo.CurrentCulture))
-                .SetEnvironmentVariable("NFLAG_TEST_PARAMETER2", "5");
+            var testConfig = new TestConfig()
+                .SetConfigValue("NFLAG_TEST_FLAG1", "false")
+                .SetConfigValue("NFLAG_TEST_FLAG2", "true")
+                .SetConfigValue("NFLAG_TEST_OPTION1", "3")
+                .SetConfigValue("NFLAG_TEST_OPTION2", "xyz")
+                .SetConfigValue("NFLAG_TEST_PARAMETER1", 2.53.ToString(CultureInfo.CurrentCulture))
+                .SetConfigValue("NFLAG_TEST_PARAMETER2", "5");
 
             CommandArgs a = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
-                    .SetEnvironment(testEnvironment)
+                    .SetConfiguration(testConfig)
                 )
                 .Root(c => c
                     .RegisterCommand("sub", "sub command ", rc => rc
-                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).EnvironmentVariable("NFLAG_TEST_OPTION1"))
-                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").EnvironmentVariable("NFLAG_TEST_OPTION2"))
-                        .RegisterFlag(b => b.Name("flag1").Description("flag desc").DefaultValue(true).EnvironmentVariable("NFLAG_TEST_FLAG1"))
-                        .RegisterFlag(b => b.Name("flag2").Abr("f2").Description("flag2 desc").EnvironmentVariable("NFLAG_TEST_FLAG2"))
-                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).EnvironmentVariable("NFLAG_TEST_PARAMETER1"))
-                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).EnvironmentVariable("NFLAG_TEST_PARAMETER2"))
+                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).Config("NFLAG_TEST_OPTION1"))
+                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").Config("NFLAG_TEST_OPTION2"))
+                        .RegisterFlag(b => b.Name("flag1").Description("flag desc").DefaultValue(true).Config("NFLAG_TEST_FLAG1"))
+                        .RegisterFlag(b => b.Name("flag2").Abr("f2").Description("flag2 desc").Config("NFLAG_TEST_FLAG2"))
+                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).Config("NFLAG_TEST_PARAMETER1"))
+                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).Config("NFLAG_TEST_PARAMETER2"))
                         .SetExecute((args, output) =>
                         {
                             a = args;
@@ -101,10 +103,10 @@ namespace NFlags.Tests
                 )
                 .Root(c => c
                     .RegisterCommand("sub", "sub command ", rc => rc
-                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).EnvironmentVariable("NFLAG_TEST_OPTION1"))
-                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").EnvironmentVariable("NFLAG_TEST_OPTION2"))
-                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).EnvironmentVariable("NFLAG_TEST_PARAMETER1"))
-                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).EnvironmentVariable("NFLAG_TEST_PARAMETER2"))
+                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).Config("NFLAG_TEST_OPTION1"))
+                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").Config("NFLAG_TEST_OPTION2"))
+                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).Config("NFLAG_TEST_PARAMETER1"))
+                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).Config("NFLAG_TEST_PARAMETER2"))
                         .SetExecute((args, output) =>
                         {
                             a = args;

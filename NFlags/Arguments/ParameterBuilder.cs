@@ -10,6 +10,7 @@ namespace NFlags.Arguments
         private string _description;
         private T _defaultValue;
         private string _environmentVariable;
+        private string _config;
 
         /// <summary>
         /// Set name of the argument.
@@ -60,6 +61,18 @@ namespace NFlags.Arguments
         }
 
         /// <summary>
+        /// Set environment variable name for the argument value
+        /// </summary>
+        /// <param name="config">Config value path for the argument value</param>
+        /// <returns>Self instance</returns>
+        public ParameterBuilder<T> Config(string config)
+        {
+            _config = config;
+
+            return this;
+        }
+
+        /// <summary>
         /// Build parameter
         /// </summary>
         /// <returns>Parameter</returns>
@@ -71,7 +84,8 @@ namespace NFlags.Arguments
                 Description = _description,
                 ValueType = typeof(T),
                 DefaultValue = _defaultValue,
-                EnvironmentVariable = _environmentVariable
+                EnvironmentVariable = _environmentVariable,
+                Config = _config
             };
         }
     }
