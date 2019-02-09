@@ -103,10 +103,16 @@ NFlags.Configure(configurator => configurator.SetOutput(Output.Console));
 ```
 
 #### Set environment
-Environmant adapter set by this method is used to read environment variables. Default `System` is used.
+Environment adapter set by this method is used to read environment variables. Default `System` is used.
 Additional Prefixed adapter is provided within library and can be used when all variabels should by started with same prefix to not define prefixed name in every usage.
 ```c#
 NFlags.Configure(configurator => configurator.SetEnvironment(Environment.System);
+```
+
+#### Set config
+Configuration adapter set by this method is used to read values from configuration. If not set, `ConfigPath` is not used when reading walue of argument.
+```c#
+NFlags.Configure(configurator => configurator.SetConfiguration(...);
 ```
 
 #### Set dialect
@@ -138,6 +144,7 @@ NFlags
             .Abr("f")
             .Description("Flag description")
             .EnvironmentVariable("NFLAGS_FLAG")
+            .ConfigPath("app.settings.flag")
             .Persistent()
             .DefaultValue(true)
         )
@@ -163,6 +170,7 @@ NFlags
             .Abr("o")
             .Description("option description")
             .EnvironmentVariable("NFLAGS_OPTION")
+            .ConfigPath("app.settings.option")
             .Persistent()
             .DefaultValue(1.1)
         )
@@ -185,6 +193,7 @@ NFlags
             .Name("parameter")
             .Description("parameter description")
             .EnvironmentVariable("NFLAGS_PARAMETER")
+            .ConfigPath("app.settings.parameter")
             .DefaultValue(1.2)
         )
     );
