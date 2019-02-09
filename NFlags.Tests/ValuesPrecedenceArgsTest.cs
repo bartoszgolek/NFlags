@@ -4,7 +4,7 @@ using Xunit;
 
 namespace NFlags.Tests
 {
-    public class ValuesPrecedence
+    public class ValuesPrecedenceArgsTest
     {
         [Fact]
         public void RegisterCommand_ShouldPassCliArgumentsToExecute_WhenDefaultConfigEnvironmentAndCliAreDefined()
@@ -93,11 +93,11 @@ namespace NFlags.Tests
                 )
                 .Root(c => c
                     .RegisterFlag(b =>
-                        b.Name("flag").DefaultValue(true).EnvironmentVariable("NFLAG_TEST_FLAG_ENV").Config("FLAG"))
+                        b.Name("flag").DefaultValue(true).EnvironmentVariable("NFLAG_TEST_FLAG_ENV").ConfigPath("FLAG"))
                     .RegisterOption<string>(b =>
-                        b.Name("option").DefaultValue("def_o").EnvironmentVariable("NFLAG_TEST_OPTION_ENV").Config("OPTION"))
+                        b.Name("option").DefaultValue("def_o").EnvironmentVariable("NFLAG_TEST_OPTION_ENV").ConfigPath("OPTION"))
                     .RegisterParameter<string>(b =>
-                        b.Name("parameter").DefaultValue("def_p").EnvironmentVariable("NFLAG_TEST_PARAM_ENV").Config("PARAM"))
+                        b.Name("parameter").DefaultValue("def_p").EnvironmentVariable("NFLAG_TEST_PARAM_ENV").ConfigPath("PARAM"))
                     .SetExecute((args, output) => { a = args; })
                 )
                 .Run(cliArgs);

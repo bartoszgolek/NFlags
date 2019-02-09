@@ -90,10 +90,10 @@ namespace NFlags.Commands
         private object GetDefaultValueInPrecedence(DefaultValueArgument argument)
         {
             var result = argument.DefaultValue;
-            if (argument.Config != null)
+            if (argument.ConfigPath != null)
             {
                 var config = _commandConfig.NFlagsConfig.Config;
-                var value = config?.Get(argument.Config);
+                var value = config?.Get(argument.ConfigPath);
                 if (value != null)
                     result = ConvertValueToExpectedType(value, argument.ValueType);
             }

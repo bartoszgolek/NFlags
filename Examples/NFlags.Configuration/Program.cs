@@ -23,7 +23,7 @@ namespace NFlags.Configuration
                     .RegisterOption<string>(b => b
                         .Name("asd")
                         .EnvironmentVariable("asd")
-                        .Config("Consul:Address")
+                        .ConfigPath("Consul:Address")
                     )
                 )
                 .Run(args);

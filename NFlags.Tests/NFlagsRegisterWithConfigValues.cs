@@ -23,12 +23,12 @@ namespace NFlags.Tests
                 })
                 .Root(c => c
                     .RegisterCommand("sub", "sub command ", rc => rc
-                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).Config("NFLAG_TEST_OPTION1"))
-                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").Config("NFLAG_TEST_OPTION2"))
-                        .RegisterFlag(b => b.Name("flag1").Description("flag desc").DefaultValue(true).Config("NFLAG_TEST_FLAG1"))
-                        .RegisterFlag(b => b.Name("flag2").Abr("f2").Description("flag2 desc").Config("NFLAG_TEST_FLAG2"))
-                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).Config("NFLAG_TEST_PARAMETER1"))
-                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).Config("NFLAG_TEST_PARAMETER2"))
+                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).ConfigPath("NFLAG_TEST_OPTION1"))
+                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").ConfigPath("NFLAG_TEST_OPTION2"))
+                        .RegisterFlag(b => b.Name("flag1").Description("flag desc").DefaultValue(true).ConfigPath("NFLAG_TEST_FLAG1"))
+                        .RegisterFlag(b => b.Name("flag2").Abr("f2").Description("flag2 desc").ConfigPath("NFLAG_TEST_FLAG2"))
+                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).ConfigPath("NFLAG_TEST_PARAMETER1"))
+                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).ConfigPath("NFLAG_TEST_PARAMETER2"))
                         .SetExecute((args, output) =>
                         {
                             a = args;
@@ -64,12 +64,12 @@ namespace NFlags.Tests
                 )
                 .Root(c => c
                     .RegisterCommand("sub", "sub command ", rc => rc
-                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).Config("NFLAG_TEST_OPTION1"))
-                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").Config("NFLAG_TEST_OPTION2"))
-                        .RegisterFlag(b => b.Name("flag1").Description("flag desc").DefaultValue(true).Config("NFLAG_TEST_FLAG1"))
-                        .RegisterFlag(b => b.Name("flag2").Abr("f2").Description("flag2 desc").Config("NFLAG_TEST_FLAG2"))
-                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).Config("NFLAG_TEST_PARAMETER1"))
-                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).Config("NFLAG_TEST_PARAMETER2"))
+                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).ConfigPath("NFLAG_TEST_OPTION1"))
+                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").ConfigPath("NFLAG_TEST_OPTION2"))
+                        .RegisterFlag(b => b.Name("flag1").Description("flag desc").DefaultValue(true).ConfigPath("NFLAG_TEST_FLAG1"))
+                        .RegisterFlag(b => b.Name("flag2").Abr("f2").Description("flag2 desc").ConfigPath("NFLAG_TEST_FLAG2"))
+                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).ConfigPath("NFLAG_TEST_PARAMETER1"))
+                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).ConfigPath("NFLAG_TEST_PARAMETER2"))
                         .SetExecute((args, output) =>
                         {
                             a = args;
@@ -103,10 +103,10 @@ namespace NFlags.Tests
                 )
                 .Root(c => c
                     .RegisterCommand("sub", "sub command ", rc => rc
-                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).Config("NFLAG_TEST_OPTION1"))
-                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").Config("NFLAG_TEST_OPTION2"))
-                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).Config("NFLAG_TEST_PARAMETER1"))
-                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).Config("NFLAG_TEST_PARAMETER2"))
+                        .RegisterOption<int>(b => b.Name("option1").Description("option desc").DefaultValue(1).ConfigPath("NFLAG_TEST_OPTION1"))
+                        .RegisterOption<string>(b => b.Name("option2").Abr("o2").Description("option2 desc").DefaultValue("asd").ConfigPath("NFLAG_TEST_OPTION2"))
+                        .RegisterParameter<double>(b => b.Name("parameter1").Description("parameter desc").DefaultValue(1.1).ConfigPath("NFLAG_TEST_PARAMETER1"))
+                        .RegisterParameter<int>(b => b.Name("parameter2").Description("parameter2 desc").DefaultValue(1).ConfigPath("NFLAG_TEST_PARAMETER2"))
                         .SetExecute((args, output) =>
                         {
                             a = args;

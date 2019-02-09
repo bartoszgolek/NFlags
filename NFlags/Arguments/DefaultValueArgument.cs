@@ -19,6 +19,6 @@ namespace NFlags.Arguments
         /// <summary>
         /// Path to configuration value
         /// </summary>
-        public string Config { get; set; }
+        public string ConfigPath { get; set; }
     }
 }
