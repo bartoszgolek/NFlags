@@ -1,3 +1,5 @@
+ * Introduced support for binding to configuration
+
 # 1.5.0
  * Introduced Flag/Option/Paraemter/ParameterSeries builders
  * Flag/Option/Paraemter/ParameterSeries Attributes changed to support named arguments

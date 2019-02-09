@@ -15,5 +15,10 @@ namespace NFlags.Arguments
         /// Name of environment variable to use before defaultValue when argument is not passed.
         /// </summary>
         public string EnvironmentVariable { get; internal set; }
+
+        /// <summary>
+        /// Path to configuration value
+        /// </summary>
+        public string ConfigPath { get; set; }
     }
 }

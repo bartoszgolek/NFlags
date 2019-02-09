@@ -46,6 +46,7 @@ namespace NFlags.GenericCommandExtension
                     Description = parameterAttribute.Description,
                     DefaultValue = parameterAttribute.DefaultValue,
                     EnvironmentVariable = parameterAttribute.EnvironmentVariable,
+                    ConfigPath = parameterAttribute.ConfigPath,
                     ValueType = TypeHelper.GetMemberType(member)
                 }
             );
@@ -63,7 +64,8 @@ namespace NFlags.GenericCommandExtension
                 Description = flagAttribute.Description,
                 ValueType = typeof(bool),
                 DefaultValue = flagAttribute.DefaultValue,
-                EnvironmentVariable = flagAttribute.EnvironmentVariable
+                EnvironmentVariable = flagAttribute.EnvironmentVariable,
+                ConfigPath = flagAttribute.ConfigPath
             }; 
 
             _commandConfigurator.RegisterFlagInstance(flag);
@@ -83,6 +85,7 @@ namespace NFlags.GenericCommandExtension
                     DefaultValue = optionAttribute.DefaultValue,
                     Abr = optionAttribute.Abr,
                     EnvironmentVariable = optionAttribute.EnvironmentVariable,
+                    ConfigPath = optionAttribute.ConfigPath,
                     ValueType = TypeHelper.GetMemberType(member)
                 }
             );

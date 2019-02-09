@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-namespace NFlags.Tests
+namespace NFlags.Tests.TestImplementations
 {
-    public class TestEnvironment : IEnvironment
+    public class TestConfig : IConfig
     {
         private readonly IDictionary<string, string> _variables = new Dictionary<string, string>();
 
-        public TestEnvironment SetEnvironmentVariable(string name, string value)
+        public TestConfig SetConfigValue(string name, string value)
         {
             _variables[name] = value;
 

@@ -21,6 +21,8 @@ namespace NFlags
 
         private bool _exceptionHandling = true;
 
+        private IConfig _config = null;
+
         private readonly List<IArgumentConverter> _baseArgumentConverters = new List<IArgumentConverter> {
             new CommonTypeConverter(),
             new ConstructorConverter(),
@@ -90,6 +92,18 @@ namespace NFlags
         }
 
         /// <summary>
+        /// Sets NFlags configuration values provider.
+        /// </summary>
+        /// <param name="config">Configuration values provider</param>
+        /// <returns>Self instance</returns>
+        public NFlagsConfigurator SetConfiguration(IConfig config)
+        {
+            _config = config;
+
+            return this;
+        }
+
+        /// <summary>
         /// Registers Converter to convert argument values
         /// </summary>
         /// <param name="argumentConverter">Param Converter to register</param>
@@ -116,7 +130,7 @@ namespace NFlags
             var converters = new List<IArgumentConverter>(_argumentConverters);
             converters.AddRange(_baseArgumentConverters);
             return new NFlags(
-                new NFlagsConfig( _name, _description, _dialect, _output, _environment, _exceptionHandling, converters.ToArray())
+                new NFlagsConfig( _name, _description, _dialect, _output, _environment, _config, _exceptionHandling, converters.ToArray())
             );
         }
     }

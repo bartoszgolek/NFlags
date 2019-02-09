@@ -24,7 +24,7 @@ namespace NFlags
         /// </summary>
         /// <param name="name">Name of parameter</param>
         /// <param name="description">Description of parameter for help</param>
-        /// <param name="defaultValue">Default value if parameter is not passed trough arguments</param>
+        /// <param name="defaultValue">Default value</param>
         public ParameterAttribute(string name, string description, object defaultValue)
         {
             Name = name;
@@ -38,13 +38,31 @@ namespace NFlags
         /// </summary>
         /// <param name="name">Name of parameter</param>
         /// <param name="description">Description of parameter for help</param>
-        /// <param name="environmentVariable">Name of environment variable to use before defaultValue when argument is not passed.</param>
-        /// <param name="defaultValue">Default value if parameter is not passed trough arguments</param>
+        /// <param name="environmentVariable">Name of environment variable to use.</param>
+        /// <param name="defaultValue">Default value</param>
         public ParameterAttribute(string name, string description, string environmentVariable, object defaultValue)
         {
             Name = name;
             Description = description;
             EnvironmentVariable = environmentVariable;
+            DefaultValue = defaultValue;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Creates new instance of ParameterAttribute
+        /// </summary>
+        /// <param name="name">Name of parameter</param>
+        /// <param name="description">Description of parameter for help</param>
+        /// <param name="environmentVariable">Name of environment variable to use.</param>
+        /// <param name="configPath">Path to configuration value to use.</param>
+        /// <param name="defaultValue">Default value</param>
+        public ParameterAttribute(string name, string description, string environmentVariable, string configPath, object defaultValue)
+        {
+            Name = name;
+            Description = description;
+            EnvironmentVariable = environmentVariable;
+            ConfigPath = configPath;
             DefaultValue = defaultValue;
         }
 
@@ -59,12 +77,17 @@ namespace NFlags
         public string Description { get;  set; }
 
         /// <summary>
-        /// Name of environment variable to use before defaultValue when argument is not passed.
+        /// Name of environment variable to use.
         /// </summary>
         public string EnvironmentVariable { get;  set; }
 
         /// <summary>
-        /// Default value if parameter is not passed trough arguments
+        /// Path to configuration value to use.
+        /// </summary>
+        public string ConfigPath { get; set; }
+
+        /// <summary>
+        /// Default value
         /// </summary>
         public object DefaultValue { get;  set; }
     }
