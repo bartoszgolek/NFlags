@@ -4,7 +4,7 @@ using NFlags.ValueProviders;
 
 namespace NFlags.Commands
 {
-    public class ValueProvidersCollection
+    internal class ValueProvidersCollection
     {
         IList<IValueProvider> _valueProviders = new List<IValueProvider>();
 

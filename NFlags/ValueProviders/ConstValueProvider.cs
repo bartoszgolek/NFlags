@@ -1,6 +1,6 @@
 namespace NFlags.ValueProviders
 {
-    public class ConstValueProvider : IValueProvider
+    internal class ConstValueProvider : IValueProvider
     {
         private object _value;
 
