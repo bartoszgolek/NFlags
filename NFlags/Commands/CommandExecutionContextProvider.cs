@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NFlags.Arguments;
 using NFlags.TypeConverters;
 using NFlags.Utils;
+using NFlags.ValueProviders;
 
 namespace NFlags.Commands
 {
@@ -76,36 +78,60 @@ namespace NFlags.Commands
         {
             var commandArgs = new CommandArgs();
             foreach (var flag in _commandConfig.Flags)
-                commandArgs.AddFlag(flag.Name, (bool)GetDefaultValueInPrecedence(flag));
+            {
+                var valueProviders = GetDefaultValueProvidersInPrecedence(flag);
+                foreach (var valueProvider in valueProviders)
+                    commandArgs.AddFlagValueProvider(flag.Name, valueProvider);
+            }
 
             foreach (var option in _commandConfig.Options)
-                commandArgs.AddOption(option.Name, GetDefaultValueInPrecedence(option));
+            {
+                var valueProviders = GetDefaultValueProvidersInPrecedence(option);
+                foreach (var valueProvider in valueProviders) 
+                    commandArgs.AddOptionValueProvider(option.Name, valueProvider);
+            }
 
             foreach (var parameter in _parameters.ToArray())
-                commandArgs.AddParameter(parameter.Name, GetDefaultValueInPrecedence(parameter));
+            {
+                var valueProviders = GetDefaultValueProvidersInPrecedence(parameter);
+                foreach (var valueProvider in valueProviders) 
+                    commandArgs.AddParameterValueProvider(parameter.Name, valueProvider);
+            }
 
             return commandArgs;
         }
 
-        private object GetDefaultValueInPrecedence(DefaultValueArgument argument)
+        private IEnumerable<IValueProvider> GetDefaultValueProvidersInPrecedence(DefaultValueArgument argument)
         {
-            var result = argument.DefaultValue;
+            var valueProvidersCollection = new List<IValueProvider>
+            {
+                new ConstValueProvider(argument.DefaultValue)
+            };
+
             if (argument.ConfigPath != null)
             {
                 var config = _commandConfig.NFlagsConfig.Config;
                 var value = config?.Get(argument.ConfigPath);
                 if (value != null)
-                    result = ConvertValueToExpectedType(value, argument.ValueType);
+                {
+                    valueProvidersCollection.Add(
+                        new ConstValueProvider(ConvertValueToExpectedType(value, argument.ValueType))
+                    );
+                }
             }
 
             if (argument.EnvironmentVariable != null)
             {
                 var environmentVariable = _commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable);
                 if (environmentVariable != null)
-                    result = ConvertValueToExpectedType(environmentVariable, argument.ValueType);
+                {
+                    valueProvidersCollection.Add(
+                        new ConstValueProvider(ConvertValueToExpectedType(environmentVariable, argument.ValueType))
+                    );
+                }
             }
 
-            return result;
+            return valueProvidersCollection;
         }
 
         private void ReadParam(string arg)
@@ -113,7 +139,7 @@ namespace NFlags.Commands
             if (_parameters.HasData())
             {
                 var parameter = _parameters.Shift();
-                _commandArgs.AddParameter(parameter.Name, ConvertValueToExpectedType(arg, parameter.ValueType));
+                _commandArgs.AddParameterValueProvider(parameter.Name, new ConstValueProvider(ConvertValueToExpectedType(arg, parameter.ValueType)));
             }
             else if (_parameterSeries != null)
                 _commandArgs.AddParameterToSeries(ConvertValueToExpectedType(arg, _parameterSeries.ValueType));
@@ -134,7 +160,7 @@ namespace NFlags.Commands
                 .GetReader(_commandConfig.NFlagsConfig.Dialect.OptionValueMode)
                 .ReadValue(_args, arg);
 
-            _commandArgs.AddOption(opt.Name, ConvertValueToExpectedType(optionValue, opt.ValueType));
+            _commandArgs.AddOptionValueProvider(opt.Name, new ConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
 
             return true;
         }
@@ -172,7 +198,7 @@ namespace NFlags.Commands
             if (flag == null)
                 return false;
 
-            _commandArgs.AddFlag(flag.Name, !(bool)flag.DefaultValue);
+            _commandArgs.AddFlagValueProvider(flag.Name, new ConstValueProvider(!(bool)flag.DefaultValue));
 
             return true;
         }

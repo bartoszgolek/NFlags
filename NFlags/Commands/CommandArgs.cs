@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NFlags.ValueProviders;
 
 namespace NFlags.Commands
 {
@@ -8,9 +8,9 @@ namespace NFlags.Commands
     /// </summary>
     public class CommandArgs
     {
-        private readonly Dictionary<string, object> _options;
-        private readonly Dictionary<string, object> _parameters;
-        private readonly Dictionary<string, bool> _flags;
+        private readonly Dictionary<string, ValueProvidersCollection> _options;
+        private readonly Dictionary<string, ValueProvidersCollection> _parameters;
+        private readonly Dictionary<string, ValueProvidersCollection> _flags;
         private readonly List<object> _parameterSeries;
 
         /// <summary>
@@ -18,35 +18,11 @@ namespace NFlags.Commands
         /// </summary>
         public CommandArgs()
         {
-            _flags = new Dictionary<string, bool>();
-            _options = new Dictionary<string, object>();
-            _parameters = new Dictionary<string, object>();
+            _flags = new Dictionary<string, ValueProvidersCollection>();
+            _options = new Dictionary<string, ValueProvidersCollection>();
+            _parameters = new Dictionary<string, ValueProvidersCollection>();
             _parameterSeries = new List<object>();
         }
-
-        /// <summary>
-        /// All registered flags with values
-        /// </summary>
-        [Obsolete("This property is obsolete and will be removed. Use AddFlag, GetFlag methods instead.")]
-        public Dictionary<string, bool> Flags => _flags;
-
-        /// <summary>
-        /// All registered options with values
-        /// </summary>
-        [Obsolete("This property is obsolete and will be removed. Use AddOption, GetOption methods instead.")]
-        public Dictionary<string, object> Options => _options;
-
-        /// <summary>
-        /// All registered parameters with values
-        /// </summary>
-        [Obsolete("This property is obsolete and will be removed. Use AddParameter, GetParameter methods instead.")]
-        public Dictionary<string, object> Parameters => _parameters;
-
-        /// <summary>
-        /// Registered parameter series with values
-        /// </summary>
-        [Obsolete("This property is obsolete and will be removed. Use AddParameterToSeries, GetParameterFromSeries, GetParameterSeries methods instead.")]
-        public List<object> ParameterSeries => _parameterSeries;
 
         /// <summary>
         /// Add flag
@@ -55,7 +31,15 @@ namespace NFlags.Commands
         /// <param name="value">Flag value</param>
         public void AddFlag(string name, bool value)
         {
-            _flags[name] = value;
+            AddFlagValueProvider(name, new ConstValueProvider(value));
+        }
+        
+        internal void AddFlagValueProvider(string name, IValueProvider valueProvider)
+        {
+            if (!_flags.ContainsKey(name))
+                _flags.Add(name, new ValueProvidersCollection());
+            
+            _flags[name].RegisterValueProvider(valueProvider);
         }
 
         /// <summary>
@@ -65,7 +49,7 @@ namespace NFlags.Commands
         /// <returns>Flag value</returns>
         public bool GetFlag(string name)
         {
-            return _flags[name];
+            return (bool) _flags[name].GetValue();
         }
 
         /// <summary>
@@ -76,7 +60,15 @@ namespace NFlags.Commands
         /// <typeparam name="T">Option value type</typeparam>
         public void AddOption<T>(string name, T value)
         {
-            _options[name] = value;
+            AddOptionValueProvider(name, new ConstValueProvider(value));
+        }
+
+        internal void AddOptionValueProvider(string name, IValueProvider valueProvider)
+        {
+            if (!_options.ContainsKey(name))
+                _options.Add(name, new ValueProvidersCollection());
+            
+            _options[name].RegisterValueProvider(valueProvider);
         }
 
         /// <summary>
@@ -87,7 +79,7 @@ namespace NFlags.Commands
         /// <returns>Option value</returns>
         public T GetOption<T>(string name)
         {
-            return (T)_options[name];
+            return (T)_options[name].GetValue();
         }
 
         /// <summary>
@@ -98,7 +90,15 @@ namespace NFlags.Commands
         /// <typeparam name="T">Parameter value type</typeparam>
         public void AddParameter<T>(string name, T value)
         {
-            _parameters[name] = value;
+            AddParameterValueProvider(name, new ConstValueProvider(value));
+        }
+
+        internal void AddParameterValueProvider(string name, IValueProvider valueProvider)
+        {
+            if (!_parameters.ContainsKey(name))
+                _parameters.Add(name, new ValueProvidersCollection());
+            
+            _parameters[name].RegisterValueProvider(valueProvider);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace NFlags.Commands
         /// <returns>Parameter value</returns>
         public T GetParameter<T>(string name)
         {
-            return (T)_parameters[name];
+            return (T)_parameters[name].GetValue();
         }
 
         /// <summary>
