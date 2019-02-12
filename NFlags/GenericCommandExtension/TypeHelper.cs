@@ -38,5 +38,10 @@ namespace NFlags.GenericCommandExtension
                     );
             }
         }
+
+        public static bool IsLazy(Type memberType)
+        {
+            return memberType.IsGenericType && memberType.GetGenericTypeDefinition() == typeof(Lazy<>);
+        }        
     }
 }

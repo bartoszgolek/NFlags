@@ -19,23 +19,60 @@ namespace NFlags.GenericCommandExtension
 
         public void SetOptionValue(MemberInfo member, OptionAttribute optionAttribute)
         {
+            var memberType = TypeHelper.GetMemberType(member);
             var method = typeof(CommandArgs).GetMethod("GetOption");
-            var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member));
-            var value = generic.Invoke(_args, new object[] {optionAttribute.Name});
-            TypeHelper.SetValue(member, _tArgs, value);
+
+            if (TypeHelper.IsLazy(memberType))
+            {
+                var activator = GetType().GetMethod("ActivateLazy", BindingFlags.NonPublic | BindingFlags.Instance);
+                var activate = activator.MakeGenericMethod(memberType.GenericTypeArguments[0]);
+
+                var generic = method.MakeGenericMethod(memberType.GenericTypeArguments[0]);
+                var lazyValue = activate.Invoke(this, new object[] { generic, new object[] { optionAttribute.Name }});
+                TypeHelper.SetValue(member, _tArgs, lazyValue);
+            }
+            else
+            {
+                var generic = method.MakeGenericMethod(memberType);
+                var value = generic.Invoke(_args, new object[] {optionAttribute.Name});
+                TypeHelper.SetValue(member, _tArgs, value);                
+            }
         }
 
         public void SetFlagValue(MemberInfo member, FlagAttribute flagAttribute)
         {
-            TypeHelper.SetValue(member, _tArgs, _args.GetFlag(flagAttribute.Name));
+            var memberType = TypeHelper.GetMemberType(member);
+            if (TypeHelper.IsLazy(memberType))
+                TypeHelper.SetValue(member, _tArgs, new Lazy<bool>(() => _args.GetFlag(flagAttribute.Name)));
+            else
+                TypeHelper.SetValue(member, _tArgs, _args.GetFlag(flagAttribute.Name));
         }
 
         public void SetParameterValue(MemberInfo member, ParameterAttribute parameterAttribute)
         {
+            var memberType = TypeHelper.GetMemberType(member);
             var method = typeof(CommandArgs).GetMethod("GetParameter");
-            var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member));
-            var value = generic.Invoke(_args, new object[] {parameterAttribute.Name});
-            TypeHelper.SetValue(member, _tArgs, value);
+
+            if (TypeHelper.IsLazy(memberType))
+            {
+                var activator = GetType().GetMethod("ActivateLazy", BindingFlags.NonPublic | BindingFlags.Instance);
+                var activate = activator.MakeGenericMethod(memberType.GenericTypeArguments[0]);
+
+                var generic = method.MakeGenericMethod(memberType.GenericTypeArguments[0]);
+                var lazyValue = activate.Invoke(this, new object[] { generic, new object[] { parameterAttribute.Name }});
+                TypeHelper.SetValue(member, _tArgs, lazyValue);
+            }
+            else
+            {
+                var generic = method.MakeGenericMethod(TypeHelper.GetMemberType(member));
+                var value = generic.Invoke(_args, new object[] {parameterAttribute.Name});
+                TypeHelper.SetValue(member, _tArgs, value);                
+            }
+        }
+
+        private Lazy<T> ActivateLazy<T>(MethodInfo method, params object[] args)
+        {
+            return new Lazy<T>(() => (T)method.Invoke(_args, args));
         }
 
         public void SetParameterSeriesValues(MemberInfo member, ParameterSeriesAttribute parameterSeriesAttribute)

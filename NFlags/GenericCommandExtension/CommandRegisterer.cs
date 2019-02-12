@@ -46,8 +46,9 @@ namespace NFlags.GenericCommandExtension
                     Description = parameterAttribute.Description,
                     DefaultValue = parameterAttribute.DefaultValue,
                     EnvironmentVariable = parameterAttribute.EnvironmentVariable,
+                    IsEnvironmentVariableLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
                     ConfigPath = parameterAttribute.ConfigPath,
-                    ValueType = TypeHelper.GetMemberType(member)
+                    ValueType = GetArgumentType(TypeHelper.GetMemberType(member))
                 }
             );
         }
@@ -65,6 +66,7 @@ namespace NFlags.GenericCommandExtension
                 ValueType = typeof(bool),
                 DefaultValue = flagAttribute.DefaultValue,
                 EnvironmentVariable = flagAttribute.EnvironmentVariable,
+                IsEnvironmentVariableLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
                 ConfigPath = flagAttribute.ConfigPath
             }; 
 
@@ -85,8 +87,9 @@ namespace NFlags.GenericCommandExtension
                     DefaultValue = optionAttribute.DefaultValue,
                     Abr = optionAttribute.Abr,
                     EnvironmentVariable = optionAttribute.EnvironmentVariable,
+                    IsEnvironmentVariableLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
                     ConfigPath = optionAttribute.ConfigPath,
-                    ValueType = TypeHelper.GetMemberType(member)
+                    ValueType = GetArgumentType(TypeHelper.GetMemberType(member))
                 }
             );
         }
@@ -118,8 +121,17 @@ namespace NFlags.GenericCommandExtension
         private static void ValidateFlagMemberType(MemberInfo member)
         {
             var memberType = TypeHelper.GetMemberType(member);
-            if (memberType != typeof(bool))
+            var flagType = GetArgumentType(memberType);
+            
+            if (flagType != typeof(bool))
                 throw new IncorrectFlagMemberTypeException(member.Name, memberType);
+        }
+
+        private static Type GetArgumentType(Type memberType)
+        {
+            return TypeHelper.IsLazy(memberType)
+                ? memberType.GenericTypeArguments[0]
+                : memberType;
         }
     }
 }

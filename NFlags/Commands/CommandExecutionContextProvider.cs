@@ -122,7 +122,6 @@ namespace NFlags.Commands
 
             if (argument.EnvironmentVariable != null)
             {
-
                 var valueProvider = argument.IsEnvironmentVariableLazy
                     ? (IValueProvider) new ValueProviderProxy(() => ConvertValueToExpectedType(_commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable), argument.ValueType))
                     : new ConstValueProvider(ConvertValueToExpectedType(_commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable), argument.ValueType));

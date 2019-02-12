@@ -1,4 +1,5 @@
 using System.Text;
+using NFlags.Tests.TestImplementations;
 
 namespace NFlags.Tests.Helpers
 {

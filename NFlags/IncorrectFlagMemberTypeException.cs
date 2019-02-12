@@ -15,7 +15,7 @@ namespace NFlags
         /// <param name="name">Member name</param>
         /// <param name="type">Member type</param>
         public IncorrectFlagMemberTypeException(string name, Type type)
-            :base($"Property '{name}' is of type '{type}'. Boolean expected.")
+            :base($"Property '{name}' is of type '{type}'. Boolean or Lazy<Boolean> expected.")
         {
         }
     }

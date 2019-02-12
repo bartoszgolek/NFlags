@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using NFlags.Tests.TestImplementations;
 using Xunit;
 using NFAssert = NFlags.Tests.Helpers.Assert;
 

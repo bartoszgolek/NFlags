@@ -1,3 +1,4 @@
+using NFlags.Tests.TestImplementations;
 using Xunit;
 using NFAssert = NFlags.Tests.Helpers.Assert;
 

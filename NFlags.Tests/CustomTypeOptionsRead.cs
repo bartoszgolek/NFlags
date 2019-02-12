@@ -1,5 +1,6 @@
 using NFlags.Commands;
 using NFlags.Tests.DataTypes;
+using NFlags.Tests.TestImplementations;
 using NFlags.TypeConverters;
 using Xunit;
 using NFAssert = NFlags.Tests.Helpers.Assert;

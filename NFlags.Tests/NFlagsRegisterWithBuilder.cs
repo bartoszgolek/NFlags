@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Linq;
 using NFlags.Commands;
-using NFlags.Tests.DataTypes;
+using NFlags.Tests.TestImplementations;
 using Xunit;
 using NFAssert = NFlags.Tests.Helpers.Assert;
 
