@@ -10,16 +10,16 @@ namespace NFlags.Arguments
         /// <summary>
         /// Name for help printing
         /// </summary>
-        public string Name;
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Description for help printing
         /// </summary>
-        public string Description;
+        public string Description { get; internal set; }
 
         /// <summary>
         /// Describes type of argument value
         /// </summary>
-        public Type ValueType;
+        public Type ValueType { get; internal set; }
     }
 }

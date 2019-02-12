@@ -87,14 +87,14 @@ namespace NFlags.Commands
             foreach (var option in _commandConfig.Options)
             {
                 var valueProviders = GetDefaultValueProvidersInPrecedence(option);
-                foreach (var valueProvider in valueProviders) 
+                foreach (var valueProvider in valueProviders)
                     commandArgs.AddOptionValueProvider(option.Name, valueProvider);
             }
 
             foreach (var parameter in _parameters.ToArray())
             {
                 var valueProviders = GetDefaultValueProvidersInPrecedence(parameter);
-                foreach (var valueProvider in valueProviders) 
+                foreach (var valueProvider in valueProviders)
                     commandArgs.AddParameterValueProvider(parameter.Name, valueProvider);
             }
 
@@ -122,13 +122,12 @@ namespace NFlags.Commands
 
             if (argument.EnvironmentVariable != null)
             {
-                var environmentVariable = _commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable);
-                if (environmentVariable != null)
-                {
-                    valueProvidersCollection.Add(
-                        new ConstValueProvider(ConvertValueToExpectedType(environmentVariable, argument.ValueType))
-                    );
-                }
+
+                var valueProvider = argument.IsEnvironmentVariableLazy
+                    ? (IValueProvider) new ValueProviderProxy(() => ConvertValueToExpectedType(_commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable), argument.ValueType))
+                    : new ConstValueProvider(ConvertValueToExpectedType(_commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable), argument.ValueType));
+
+                valueProvidersCollection.Add(valueProvider);
             }
 
             return valueProvidersCollection;
@@ -167,6 +166,9 @@ namespace NFlags.Commands
 
         private object ConvertValueToExpectedType(string value, Type expectedType)
         {
+            if (value == null)
+                return null;
+
             if (expectedType == typeof(string))
                 return value;
 

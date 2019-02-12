@@ -9,7 +9,7 @@ namespace NFlags.Arguments
         /// <summary>
         /// Default value
         /// </summary>
-        public object DefaultValue;
+        public object DefaultValue { get; internal set; }
 
         /// <summary>
         /// Name of environment variable to use before defaultValue when argument is not passed.
@@ -17,8 +17,13 @@ namespace NFlags.Arguments
         public string EnvironmentVariable { get; internal set; }
 
         /// <summary>
+        /// Determines, if environment variable should be read during initialization or on each access
+        /// </summary>
+        public bool IsEnvironmentVariableLazy { get; internal set; }
+
+        /// <summary>
         /// Path to configuration value
         /// </summary>
-        public string ConfigPath { get; set; }
+        public string ConfigPath { get; internal set; }
     }
 }

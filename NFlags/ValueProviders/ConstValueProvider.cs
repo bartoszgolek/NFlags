@@ -2,7 +2,7 @@ namespace NFlags.ValueProviders
 {
     internal class ConstValueProvider : IValueProvider
     {
-        private object _value;
+        private readonly object _value;
 
         public ConstValueProvider(object value)
         {

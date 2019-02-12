@@ -13,6 +13,7 @@ namespace NFlags.Arguments
         private T _defaultValue;
         private string _environmentVariable;
         private string _configPath;
+        private bool _isEnvironmentVariableLazy;
 
         /// <summary>
         /// Set name of the argument.
@@ -81,6 +82,20 @@ namespace NFlags.Arguments
         public OptionBuilder<T> EnvironmentVariable(string environmentVariable)
         {
             _environmentVariable = environmentVariable;
+            _isEnvironmentVariableLazy = false;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Set lazy environment variable name for the argument value. Environment variable will be resolved on each read.
+        /// </summary>
+        /// <param name="environmentVariable">Environment variable name for the argument value</param>
+        /// <returns>Self instance</returns>
+        public OptionBuilder<T> LazyEnvironmentVariable(string environmentVariable)
+        {
+            _environmentVariable = environmentVariable;
+            _isEnvironmentVariableLazy = true;
 
             return this;
         }
@@ -110,6 +125,7 @@ namespace NFlags.Arguments
                 ValueType = typeof(T),
                 DefaultValue = _defaultValue,
                 EnvironmentVariable = _environmentVariable,
+                IsEnvironmentVariableLazy = _isEnvironmentVariableLazy,
                 ConfigPath = _configPath,
                 Abr = _abr,
                 IsPersistent = _isPersistent

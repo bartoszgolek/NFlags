@@ -9,11 +9,11 @@ namespace NFlags.Arguments
         /// <summary>
         /// Abbreviation name for help printing and shorthand usage.
         /// </summary>
-        public string Abr;
+        public string Abr { get; internal set; }
 
         /// <summary>
         /// Defines if flag persist for sub commands
         /// </summary>
-        public bool IsPersistent;
+        public bool IsPersistent { get; internal set; }
     }
 }
