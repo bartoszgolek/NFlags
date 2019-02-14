@@ -1,4 +1,7 @@
+# 1.6.0
  * Introduced support for binding to configuration
+ * Introduced lazy binding for environment variables
+ * Introduced lazy binding for configuration
 
 # 1.5.0
  * Introduced Flag/Option/Paraemter/ParameterSeries builders

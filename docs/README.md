@@ -374,7 +374,7 @@ will print following output:
 ```
 $> dotnet NFlags.Gnu.dll
 Usage:
-        NFlags.Generics [FLAGS]... [OPTIONS]... [PARAMETERS]...
+        NFlags.Gnu [FLAGS]... [OPTIONS]... [PARAMETERS]...
 
         Flags:
         --flag, -f      flag description
@@ -436,7 +436,24 @@ NFlags
     )
 ```
 
-See `NFlags.Generics` example. 
+See `NFlags.Generics` example.
+
+Generics also supports lazy environment and configuration binding. When property is of type `Lazy<>` the value will be 
+resolved when accessed by `Value` property of `Lazy<>` type. 
+
+```c#
+    public class RootCommandArguments
+    {
+        [Option(Name = "option", ConfigPath = "config.option", EnvironmentVariable = "NFLAGS_OPTION_TEST_ENV", DefaultValue = 1)]
+        public Lazy<int> Option;
+
+        [Flag(Name = "flag", ConfigPath = "config.flag", EnvironmentVariable = "NFLAGS_FLAG_TEST_ENV", DefaultValue = true)]
+        public Lazy<bool> Flag;
+
+        [Flag(Name = "parameter", ConfigPath = "config.parameter", EnvironmentVariable = "NFLAGS_FLAG_PARAMETER_ENV", DefaultValue = 1.1)]
+        public Lazy<double> Parameter;
+    }
+```
 
 ## Converters
 
