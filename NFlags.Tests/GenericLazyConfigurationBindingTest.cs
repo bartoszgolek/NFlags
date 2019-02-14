@@ -4,26 +4,26 @@ using Xunit;
 
 namespace NFlags.Tests
 {
-    public class GenericLazyEnvironmentBindingTest
+    public class GenericLazyConfigurationBindingTest
     {
         [Fact]
         public void RegisterCommandT_ShouldReadFlagLazyEnvironmentVariable_IfSetAfterInitialization()
         {
-            var testEnvironment = new TestEnvironment();
+            var testConfig = new TestConfig();
 
-            LazyEnvironmentArgumentsType commandArgs = null;
+            LazyConfigPathArgumentsType commandArgs = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
-                    .SetEnvironment(testEnvironment)
+                    .SetConfiguration(testConfig)
                 )
-                .Root<LazyEnvironmentArgumentsType>(c => c
+                .Root<LazyConfigPathArgumentsType>(c => c
                     .SetExecute((args, output) => { commandArgs = args; })
                 )
                 .Run(new string[0]);
 
-            testEnvironment
-                .SetEnvironmentVariable("NFLAG_TEST_FLAG_ENV", "false");
+            testConfig
+                .SetConfigValue("config.flag", "false");
 
             Assert.False(commandArgs.Flag.Value);
         }
@@ -31,21 +31,21 @@ namespace NFlags.Tests
         [Fact]
         public void RegisterCommandT_ShouldReadLazyOptionEnvironmentVariable_IfSetAfterInitialization()
         {
-            var testEnvironment = new TestEnvironment();
+            var testConfig = new TestConfig();
 
-            LazyEnvironmentArgumentsType commandArgs = null;
+            LazyConfigPathArgumentsType commandArgs = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
-                    .SetEnvironment(testEnvironment)
+                    .SetConfiguration(testConfig)
                 )
-                .Root<LazyEnvironmentArgumentsType>(c => c
+                .Root<LazyConfigPathArgumentsType>(c => c
                     .SetExecute((args, output) => { commandArgs = args; })
                 )
                 .Run(new string[0]);
 
-            testEnvironment
-                .SetEnvironmentVariable("NFLAG_TEST_OPTION_ENV", "env_o");
+            testConfig
+                .SetConfigValue("config.option", "env_o");
 
             Assert.Equal("env_o", commandArgs.Option.Value);
         }
@@ -53,21 +53,21 @@ namespace NFlags.Tests
         [Fact]
         public void RegisterCommandT_ShouldReadLazyParameterEnvironmentVariable_IfSetAfterInitialization()
         {
-            var testEnvironment = new TestEnvironment();
+            var testConfig = new TestConfig();
 
-            LazyEnvironmentArgumentsType commandArgs = null;
+            LazyConfigPathArgumentsType commandArgs = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
-                    .SetEnvironment(testEnvironment)
+                    .SetConfiguration(testConfig)
                 )
-                .Root<LazyEnvironmentArgumentsType>(c => c
+                .Root<LazyConfigPathArgumentsType>(c => c
                     .SetExecute((args, output) => { commandArgs = args; })
                 )
                 .Run(new string[0]);
 
-            testEnvironment
-                .SetEnvironmentVariable("NFLAG_TEST_PARAM_ENV", "env_p");
+            testConfig
+                .SetConfigValue("config.parameter", "env_p");
 
             Assert.Equal("env_p", commandArgs.Parameter.Value);
         }
@@ -75,67 +75,67 @@ namespace NFlags.Tests
         [Fact]
         public void RegisterCommandT_ShouldNotReadFlagEnvironmentVariable_IfSetAfterInitialization()
         {
-            var testEnvironment = new TestEnvironment();
+            var testConfig = new TestConfig();
 
-            ArgumentsType commandArgs = null;
+            NonLazyConfigPathArgumentsType commandArgs = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
-                    .SetEnvironment(testEnvironment)
+                    .SetConfiguration(testConfig)
                 )
-                .Root<ArgumentsType>(c => c
+                .Root<NonLazyConfigPathArgumentsType>(c => c
                     .SetExecute((args, output) => { commandArgs = args; })
                 )
                 .Run(new string[0]);
 
-            testEnvironment
-                .SetEnvironmentVariable("NFLAG_TEST_FLAG1", "false");
+            testConfig
+                .SetConfigValue("NFLAG_TEST_FLAG1", "false");
 
-            Assert.True(commandArgs.Flag1);
+            Assert.True(commandArgs.Flag);
         }
 
         [Fact]
         public void RegisterCommandT_ShouldNotReadOptionEnvironmentVariable_IfSetAfterInitialization()
         {
-            var testEnvironment = new TestEnvironment();
+            var testConfig = new TestConfig();
 
-            ArgumentsType commandArgs = null;
+            NonLazyConfigPathArgumentsType commandArgs = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
-                    .SetEnvironment(testEnvironment)
+                    .SetConfiguration(testConfig)
                 )
-                .Root<ArgumentsType>(c => c
+                .Root<NonLazyConfigPathArgumentsType>(c => c
                     .SetExecute((args, output) => { commandArgs = args; })
                 )
                 .Run(new string[0]);
 
-            testEnvironment
-                .SetEnvironmentVariable("NFLAG_TEST_OPTION1", "2");
+            testConfig
+                .SetConfigValue("config.option", "2");
 
-            Assert.Equal(1, commandArgs.Option1);
+            Assert.Equal("def_o", commandArgs.Option);
         }
 
         [Fact]
         public void RegisterCommandT_ShouldNotReadParameterEnvironmentVariable_IfSetAfterInitialization()
         {
-            var testEnvironment = new TestEnvironment();
+            var testConfig = new TestConfig();
 
-            ArgumentsType commandArgs = null;
+            NonLazyConfigPathArgumentsType commandArgs = null;
             NFlags
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
-                    .SetEnvironment(testEnvironment)
+                    .SetConfiguration(testConfig)
                 )
-                .Root<ArgumentsType>(c => c
+                .Root<NonLazyConfigPathArgumentsType>(c => c
                     .SetExecute((args, output) => { commandArgs = args; })
                 )
                 .Run(new string[0]);
 
-            testEnvironment
-                .SetEnvironmentVariable("NFLAG_TEST_PARAMETER2", "env_p");
+            testConfig
+                .SetConfigValue("config.parameter", "env_p");
 
-            Assert.Equal(1, commandArgs.Parameter2);
+            Assert.Equal("def_p", commandArgs.Parameter);
         }
     }
 }

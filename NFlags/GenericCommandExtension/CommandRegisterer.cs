@@ -48,6 +48,7 @@ namespace NFlags.GenericCommandExtension
                     EnvironmentVariable = parameterAttribute.EnvironmentVariable,
                     IsEnvironmentVariableLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
                     ConfigPath = parameterAttribute.ConfigPath,
+                    IsConfigPathLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
                     ValueType = GetArgumentType(TypeHelper.GetMemberType(member))
                 }
             );
@@ -67,7 +68,8 @@ namespace NFlags.GenericCommandExtension
                 DefaultValue = flagAttribute.DefaultValue,
                 EnvironmentVariable = flagAttribute.EnvironmentVariable,
                 IsEnvironmentVariableLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
-                ConfigPath = flagAttribute.ConfigPath
+                ConfigPath = flagAttribute.ConfigPath,
+                IsConfigPathLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member))
             }; 
 
             _commandConfigurator.RegisterFlagInstance(flag);
@@ -89,6 +91,7 @@ namespace NFlags.GenericCommandExtension
                     EnvironmentVariable = optionAttribute.EnvironmentVariable,
                     IsEnvironmentVariableLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
                     ConfigPath = optionAttribute.ConfigPath,
+                    IsConfigPathLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
                     ValueType = GetArgumentType(TypeHelper.GetMemberType(member))
                 }
             );

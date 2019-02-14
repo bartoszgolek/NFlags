@@ -2,7 +2,7 @@ using System;
 
 namespace NFlags.Tests.DataTypes
 {
-    public class LazyArgumentsType
+    public class LazyEnvironmentArgumentsType
     {
         [Option(Name = "option", DefaultValue = "def_o", EnvironmentVariable = "NFLAG_TEST_OPTION_ENV")]
         public Lazy<string> Option;
