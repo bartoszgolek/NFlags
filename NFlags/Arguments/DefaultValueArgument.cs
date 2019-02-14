@@ -25,5 +25,10 @@ namespace NFlags.Arguments
         /// Path to configuration value
         /// </summary>
         public string ConfigPath { get; internal set; }
+
+        /// <summary>
+        /// Determines, if config path value should be read during initialization or on each access
+        /// </summary>
+        public bool IsConfigPathLazy { get; internal set; }
     }
 }

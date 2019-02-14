@@ -111,11 +111,13 @@ namespace NFlags.Commands
             if (argument.ConfigPath != null)
             {
                 var config = _commandConfig.NFlagsConfig.Config;
-                var value = config?.Get(argument.ConfigPath);
-                if (value != null)
+                if (config != null)
                 {
+                    var valueProvider = argument.IsConfigPathLazy
+                        ? (IValueProvider) new ValueProviderProxy(() => ConvertValueToExpectedType(config.Get(argument.ConfigPath), argument.ValueType))
+                        : new ConstValueProvider(ConvertValueToExpectedType(config.Get(argument.ConfigPath), argument.ValueType));
                     valueProvidersCollection.Add(
-                        new ConstValueProvider(ConvertValueToExpectedType(value, argument.ValueType))
+                        valueProvider
                     );
                 }
             }

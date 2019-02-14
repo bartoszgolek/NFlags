@@ -139,13 +139,16 @@ NFlags
             .Name("flag")
             .Abr("f")
             .Description("Flag description")
-            .EnvironmentVariable("NFLAGS_FLAG")
-            .ConfigPath("app.settings.flag")
+            .EnvironmentVariable("NFLAGS_FLAG") //.LazyEnvironmentVariable("NFLAGS_FLAG")
+            .ConfigPath("app.settings.flag") //.LazyConfigPath("app.settings.flag")
             .Persistent()
             .DefaultValue(true)
         )
     );
 ```
+
+When registering flag, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.
+Same goes to setting config path, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.
 
 ### Set option
 Option is an prefixed argument with value.
@@ -165,13 +168,16 @@ NFlags
             .Name("option")
             .Abr("o")
             .Description("option description")
-            .EnvironmentVariable("NFLAGS_OPTION")
-            .ConfigPath("app.settings.option")
+            .EnvironmentVariable("NFLAGS_OPTION") // .LazyEnvironmentVariable("NFLAGS_OPTION")
+            .ConfigPath("app.settings.option") // .LazyConfigPath("app.settings.flag")
             .Persistent()
             .DefaultValue(1.1)
         )
     );
 ```
+
+When registering option, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.
+Same goes to setting config path, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.
 
 ### Set parameter
 Parameter is an unprefixed value argument. Parameters are read by registration order.
@@ -188,12 +194,15 @@ NFlags
         .RegisterParameter<double>(parameterBuilder => parameterBuilder
             .Name("parameter")
             .Description("parameter description")
-            .EnvironmentVariable("NFLAGS_PARAMETER")
-            .ConfigPath("app.settings.parameter")
+            .EnvironmentVariable("NFLAGS_PARAMETER") // .LazyEnvironmentVariable("NFLAGS_PARAMETER")
+            .ConfigPath("app.settings.parameter") // .LazyConfigPath("app.settings.parameter")
             .DefaultValue(1.2)
         )
     );
 ```
+
+When registering parameter, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.
+Same goes to setting config path, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.  
 
 ### Set parameter series
 Parameter series is a collection of parameters after last named parameter.
@@ -358,12 +367,12 @@ The following code:
 ```c#
 NFlags
     .Configure(c => c.SetDialect(Dialect.Gnu))
-    .Root<RootCommandArguments>(c => c.PrintHelpOnExecute())
+    .Root(c => c.PrintHelpOnExecute())
     .Run(args);
 ```
 will print following output:
 ```
-$> dotnet NFlags.Generics.dll
+$> dotnet NFlags.Gnu.dll
 Usage:
         NFlags.Generics [FLAGS]... [OPTIONS]... [PARAMETERS]...
 

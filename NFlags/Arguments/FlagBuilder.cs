@@ -13,6 +13,7 @@ namespace NFlags.Arguments
         private string _environmentVariable;
         private string _configPath;
         private bool _isEnvironmentVariableLazy;
+        private bool _isConfigPathLazy;
 
         /// <summary>
         /// Set name of the argument.
@@ -107,6 +108,20 @@ namespace NFlags.Arguments
         public FlagBuilder ConfigPath(string config)
         {
             _configPath = config;
+            _isConfigPathLazy = false;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Set lazy config value path for the argument value
+        /// </summary>
+        /// <param name="config">Config value path for the argument value</param>
+        /// <returns>Self instance</returns>
+        public FlagBuilder LazyConfigPath(string config)
+        {
+            _configPath = config;
+            _isConfigPathLazy = true;
 
             return this;
         }
@@ -125,6 +140,7 @@ namespace NFlags.Arguments
                 EnvironmentVariable = _environmentVariable,
                 IsEnvironmentVariableLazy = _isEnvironmentVariableLazy,
                 ConfigPath = _configPath,
+                IsConfigPathLazy = _isConfigPathLazy,
                 Abr = _abr,
                 IsPersistent = _isPersistent
             };
