@@ -2,6 +2,7 @@
  * Introduced support for binding to configuration
  * Introduced lazy binding for environment variables
  * Introduced lazy binding for configuration
+ * Kestrel integration example
 
 # 1.5.0
  * Introduced Flag/Option/Paraemter/ParameterSeries builders
