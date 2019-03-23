@@ -29,7 +29,7 @@ namespace NFlags.Commands
         /// <param name="args">Application arguments.</param>
         public CommandExecutionContext Read(string[] args)
         {
-            _commandConfig.Flags.Add(
+            _commandConfig.Options.Add(
                 new Flag
                 {
                     Name = HelpFlag,

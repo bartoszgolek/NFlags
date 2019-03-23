@@ -198,13 +198,11 @@ namespace NFlags.Tests
                 "Cannot convert value 'asd' to type 'System.Int32'",
                 "",
                 "Usage:",
-                "\ttesthost [FLAGS]... [OPTIONS]...",
-                "",
-                "\tFlags:",
-                "\t/help, /h\tPrints this help",
+                "\ttesthost [OPTIONS]...",
                 "",
                 "\tOptions:",
                 "\t/option=<option>",
+                "\t/help, /h\tPrints this help",
                 ""
             );
         }

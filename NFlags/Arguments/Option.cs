@@ -6,5 +6,7 @@ namespace NFlags.Arguments
     /// </summary>
     public class Option : PrefixedDefaultValueArgument
     {
+        /// <inheritdoc />
+        public override bool RequireValue => true;
     }
 }

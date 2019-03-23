@@ -9,10 +9,15 @@ namespace NFlags.ArgMatchers
         {
         }
 
-        public override bool IsOptionMatching(Option option, string arg)
+        public override bool IsOptionMatching(PrefixedDefaultValueArgument option, string arg)
         {
-            return arg.StartsWith($"{Dialect.Prefix}{option.Name}=") || 
-                   option.Abr != null && arg.StartsWith($"{Dialect.AbrPrefix}{option.Abr}=");
+            if (option.RequireValue)
+            {
+                return arg.StartsWith($"{Dialect.Prefix}{option.Name}=") ||
+                       option.Abr != null && arg.StartsWith($"{Dialect.AbrPrefix}{option.Abr}=");
+            }
+            
+            return arg == $"{Dialect.Prefix}{option.Name}" || option.Abr != null && arg == $"{Dialect.AbrPrefix}{option.Abr}";
         }
     }
 }

@@ -16,8 +16,7 @@ namespace NFlags.Commands
         private readonly List<CommandConfigurator> _commands = new List<CommandConfigurator>();
         private CommandConfigurator _defaultCommand;
         private readonly List<Parameter> _parameters = new List<Parameter>();
-        private readonly List<Flag> _flags = new List<Flag>();
-        private readonly List<Option> _options = new List<Option>();
+        private readonly List<PrefixedDefaultValueArgument> _options = new List<PrefixedDefaultValueArgument>();
         private ParameterSeries _paramSeries;
         private bool _printHelpOnExecute;
         private Func<CommandArgs, IOutput, int> _execute;
@@ -240,7 +239,7 @@ namespace NFlags.Commands
 
         internal CommandConfigurator RegisterFlagInstance(Flag flag)
         {
-            _flags.Add(flag);
+            _options.Add(flag);
 
             return this;
         }
@@ -436,7 +435,6 @@ namespace NFlags.Commands
                     _parents,
                     _commands,
                     _defaultCommand,
-                    GetCommandFlags(parentConfig),
                     GetCommandOptions(parentConfig),
                     _parameters,
                     _paramSeries,
@@ -445,18 +443,9 @@ namespace NFlags.Commands
             );
         }
 
-        private List<Flag> GetCommandFlags(CommandConfig parentConfig)
+        private List<PrefixedDefaultValueArgument> GetCommandOptions(CommandConfig parentConfig)
         {
-            var commandFlags = new List<Flag>();
-            commandFlags.AddRange(_flags);
-            if (parentConfig != null)
-                commandFlags.AddRange(parentConfig.Flags.Where(f => f.IsPersistent));
-            return commandFlags;
-        }
-
-        private List<Option> GetCommandOptions(CommandConfig parentConfig)
-        {
-            var commandOptions = new List<Option>();
+            var commandOptions = new List<PrefixedDefaultValueArgument>();
             commandOptions.AddRange(_options);
             if (parentConfig != null)
                 commandOptions.AddRange(parentConfig.Options.Where(f => f.IsPersistent));

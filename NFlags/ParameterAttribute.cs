@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace NFlags
 {
@@ -10,12 +11,16 @@ namespace NFlags
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class ParameterAttribute : Attribute
     {
+        internal int Order { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// Creates new instance of ParameterAttribute
         /// </summary>
-        public ParameterAttribute()
+        /// <param name="order">Used to order members in help.</param>
+        public ParameterAttribute([CallerLineNumber]int order = 0)
         {
+            Order = order;
         }
 
         /// <inheritdoc />
@@ -25,11 +30,13 @@ namespace NFlags
         /// <param name="name">Name of parameter</param>
         /// <param name="description">Description of parameter for help</param>
         /// <param name="defaultValue">Default value</param>
-        public ParameterAttribute(string name, string description, object defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public ParameterAttribute(string name, string description, object defaultValue, [CallerLineNumber]int order = 0)
         {
             Name = name;
             Description = description;
             DefaultValue = defaultValue;
+            Order = order;
         }
 
         /// <inheritdoc />
@@ -40,12 +47,14 @@ namespace NFlags
         /// <param name="description">Description of parameter for help</param>
         /// <param name="environmentVariable">Name of environment variable to use.</param>
         /// <param name="defaultValue">Default value</param>
-        public ParameterAttribute(string name, string description, string environmentVariable, object defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public ParameterAttribute(string name, string description, string environmentVariable, object defaultValue, [CallerLineNumber]int order = 0)
         {
             Name = name;
             Description = description;
             EnvironmentVariable = environmentVariable;
             DefaultValue = defaultValue;
+            Order = order;
         }
 
         /// <inheritdoc />
@@ -57,13 +66,15 @@ namespace NFlags
         /// <param name="environmentVariable">Name of environment variable to use.</param>
         /// <param name="configPath">Path to configuration value to use.</param>
         /// <param name="defaultValue">Default value</param>
-        public ParameterAttribute(string name, string description, string environmentVariable, string configPath, object defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public ParameterAttribute(string name, string description, string environmentVariable, string configPath, object defaultValue, [CallerLineNumber]int order = 0)
         {
             Name = name;
             Description = description;
             EnvironmentVariable = environmentVariable;
             ConfigPath = configPath;
             DefaultValue = defaultValue;
+            Order = order;
         }
 
         /// <summary>

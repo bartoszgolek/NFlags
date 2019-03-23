@@ -11,8 +11,14 @@ namespace NFlags.GenericCommandExtension
         {
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
             var type = typeof(TArguments);
-            var members = type.GetFields(bindingFlags).Cast<MemberInfo>()
-                .Concat(type.GetProperties(bindingFlags)).ToArray();
+            var members = (from member in type.GetMembers(bindingFlags)
+                where member.MemberType == MemberTypes.Field || member.MemberType == MemberTypes.Property
+                orderby member.GetCustomAttribute<FlagAttribute>()?.Order ??
+                        member.GetCustomAttribute<OptionAttribute>()?.Order ??
+                        member.GetCustomAttribute<ParameterAttribute>()?.Order ??
+                        0
+                select member).ToArray(); 
+;
 
             foreach (var member in members)
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace NFlags
 {
@@ -14,8 +15,9 @@ namespace NFlags
         /// <summary>
         /// Creates new instance of FlagAttribute
         /// </summary>
-        public FlagAttribute()
+        public FlagAttribute([CallerLineNumber]int order = 0)
         {
+            Order = order;
         }
 
         /// <inheritdoc />
@@ -26,8 +28,10 @@ namespace NFlags
         /// <param name="abr">Abbreviation of flag</param>
         /// <param name="description">Description of flag for help.</param>
         /// <param name="defaultValue">Default value</param>
-        public FlagAttribute(string name, string abr, string description, bool defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public FlagAttribute(string name, string abr, string description, bool defaultValue, [CallerLineNumber]int order = 0)
         {
+            Order = order;
             Name = name;
             Abr = abr;
             Description = description;
@@ -41,8 +45,10 @@ namespace NFlags
         /// <param name="name">Name of flag</param>
         /// <param name="description">Description of flag for help</param>
         /// <param name="defaultValue">Default value</param>
-        public FlagAttribute(string name, string description, bool defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public FlagAttribute(string name, string description, bool defaultValue, [CallerLineNumber]int order = 0)
         {
+            Order = order;
             Name = name;
             Description = description;
             DefaultValue = defaultValue;
@@ -57,8 +63,10 @@ namespace NFlags
         /// <param name="description">Description of flag for help.</param>
         /// <param name="environmentVariable">Name of environment variable to use.</param>
         /// <param name="defaultValue">Default value</param>
-        public FlagAttribute(string name, string abr, string description, string environmentVariable, bool defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public FlagAttribute(string name, string abr, string description, string environmentVariable, bool defaultValue, [CallerLineNumber]int order = 0)
         {
+            Order = order;
             Name = name;
             Abr = abr;
             Description = description;
@@ -76,8 +84,10 @@ namespace NFlags
         /// <param name="environmentVariable">Name of environment variable to use.</param>
         /// <param name="configPath">Path to configuration value to use.</param>
         /// <param name="defaultValue">Default value</param>
-        public FlagAttribute(string name, string abr, string description, string environmentVariable, string configPath, bool defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public FlagAttribute(string name, string abr, string description, string environmentVariable, string configPath, bool defaultValue, [CallerLineNumber]int order = 0)
         {
+            Order = order;
             Name = name;
             Abr = abr;
             Description = description;
@@ -115,5 +125,7 @@ namespace NFlags
         /// Default value
         /// </summary>
         public bool DefaultValue { get;  set; }
+
+        internal int Order { get; }
     }
 }

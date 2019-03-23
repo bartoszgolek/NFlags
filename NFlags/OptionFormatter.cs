@@ -19,7 +19,7 @@ namespace NFlags
             return Printers[dialect.OptionValueMode](dialect);
         }
 
-        public abstract string FormatName(Option option);
-        public abstract string FormatAbr(Option option);
+        public abstract string FormatName(PrefixedDefaultValueArgument option);
+        public abstract string FormatAbr(PrefixedDefaultValueArgument option);
     }
 }

@@ -35,9 +35,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost [FLAGS]...",
+                "\ttesthost [OPTIONS]...",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );
@@ -57,9 +57,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost [FLAGS]...",
+                "\ttesthost [OPTIONS]...",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );
@@ -80,9 +80,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\tcustName [FLAGS]...",
+                "\tcustName [OPTIONS]...",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );
@@ -103,11 +103,11 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost [FLAGS]...",
+                "\ttesthost [OPTIONS]...",
                 "",
                 "some description",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );
@@ -130,9 +130,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost [FLAGS]...",
+                "\ttesthost [OPTIONS]...",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t" + _longPrefix + "flag1\tFlag 1 Description",
                 "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
@@ -157,14 +157,12 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost [FLAGS]... [OPTIONS]...",
-                "",
-                "\tFlags:",
-                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "\ttesthost [OPTIONS]...",
                 "",
                 "\tOptions:",
                 "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description",
                 "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );
         }
@@ -186,9 +184,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost [FLAGS]... [PARAMETERS]...",
+                "\ttesthost [OPTIONS]... [PARAMETERS]...",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 "",
                 "\tParameters:",
@@ -216,9 +214,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost [FLAGS]... [PARAMETERS]...",
+                "\ttesthost [OPTIONS]... [PARAMETERS]...",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 "",
                 "\tParameters:",
@@ -245,9 +243,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost [FLAGS]... [PARAMETERS]...",
+                "\ttesthost [OPTIONS]... [PARAMETERS]...",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 "",
                 "\tParameters:",
@@ -279,18 +277,16 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\tcustName [FLAGS]... [OPTIONS]... [PARAMETERS]...",
+                "\tcustName [OPTIONS]... [PARAMETERS]...",
                 "",
                 "some description",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t" + _longPrefix + "flag1\tFlag 1 Description",
                 "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description",
-                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
-                "",
-                "\tOptions:",
                 "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description",
                 "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 "",
                 "\tParameters:",
                 "\t<param1>\tParam 1 Description",

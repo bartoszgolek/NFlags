@@ -26,22 +26,6 @@ namespace NFlags
             return Matchers[dialect.OptionValueMode](dialect);
         }
 
-        public abstract bool IsOptionMatching(Option option, string arg);
-
-        public bool IsFlagMatching(Flag flag, string arg)
-        {
-            return arg == GetPrefixedName(flag) ||
-                   flag.Abr != null && arg == GetPrefixedAbbreviation(flag);
-        }
-
-        private string GetPrefixedAbbreviation(PrefixedDefaultValueArgument flag)
-        {
-            return $"{Dialect.AbrPrefix}{flag.Abr}";
-        }
-
-        private string GetPrefixedName(Argument flag)
-        {
-            return $"{Dialect.Prefix}{flag.Name}";
-        }
+        public abstract bool IsOptionMatching(PrefixedDefaultValueArgument option, string arg);
     }
 }

@@ -11,14 +11,22 @@ namespace NFlags.OptionFormatters
             _dialect = dialect;
         }
 
-        public override string FormatName(Option option)
+        public override string FormatName(PrefixedDefaultValueArgument option)
         {
-            return $"{_dialect.Prefix}{option.Name} <{option.Name}>";
+            var name = $"{_dialect.Prefix}{option.Name}";
+            if (option.RequireValue)
+                name += $" <{option.Name}>";
+            
+            return name;
         }
 
-        public override string FormatAbr(Option option)
+        public override string FormatAbr(PrefixedDefaultValueArgument option)
         {
-            return $"{_dialect.AbrPrefix}{option.Abr} <{option.Name}>";
+            var name = $"{_dialect.AbrPrefix}{option.Abr}";
+            if (option.RequireValue)
+                name += $" <{option.Name}>";
+            
+            return name;
         }
     }
 }

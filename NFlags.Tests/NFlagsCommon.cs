@@ -43,9 +43,9 @@ namespace NFlags.Tests
             expectedResultBuilder.AppendLine("Two many parameters. Can't handle s value.");
             expectedResultBuilder.AppendLine();
             expectedResultBuilder.AppendLine("Usage:");
-            expectedResultBuilder.AppendLine("\ttesthost [FLAGS]...");
+            expectedResultBuilder.AppendLine("\ttesthost [OPTIONS]...");
             expectedResultBuilder.AppendLine();
-            expectedResultBuilder.AppendLine("\tFlags:");
+            expectedResultBuilder.AppendLine("\tOptions:");
             expectedResultBuilder.AppendLine("\t/help, /h	Prints this help");
             expectedResultBuilder.AppendLine();
 
@@ -185,14 +185,12 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-               "\ttesthost sub [FLAGS]... [OPTIONS]... [PARAMETERS]...",
-               "",
-               "\tFlags:",
-               "\t/help, /h\tPrints this help",
+               "\ttesthost sub [OPTIONS]... [PARAMETERS]...",
                "",
                "\tOptions:",
                "\t/option1=<option1>",
                "\t/option2=<option2>, /o2=<option2>",
+                "\t/help, /h\tPrints this help",
                "",
                "\tParameters:",
                "\t<param1>",
@@ -220,9 +218,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost sub sub1 sub2 sub3 [FLAGS]...",
+                "\ttesthost sub sub1 sub2 sub3 [OPTIONS]...",
                 "",
-                "\tFlags:",
+                "\tOptions:",
                 "\t/help, /h\tPrints this help",
                 ""
             );
@@ -242,9 +240,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-               "\ttesthost [FLAGS]...",
+               "\ttesthost [OPTIONS]...",
                "",
-               "\tFlags:",
+               "\tOptions:",
                "\t/flag1, /f1\tdFlag1",
                "\t/flag2\tdFlag2",
                "\t/help, /h\tPrints this help",
@@ -273,9 +271,9 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-               "\ttesthost sub sub1 sub2 sub3 [FLAGS]...",
+               "\ttesthost sub sub1 sub2 sub3 [OPTIONS]...",
                "",
-               "\tFlags:",
+               "\tOptions:",
                "\t/flag1, /f1\tdFlag1",
                "\t/flag2\tdFlag2",
                "\t/help, /h\tPrints this help",
@@ -297,14 +295,12 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost [FLAGS]... [OPTIONS]...",
-                "",
-                "\tFlags:",
-                "\t/help, /h\tPrints this help",
+                "\ttesthost [OPTIONS]...",
                 "",
                 "\tOptions:",
                 "\t/option1=<option1>, /o1=<option1>\tdOption1",
                 "\t/option2=<option2>\tdOption2",
+                "\t/help, /h\tPrints this help",
                 ""
             );
         }
@@ -330,14 +326,12 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\ttesthost sub sub1 sub2 sub3 [FLAGS]... [OPTIONS]...",
-                "",
-                "\tFlags:",
-                "\t/help, /h\tPrints this help",
+                "\ttesthost sub sub1 sub2 sub3 [OPTIONS]...",
                 "",
                 "\tOptions:",
                 "\t/option1=<option1>, /o1=<option1>\tdOption1",
                 "\t/option2=<option2>\tdOption2",
+                "\t/help, /h\tPrints this help",
                 ""
             );
         }

@@ -15,5 +15,10 @@ namespace NFlags.Arguments
         /// Defines if flag persist for sub commands
         /// </summary>
         public bool IsPersistent { get; internal set; }
+
+        /// <summary>
+        /// Determines if argument require passing value. 
+        /// </summary>
+        public abstract bool RequireValue { get; }
     }
 }

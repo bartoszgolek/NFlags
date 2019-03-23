@@ -18,7 +18,6 @@ namespace NFlags.Utils
             var sb = new StringBuilder();
             PrintUsage(sb);
             PrintCommands(sb);
-            PrintFlags(sb);
             PrintOptions(sb);
             PrintParameters(sb);
 
@@ -37,8 +36,6 @@ namespace NFlags.Utils
                 line += " " + _commandConfig.Name;
             if (_commandConfig.Commands.Any())
                 line += " [COMMAND]";
-            if (_commandConfig.Flags.Any())
-                line += " [FLAGS]...";
             if (_commandConfig.Options.Any())
                 line += " [OPTIONS]...";
             if (_commandConfig.Parameters.Any() || _commandConfig.ParameterSeries != null)
@@ -51,25 +48,6 @@ namespace NFlags.Utils
                 return;
 
             builder.AppendLine(_commandConfig.NFlagsConfig.Description);
-            builder.AppendLine("");
-        }
-
-        private void PrintFlags(StringBuilder builder)
-        {
-            if (!_commandConfig.Flags.Any())
-                return;
-
-            builder.AppendLine("\tFlags:");
-            foreach (var flag in _commandConfig.Flags)
-            {
-                var line = "\t" + _commandConfig.NFlagsConfig.Dialect.Prefix + flag.Name;
-                if (flag.Abr != null)
-                    line += ", " + _commandConfig.NFlagsConfig.Dialect.AbrPrefix + flag.Abr;
-                if (!string.IsNullOrEmpty(flag.Description))
-                    line += "\t" + flag.Description;
-                builder.AppendLine(line);
-            }
-
             builder.AppendLine("");
         }
 

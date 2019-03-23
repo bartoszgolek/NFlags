@@ -18,9 +18,9 @@ namespace NFlags.Tests
 
                 NFAssert.HelpEquals(outputAggregator,
                     "Usage:",
-                    "\ttesthost [FLAGS]...",
+                    "\ttesthost [OPTIONS]...",
                     "",
-                    "\tFlags:",
+                    "\tOptions:",
                     "\t/help, /h\tPrints this help",
                     ""
                 );
@@ -37,9 +37,9 @@ namespace NFlags.Tests
 
                 NFAssert.HelpEquals(outputAggregator,
                     "Usage:",
-                    "\ttesthost [FLAGS]...",
+                    "\ttesthost [OPTIONS]...",
                     "",
-                    "\tFlags:",
+                    "\tOptions:",
                     "\t/help, /h\tPrints this help",
                     ""
                 );
@@ -61,9 +61,9 @@ namespace NFlags.Tests
 
                 NFAssert.HelpEquals(outputAggregator,
                     "Usage:",
-                    "\ttesthost command [FLAGS]...",
+                    "\ttesthost command [OPTIONS]...",
                     "",
-                    "\tFlags:",
+                    "\tOptions:",
                     "\t/help, /h\tPrints this help",
                     ""
                 );

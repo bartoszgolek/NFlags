@@ -18,7 +18,6 @@ namespace NFlags.Commands
         /// <param name="parents">Command parents list</param>
         /// <param name="commands">List of registered commands</param>
         /// <param name="defaultCommand">Default command to run where subcommand is not defined in params</param>
-        /// <param name="flags">List of registered flags</param>
         /// <param name="options">List of registered options</param>
         /// <param name="parameters">List of registered parameters</param>
         /// <param name="parameterSeries">Registered parameter series</param>
@@ -30,8 +29,7 @@ namespace NFlags.Commands
             List<string> parents,
             List<CommandConfigurator> commands,
             CommandConfigurator defaultCommand,
-            List<Flag> flags,
-            List<Option> options,
+            List<PrefixedDefaultValueArgument> options,
             List<Parameter> parameters,
             ParameterSeries parameterSeries,
             Func<CommandArgs, IOutput, int> execute)
@@ -39,7 +37,6 @@ namespace NFlags.Commands
             NFlagsConfig = nFlagsConfig;
             Name = name;
             Parents = parents;
-            Flags = flags;
             Options = options;
             Parameters = parameters;
             ParameterSeries = parameterSeries;
@@ -75,14 +72,9 @@ namespace NFlags.Commands
         public List<string> Parents { get; }
 
         /// <summary>
-        /// List of registered flags
-        /// </summary>
-        public List<Flag> Flags { get; }
-
-        /// <summary>
         /// List of registered options
         /// </summary>
-        public List<Option> Options { get; }
+        public List<PrefixedDefaultValueArgument> Options { get; }
 
         /// <summary>
         /// List of registered parameters

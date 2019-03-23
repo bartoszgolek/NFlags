@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace NFlags
 {
@@ -14,8 +15,10 @@ namespace NFlags
         /// <summary>
         /// Creates new instance of OptionAttribute
         /// </summary>
-        public OptionAttribute()
+        /// <param name="order">Used to order members in help.</param>
+        public OptionAttribute([CallerLineNumber]int order = 0)
         {
+            Order = order;
         }
 
         /// <inheritdoc />
@@ -26,12 +29,14 @@ namespace NFlags
         /// <param name="abr">Abbreviation of option</param>
         /// <param name="description">Description of option for help</param>
         /// <param name="defaultValue">Default value</param>
-        public OptionAttribute(string name, string abr, string description, object defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public OptionAttribute(string name, string abr, string description, object defaultValue, [CallerLineNumber]int order = 0)
         {
             Name = name;
             Abr = abr;
             Description = description;
             DefaultValue = defaultValue;
+            Order = order;
         }
 
         /// <inheritdoc />
@@ -41,11 +46,13 @@ namespace NFlags
         /// <param name="name">Name of option</param>
         /// <param name="description">Description of option for help</param>
         /// <param name="defaultValue">Default value</param>
-        public OptionAttribute(string name, string description, object defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public OptionAttribute(string name, string description, object defaultValue, [CallerLineNumber]int order = 0)
         {
             Name = name;
             Description = description;
             DefaultValue = defaultValue;
+            Order = order;
         }
 
         /// <inheritdoc />
@@ -57,13 +64,15 @@ namespace NFlags
         /// <param name="description">Description of option for help</param>
         /// <param name="environmentVariable">Name of environment variable to use.</param>
         /// <param name="defaultValue">Default value</param>
-        public OptionAttribute(string name, string abr, string description, string environmentVariable, object defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public OptionAttribute(string name, string abr, string description, string environmentVariable, object defaultValue, [CallerLineNumber]int order = 0)
         {
             Name = name;
             Abr = abr;
             Description = description;
             EnvironmentVariable = environmentVariable;
             DefaultValue = defaultValue;
+            Order = order;
         }
 
         /// <inheritdoc />
@@ -76,7 +85,8 @@ namespace NFlags
         /// <param name="environmentVariable">Name of environment variable to use.</param>
         /// <param name="configPath">Path to configuration value to use.</param>
         /// <param name="defaultValue">Default value</param>
-        public OptionAttribute(string name, string abr, string description, string environmentVariable, string configPath, object defaultValue)
+        /// <param name="order">Used to order members in help.</param>
+        public OptionAttribute(string name, string abr, string description, string environmentVariable, string configPath, object defaultValue, [CallerLineNumber]int order = 0)
         {
             Name = name;
             Abr = abr;
@@ -84,6 +94,7 @@ namespace NFlags
             EnvironmentVariable = environmentVariable;
             ConfigPath = configPath;
             DefaultValue = defaultValue;
+            Order = order;
         }
 
         /// <summary>
@@ -115,5 +126,7 @@ namespace NFlags
         /// Default value
         /// </summary>
         public object DefaultValue { get;  set; }
+
+        internal int Order { get; }
     }
 }

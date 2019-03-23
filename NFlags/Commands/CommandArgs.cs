@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NFlags.ValueProviders;
 
 namespace NFlags.Commands
@@ -11,7 +10,6 @@ namespace NFlags.Commands
     {
         private readonly Dictionary<string, ValueProvidersCollection> _options;
         private readonly Dictionary<string, ValueProvidersCollection> _parameters;
-        private readonly Dictionary<string, ValueProvidersCollection> _flags;
         private readonly List<object> _parameterSeries;
 
         /// <summary>
@@ -19,7 +17,6 @@ namespace NFlags.Commands
         /// </summary>
         public CommandArgs()
         {
-            _flags = new Dictionary<string, ValueProvidersCollection>();
             _options = new Dictionary<string, ValueProvidersCollection>();
             _parameters = new Dictionary<string, ValueProvidersCollection>();
             _parameterSeries = new List<object>();
@@ -32,15 +29,7 @@ namespace NFlags.Commands
         /// <param name="value">Flag value</param>
         public void AddFlag(string name, bool value)
         {
-            AddFlagValueProvider(name, new ConstValueProvider(value));
-        }
-        
-        internal void AddFlagValueProvider(string name, IValueProvider valueProvider)
-        {
-            if (!_flags.ContainsKey(name))
-                _flags.Add(name, new ValueProvidersCollection());
-            
-            _flags[name].RegisterValueProvider(valueProvider);
+            AddOptionValueProvider(name, new ConstValueProvider(value));
         }
 
         /// <summary>
@@ -50,7 +39,7 @@ namespace NFlags.Commands
         /// <returns>Flag value</returns>
         public bool GetFlag(string name)
         {
-            return (bool) _flags[name].GetValue();
+            return (bool) _options[name].GetValue();
         }
 
         /// <summary>

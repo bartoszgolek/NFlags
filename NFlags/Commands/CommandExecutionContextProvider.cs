@@ -54,7 +54,7 @@ namespace NFlags.Commands
                     return PrepareHelpCommandExecutionContext(_commandConfig);
 
                 cmdAllowed = false;
-                if (!ReadOpt(arg) && !ReadFlag(arg))
+                if (!ReadOpt(arg))
                     ReadParam(arg);
 
             }
@@ -77,13 +77,6 @@ namespace NFlags.Commands
         private CommandArgs InitDefaultCommandArgs()
         {
             var commandArgs = new CommandArgs();
-            foreach (var flag in _commandConfig.Flags)
-            {
-                var valueProviders = GetDefaultValueProvidersInPrecedence(flag);
-                foreach (var valueProvider in valueProviders)
-                    commandArgs.AddFlagValueProvider(flag.Name, valueProvider);
-            }
-
             foreach (var option in _commandConfig.Options)
             {
                 var valueProviders = GetDefaultValueProvidersInPrecedence(option);
@@ -156,11 +149,20 @@ namespace NFlags.Commands
             if (opt == null)
                 return false;
 
+            if (!opt.RequireValue)
+            {
+                if (opt.ValueType == typeof(bool))
+                    _commandArgs.AddOptionValueProvider(opt.Name, new ConstValueProvider(!(bool) opt.DefaultValue));
+                
+                return true;
+            }
+
             var optionValue = OptionReader
                 .GetReader(_commandConfig.NFlagsConfig.Dialect.OptionValueMode)
                 .ReadValue(_args, arg);
 
-            _commandArgs.AddOptionValueProvider(opt.Name, new ConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
+            _commandArgs.AddOptionValueProvider(opt.Name,
+                new ConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
 
             return true;
         }
@@ -190,20 +192,6 @@ namespace NFlags.Commands
         private Command GetDefaultCommand()
         {
             return _commandConfig.DefaultCommand?.CreateCommand(_commandConfig);
-        }
-
-        private bool ReadFlag(string arg)
-        {
-            var flag = _commandConfig.Flags.FirstOrDefault(
-                f => ArgMatcher.GetMatcher(_commandConfig.NFlagsConfig.Dialect).IsFlagMatching(f, arg)
-            );
-
-            if (flag == null)
-                return false;
-
-            _commandArgs.AddFlagValueProvider(flag.Name, new ConstValueProvider(!(bool)flag.DefaultValue));
-
-            return true;
         }
     }
 }

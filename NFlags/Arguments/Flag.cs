@@ -13,5 +13,8 @@ namespace NFlags.Arguments
         {
             ValueType = typeof(bool);
         }
+
+        /// <inheritdoc />
+        public override bool RequireValue => false;
     }
 }
