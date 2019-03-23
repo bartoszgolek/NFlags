@@ -186,15 +186,15 @@ namespace NFlags.Tests
                 outputAggregator,
                 "Usage:",
                "\ttesthost sub [OPTIONS]... [PARAMETERS]...",
+                "",
+                "\tParameters:",
+                "\t<param1>",
+                "\t<param2>",
                "",
                "\tOptions:",
                "\t/option1=<option1>",
                "\t/option2=<option2>, /o2=<option2>",
                 "\t/help, /h\tPrints this help",
-               "",
-               "\tParameters:",
-               "\t<param1>",
-               "\t<param2>",
                ""
             );
         }

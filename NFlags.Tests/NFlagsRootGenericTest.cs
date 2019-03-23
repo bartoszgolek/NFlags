@@ -26,17 +26,17 @@ namespace NFlags.Tests
                 "Usage:",
                 "\ttesthost [OPTIONS]... [PARAMETERS]...",
                 "",
+                "\tParameters:",
+                "\t<parameter1>\tparameter desc",
+                "\t<parameter2>\tparameter2 desc",
+                "\t<parameterSeries...>\tparameter series desc",
+                "",
                 "\tOptions:",
                 "\t--option1 <option1>\toption desc",
                 "\t--option2 <option2>, -o2 <option2>\toption2 desc",
                 "\t--flag1\tflag desc",
                 "\t--flag2, -f2\tflag2 desc",
                 "\t--help, -h\tPrints this help",
-                "",
-                "\tParameters:",
-                "\t<parameter1>\tparameter desc",
-                "\t<parameter2>\tparameter2 desc",
-                "\t<parameterSeries...>\tparameter series desc",
                 ""
             );
         }

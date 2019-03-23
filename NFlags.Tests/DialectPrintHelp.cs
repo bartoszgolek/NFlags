@@ -186,12 +186,12 @@ namespace NFlags.Tests
                 "Usage:",
                 "\ttesthost [OPTIONS]... [PARAMETERS]...",
                 "",
-                "\tOptions:",
-                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
-                "",
                 "\tParameters:",
                 "\t<param1>\tParam 1 Description",
                 "\t<param2>\tParam 2 Description",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );
         }
@@ -216,13 +216,13 @@ namespace NFlags.Tests
                 "Usage:",
                 "\ttesthost [OPTIONS]... [PARAMETERS]...",
                 "",
-                "\tOptions:",
-                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
-                "",
                 "\tParameters:",
                 "\t<param1>\tParam 1 Description",
                 "\t<param2>\tParam 2 Description",
                 "\t<paramSeries...>\tParam series Description",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );
         }
@@ -245,11 +245,11 @@ namespace NFlags.Tests
                 "Usage:",
                 "\ttesthost [OPTIONS]... [PARAMETERS]...",
                 "",
-                "\tOptions:",
-                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
-                "",
                 "\tParameters:",
                 "\t<paramSeries...>\tParam series Description",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );
         }
@@ -281,16 +281,16 @@ namespace NFlags.Tests
                 "",
                 "some description",
                 "",
+                "\tParameters:",
+                "\t<param1>\tParam 1 Description",
+                "\t<param2>\tParam 2 Description",
+                "",
                 "\tOptions:",
                 "\t" + _longPrefix + "flag1\tFlag 1 Description",
                 "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description",
                 "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description",
                 "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
-                "",
-                "\tParameters:",
-                "\t<param1>\tParam 1 Description",
-                "\t<param2>\tParam 2 Description",
                 ""
             );
         }

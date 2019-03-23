@@ -18,8 +18,8 @@ namespace NFlags.Utils
             var sb = new StringBuilder();
             PrintUsage(sb);
             PrintCommands(sb);
-            PrintOptions(sb);
             PrintParameters(sb);
+            PrintOptions(sb);
 
             return sb.ToString();
         }
