@@ -37,23 +37,21 @@ $> dotnet NFlags.QuickStart.dll xxx
 This is root command: xxx
 $> dotnet NFlags.QuickStart.dll --help
 Usage:
-        QuickStart [COMMAND] [FLAGS]... [OPTIONS]... [PARAMETERS]...
+        QuickStart [COMMAND] [OPTIONS]... [PARAMETERS]...
 
 This is NFlags
 
         Commands:
         subcommand      Subcommand Description
 
-        Flags:
-        --flag1, -f     Flag description
-        --help, -h      Prints this help
-
-        Options:
-        --option <option>, -o <option>  Option description
-
         Parameters:
         <param> Param description
         <paramSeries...>        paramSeriesDescription
+
+        Options:
+        --flag1, -f     Flag description
+        --option <option>, -o <option>  Option description
+        --help, -h      Prints this help
 
 
 $> dotnet NFlags.QuickStart.dll subcommand
@@ -62,15 +60,15 @@ $> dotnet NFlags.QuickStart.dll subcommand yyy
 This is subcommand: yyy
 $> dotnet NFlags.QuickStart.dll subcommand --help
 Usage:
-        QuickStart [FLAGS]... [PARAMETERS]...
+        QuickStart [OPTIONS]... [PARAMETERS]...
 
 This is NFlags
 
-        Flags:
-        --help, -h      Prints this help
-
         Parameters:
         <SubParameter>  SubParameter description
+
+        Options:
+        --help, -h      Prints this help
 
 $> 
 
@@ -317,48 +315,44 @@ Example help for Win dialect:
 
 ```
 Usage:
-        NFlags.Win [COMMAND] [FLAGS]... [OPTIONS]... [PARAMETERS]...
+        NFlags.Win [COMMAND] [OPTIONS]... [PARAMETERS]...
 
 Application description
 
         Commands:
         subcommand      Subcommand Description
 
-        Flags:
-        /help, /h       Print this help
-        /verbose, /v    Verbose description
-        /clear  Clear description
-
-        Options:
-        /option1=<option1>, /o1=<option1>       Option 1 description
-        /option2=<option2>      Option 2 description
-
         Parameters:
         <param1>        Parameter 1 description
+
+        Options:
+        /verbose, /v    Verbose description
+        /clear  Clear description
+        /option1=<option1>, /o1=<option1>       Option 1 description
+        /option2=<option2>      Option 2 description
+        /help, /h       Print this help
 
 ```
 
 and for Gnu dialect:
 ```
 Usage:
-        NFlags.Gnu [COMMAND] [FLAGS]... [OPTIONS]... [PARAMETERS]...
+        NFlags.Gnu [COMMAND] [OPTIONS]... [PARAMETERS]...
 
 Application description
 
         Commands:
         subcommand      Subcommand Description
 
-        Flags:
-        --help, -h      Print this help
-        --verbose, -v   Verbose description
-        --clear Clear description
-
-        Options:
-        --option1 <option1>, -o1 <option1>      Option 1 description
-        --option2 <option2>     Option 2 description
-
         Parameters:
         <param1>        Parameter 1 description
+
+        Options:
+        --verbose, -v   Verbose description
+        --clear Clear description
+        --option1 <option1>, -o1 <option1>      Option 1 description
+        --option2 <option2>     Option 2 description
+        --help, -h      Print this help
 
 ```
 
@@ -374,18 +368,16 @@ will print following output:
 ```
 $> dotnet NFlags.Gnu.dll
 Usage:
-        NFlags.Gnu [FLAGS]... [OPTIONS]... [PARAMETERS]...
-
-        Flags:
-        --flag, -f      flag description
-        --help, -h      Prints this help
-
-        Options:
-        --option <option>, -o <option>  option description
+        NFlags.Gnu [OPTIONS]... [PARAMETERS]...
 
         Parameters:
         <parameter>     parameter description
         <parameterSeries...>    parameter series description
+
+        Options:
+        --flag, -f      flag description
+        --option <option>, -o <option>  option description
+        --help, -h      Prints this help
 ```
 
 ## Generics
@@ -513,13 +505,13 @@ Will print:
 Cannot convert value 'as' to type 'System.Int32'
 
 Usage:
-        NFlags.Empty [FLAGS]... [PARAMETERS]...
-
-        Flags:
-        /help, /h       Prints this help
+        NFlags.Empty [OPTIONS]... [PARAMETERS]...
 
         Parameters:
         <param> param description
+
+        Options:
+        /help, /h       Prints this help
 
 
 Process finished with exit code 255.

@@ -48,16 +48,14 @@ This is NFlags
         Commands:
         subcommand      Subcommand Description
 
-        Flags:
-        --flag1, -f     Flag description
-        --help, -h      Prints this help
-
-        Options:
-        --option <option>, -o <option>  Option description
-
         Parameters:
         <param> Param description
         <paramSeries...>        paramSeriesDescription
+
+        Options:
+        --flag1, -f     Flag description
+        --option <option>, -o <option>  Option description
+        --help, -h      Prints this help
 
 
 $> dotnet NFlags.QuickStart.dll subcommand
@@ -70,11 +68,11 @@ Usage:
 
 This is NFlags
 
-        Flags:
-        --help, -h      Prints this help
-
         Parameters:
         <SubParameter>  SubParameter description
+
+        Options:
+        --help, -h      Prints this help
 
 $> 
 
