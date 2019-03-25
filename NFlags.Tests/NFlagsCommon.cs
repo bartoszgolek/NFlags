@@ -188,12 +188,12 @@ namespace NFlags.Tests
                "\ttesthost sub [OPTIONS]... [PARAMETERS]...",
                 "",
                 "\tParameters:",
-                "\t<param1>",
-                "\t<param2>",
+                "\t<param1>\t(Default: '')",
+                "\t<param2>\t(Default: '')",
                "",
                "\tOptions:",
-               "\t/option1=<option1>",
-               "\t/option2=<option2>, /o2=<option2>",
+               "\t/option1=<option1>\t(Default: '')",
+               "\t/option2=<option2>, /o2=<option2>\t(Default: '')",
                 "\t/help, /h\tPrints this help",
                ""
             );
@@ -298,8 +298,8 @@ namespace NFlags.Tests
                 "\ttesthost [OPTIONS]...",
                 "",
                 "\tOptions:",
-                "\t/option1=<option1>, /o1=<option1>\tdOption1",
-                "\t/option2=<option2>\tdOption2",
+                "\t/option1=<option1>, /o1=<option1>\tdOption1 (Default: '')",
+                "\t/option2=<option2>\tdOption2 (Default: '')",
                 "\t/help, /h\tPrints this help",
                 ""
             );
@@ -329,8 +329,8 @@ namespace NFlags.Tests
                 "\ttesthost sub sub1 sub2 sub3 [OPTIONS]...",
                 "",
                 "\tOptions:",
-                "\t/option1=<option1>, /o1=<option1>\tdOption1",
-                "\t/option2=<option2>\tdOption2",
+                "\t/option1=<option1>, /o1=<option1>\tdOption1 (Default: '')",
+                "\t/option2=<option2>\tdOption2 (Default: '')",
                 "\t/help, /h\tPrints this help",
                 ""
             );

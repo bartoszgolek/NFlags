@@ -201,7 +201,7 @@ namespace NFlags.Tests
                 "\ttesthost [OPTIONS]...",
                 "",
                 "\tOptions:",
-                "\t/option=<option>",
+                "\t/option=<option>\t(Default: 1)",
                 "\t/help, /h\tPrints this help",
                 ""
             );

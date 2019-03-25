@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using NFlags.Arguments;
 using NFlags.Commands;
 
 namespace NFlags.Utils
@@ -23,7 +24,7 @@ namespace NFlags.Utils
 
             return sb.ToString();
         }
-        
+
         private void PrintUsage(StringBuilder builder)
         {
             builder.AppendLine("Usage:");
@@ -80,12 +81,29 @@ namespace NFlags.Utils
                 var line = "\t" + optionFormatter.FormatName(option);
                 if (option.Abr != null)
                     line += ", " + optionFormatter.FormatAbr(option);
+
+                var separator = "\t";
                 if (!string.IsNullOrEmpty(option.Description))
-                    line += "\t" + option.Description;
+                {
+                    line += separator + option.Description;
+                    separator = " ";
+                }
+
+                if (option.RequireValue && option.DefaultValue != null)
+                    line += separator + "(" + PrintDefaultValue(option) + ")";
+
                 builder.AppendLine(line);
             }
 
             builder.AppendLine("");
+        }
+
+        private static object PrintDefaultValue(DefaultValueArgument argument)
+        {
+            if (argument.ValueType == typeof(string))
+                return "Default: '" + argument.DefaultValue + "'";
+
+            return "Default: " + argument.DefaultValue;
         }
 
         private void PrintParameters(StringBuilder builder)
@@ -97,8 +115,17 @@ namespace NFlags.Utils
             foreach (var parameter in _commandConfig.Parameters)
             {
                 var line = "\t<" + parameter.Name + ">";
+
+                var separator = "\t";
                 if (!string.IsNullOrEmpty(parameter.Description))
-                    line += "\t" + parameter.Description;
+                {
+                    line += separator + parameter.Description;
+                    separator = " ";
+                }
+
+                if (parameter.DefaultValue != null)
+                    line += separator + "(" + PrintDefaultValue(parameter) + ")";
+
                 builder.AppendLine(line);
             }
 

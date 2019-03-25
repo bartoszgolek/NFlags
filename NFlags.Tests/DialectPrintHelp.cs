@@ -76,7 +76,7 @@ namespace NFlags.Tests
                 )
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
-            
+
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
@@ -99,7 +99,7 @@ namespace NFlags.Tests
                 )
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });
-            
+
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
@@ -126,7 +126,7 @@ namespace NFlags.Tests
                     .RegisterFlag("flag2", "f2", "Flag 2 Description", false)
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-            
+
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
@@ -153,15 +153,15 @@ namespace NFlags.Tests
                     .RegisterOption("option2", "o2", "Option 2 Description", "")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-            
+
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
                 "\ttesthost [OPTIONS]...",
                 "",
                 "\tOptions:",
-                "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description",
-                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description",
+                "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description (Default: '')",
+                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description (Default: '')",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );
@@ -180,15 +180,15 @@ namespace NFlags.Tests
                     .RegisterParameter("param2", "Param 2 Description", "")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-            
+
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
                 "\ttesthost [OPTIONS]... [PARAMETERS]...",
                 "",
                 "\tParameters:",
-                "\t<param1>\tParam 1 Description",
-                "\t<param2>\tParam 2 Description",
+                "\t<param1>\tParam 1 Description (Default: '')",
+                "\t<param2>\tParam 2 Description (Default: '')",
                 "",
                 "\tOptions:",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
@@ -210,15 +210,15 @@ namespace NFlags.Tests
                     .RegisterParameterSeries<string>("paramSeries", "Param series Description")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-            
+
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
                 "\ttesthost [OPTIONS]... [PARAMETERS]...",
                 "",
                 "\tParameters:",
-                "\t<param1>\tParam 1 Description",
-                "\t<param2>\tParam 2 Description",
+                "\t<param1>\tParam 1 Description (Default: '')",
+                "\t<param2>\tParam 2 Description (Default: '')",
                 "\t<paramSeries...>\tParam series Description",
                 "",
                 "\tOptions:",
@@ -239,7 +239,7 @@ namespace NFlags.Tests
                     .RegisterParameterSeries<string>("paramSeries", "Param series Description")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-            
+
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
@@ -273,7 +273,7 @@ namespace NFlags.Tests
                     .RegisterParameter("param2", "Param 2 Description", "")
                 )
                 .Run(new[] { "" + _longPrefix + "help" });
-            
+
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
@@ -282,14 +282,57 @@ namespace NFlags.Tests
                 "some description",
                 "",
                 "\tParameters:",
-                "\t<param1>\tParam 1 Description",
-                "\t<param2>\tParam 2 Description",
+                "\t<param1>\tParam 1 Description (Default: '')",
+                "\t<param2>\tParam 2 Description (Default: '')",
                 "",
                 "\tOptions:",
                 "\t" + _longPrefix + "flag1\tFlag 1 Description",
                 "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description",
-                "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description",
-                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description",
+                "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description (Default: '')",
+                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description (Default: '')",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                ""
+            );
+        }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintDefaultValueAfterOptionAndParametersDescriptions()
+        {
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(_dialect)
+                    .SetOutput(outputAggregator)
+                    .SetName("custName")
+                    .SetDescription("some description")
+                )
+                .Root(configurator => configurator
+                    .RegisterFlag("flag1", "Flag 1 Description", false)
+                    .RegisterFlag("flag2", "f2", "Flag 2 Description", false)
+                    .RegisterOption("option1", "Option 1 Description", 1)
+                    .RegisterOption("option2", "o2", "Option 2 Description", 2.1)
+                    .RegisterParameter("param1", "Param 1 Description", 8.5m)
+                    .RegisterParameter("param2", "Param 2 Description", "default")
+                    .RegisterParameter("param3", "", "default")
+                )
+                .Run(new[] { "" + _longPrefix + "help" });
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tcustName [OPTIONS]... [PARAMETERS]...",
+                "",
+                "some description",
+                "",
+                "\tParameters:",
+                "\t<param1>\tParam 1 Description (Default: "+ 8.5 + ")",
+                "\t<param2>\tParam 2 Description (Default: 'default')",
+                "\t<param3>\t(Default: 'default')",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "flag1\tFlag 1 Description",
+                "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description",
+                "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description (Default: 1)",
+                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description (Default: " + 2.1 + ")",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
                 ""
             );

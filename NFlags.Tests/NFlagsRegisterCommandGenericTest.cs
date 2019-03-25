@@ -19,7 +19,7 @@ namespace NFlags.Tests
                     .Root<NotBooleanFlag>(c => { });
             });
         }
-        
+
         [Fact]
         public void RegisterCommandT_ShouldThrowIncorrectParameterSeriesMemberTypeException_IfMemberWithParameterSeriesAttributeIsNotArray()
         {
@@ -30,7 +30,7 @@ namespace NFlags.Tests
                     .Root<NotArrayParameterSeries>(c => { });
             });
         }
-        
+
         [Fact]
         public void RegisterCommandT_ShouldThrowPropertyWithoutSetterException_IfPropertyWithParameterSeriesAttributeHasNoSetter()
         {
@@ -41,7 +41,7 @@ namespace NFlags.Tests
                     .Root<ParameterSeriesWithoutSetter>(c => { });
             });
         }
-        
+
         [Fact]
         public void RegisterCommandT_ShouldThrowPropertyWithoutSetterException_IfPropertyWithFlagAttributeHasNoSetter()
         {
@@ -52,7 +52,7 @@ namespace NFlags.Tests
                     .Root<FlagWithoutSetter>(c => { });
             });
         }
-        
+
         [Fact]
         public void RegisterCommandT_ShouldThrowPropertyWithoutSetterException_IfPropertyWithOptionAttributeHasNoSetter()
         {
@@ -63,7 +63,7 @@ namespace NFlags.Tests
                     .Root<OptionWithoutSetter>(c => { });
             });
         }
-        
+
         [Fact]
         public void RegisterCommandT_ShouldThrowPropertyWithoutSetterException_IfPropertyWithParameterAttributeHasNoSetter()
         {
@@ -74,7 +74,7 @@ namespace NFlags.Tests
                     .Root<ParameterWithoutSetter>(c => { });
             });
         }
-        
+
         [Fact]
         public void RegisterCommandT_ShouldPrintParametersOptionsFlagsAndParameterSeriesInHelp()
         {
@@ -98,13 +98,13 @@ namespace NFlags.Tests
                 "\ttesthost sub [OPTIONS]... [PARAMETERS]...",
                 "",
                 "\tParameters:",
-                "\t<parameter1>\tparameter desc",
-                "\t<parameter2>\tparameter2 desc",
+                "\t<parameter1>\tparameter desc (Default: " + 1.1 + ")",
+                "\t<parameter2>\tparameter2 desc (Default: " + 1 + ")",
                 "\t<parameterSeries...>\tparameter series desc",
                 "",
                 "\tOptions:",
-                "\t--option1 <option1>\toption desc",
-                "\t--option2 <option2>, -o2 <option2>\toption2 desc",
+                "\t--option1 <option1>\toption desc (Default: " + 1 + ")",
+                "\t--option2 <option2>, -o2 <option2>\toption2 desc (Default: 'asd')",
                 "\t--flag1\tflag desc",
                 "\t--flag2, -f2\tflag2 desc",
                 "\t--help, -h\tPrints this help",
@@ -146,7 +146,7 @@ namespace NFlags.Tests
                 .SetEnvironmentVariable("NFLAG_TEST_OPTION1", "54")
                 .SetEnvironmentVariable("NFLAG_TEST_FLAG1", "false")
                 .SetEnvironmentVariable("NFLAG_TEST_PARAMETER2", "89");
-            
+
             ArgumentsType a = null;
             NFlags
                 .Configure(c => c
