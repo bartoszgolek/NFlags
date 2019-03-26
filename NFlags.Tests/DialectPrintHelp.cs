@@ -337,5 +337,58 @@ namespace NFlags.Tests
                 ""
             );
         }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintFlagAndOptionsInGroups()
+        {
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(_dialect)
+                    .SetOutput(outputAggregator)
+                    .SetName("custName")
+                    .SetDescription("some description")
+                )
+                .Root(configurator => configurator
+                    .RegisterFlag(b => b.Name("flag1").Group("group1"))
+                    .RegisterFlag(b => b.Name("flag2"))
+                    .RegisterFlag(b => b.Name("flag3").Group("group1"))
+                    .RegisterFlag(b => b.Name("flag4"))
+                    .RegisterFlag(b => b.Name("flag5").Group("group2"))
+                    .RegisterFlag(b => b.Name("flag6").Group("group3"))
+                    .RegisterFlag(b => b.Name("flag7"))
+                    .RegisterOption<int>(b => b.Name("option1").Group("group1"))
+                    .RegisterOption<int>(b => b.Name("option2"))
+                    .RegisterOption<int>(b => b.Name("option3").Group("group1"))
+                    .RegisterOption<int>(b => b.Name("option4"))
+                    .RegisterOption<int>(b => b.Name("option5").Group("group2"))
+                    .RegisterOption<int>(b => b.Name("option6").Group("group3"))
+                    .RegisterOption<int>(b => b.Name("option7"))
+                    .RegisterParameter<string>(b => b.Name("param1"))
+                    .RegisterParameter<string>(b => b.Name("param2"))
+                    .RegisterParameter<string>(b => b.Name("param3"))
+                )
+                .Run(new[] { "" + _longPrefix + "help" });
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tcustName [OPTIONS]... [PARAMETERS]...",
+                "",
+                "some description",
+                "",
+                "\tParameters:",
+                "\t<param1>\tParam 1 Description (Default: "+ 8.5 + ")",
+                "\t<param2>\tParam 2 Description (Default: 'default')",
+                "\t<param3>\t(Default: 'default')",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "flag1\tFlag 1 Description",
+                "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description",
+                "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description (Default: 1)",
+                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description (Default: " + 2.1 + ")",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                ""
+            );
+        }
     }
 }

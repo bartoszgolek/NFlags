@@ -15,5 +15,10 @@ namespace NFlags.Arguments
         /// Defines if flag persist for sub commands
         /// </summary>
         public bool IsPersistent { get; internal set; }
+
+        /// <summary>
+        /// Defines grouping of arguments when printing help
+        /// </summary>
+        public string Group { get; internal set; }
     }
 }
