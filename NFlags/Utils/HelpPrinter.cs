@@ -82,28 +82,12 @@ namespace NFlags.Utils
                 if (option.Abr != null)
                     line += ", " + optionFormatter.FormatAbr(option);
 
-                var separator = "\t";
-                if (!string.IsNullOrEmpty(option.Description))
-                {
-                    line += separator + option.Description;
-                    separator = " ";
-                }
-
-                if (option.RequireValue && option.DefaultValue != null)
-                    line += separator + "(" + PrintDefaultValue(option) + ")";
+                line += PrintDescription(option);
 
                 builder.AppendLine(line);
             }
 
             builder.AppendLine("");
-        }
-
-        private static object PrintDefaultValue(DefaultValueArgument argument)
-        {
-            if (argument.ValueType == typeof(string))
-                return "Default: '" + argument.DefaultValue + "'";
-
-            return "Default: " + argument.DefaultValue;
         }
 
         private void PrintParameters(StringBuilder builder)
@@ -114,30 +98,78 @@ namespace NFlags.Utils
             builder.AppendLine("\tParameters:");
             foreach (var parameter in _commandConfig.Parameters)
             {
-                var line = "\t<" + parameter.Name + ">";
+                var line = $"\t<{parameter.Name}>";
 
-                var separator = "\t";
-                if (!string.IsNullOrEmpty(parameter.Description))
-                {
-                    line += separator + parameter.Description;
-                    separator = " ";
-                }
-
-                if (parameter.DefaultValue != null)
-                    line += separator + "(" + PrintDefaultValue(parameter) + ")";
+                line += PrintDescription(parameter);
 
                 builder.AppendLine(line);
             }
 
             if (_commandConfig.ParameterSeries != null)
             {
-                var line = "\t<" + _commandConfig.ParameterSeries.Name + "...>";
+                var line = $"\t<{_commandConfig.ParameterSeries.Name}...>";
                 if (!string.IsNullOrEmpty(_commandConfig.ParameterSeries.Description))
                     line += "\t" + _commandConfig.ParameterSeries.Description;
                 builder.AppendLine(line);
             }
 
             builder.AppendLine("");
+        }
+
+        private static string PrintDescription(DefaultValueArgument argument)
+        {
+            var description = "";
+            var separator = "\t";
+            if (!string.IsNullOrEmpty(argument.Description))
+            {
+                description += separator + argument.Description;
+                separator = " ";
+            }
+
+            if ((!argument.RequireValue || argument.DefaultValue == null) && string.IsNullOrEmpty(argument.EnvironmentVariable) && string.IsNullOrEmpty(argument.ConfigPath))
+                return description;
+
+            description += separator + "(";
+            separator = "";
+            if (argument.RequireValue && argument.DefaultValue != null)
+            {
+                description += separator + PrintDefaultValue(argument);
+                separator = ", ";
+            }
+
+            if (!string.IsNullOrEmpty(argument.EnvironmentVariable))
+            {
+                description += separator + PrintEnvironmentVariable(argument);
+                separator = ", ";
+            }
+
+            if (!string.IsNullOrEmpty(argument.ConfigPath))
+            {
+                description += separator + PrintConfigPath(argument);
+                separator = ", ";
+            }
+
+            description += ")";
+
+            return description;
+        }
+
+        private static object PrintDefaultValue(DefaultValueArgument argument)
+        {
+            if (argument.ValueType == typeof(string))
+                return $"Default: '{argument.DefaultValue}'";
+
+            return $"Default: {argument.DefaultValue}";
+        }
+
+        private static object PrintEnvironmentVariable(DefaultValueArgument argument)
+        {
+            return $"Environment variable: '{argument.EnvironmentVariable}'";
+        }
+
+        private static object PrintConfigPath(DefaultValueArgument argument)
+        {
+            return $"Config path: '{argument.ConfigPath}'";
         }
     }
 }
