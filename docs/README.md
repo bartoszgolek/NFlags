@@ -42,30 +42,31 @@ Usage:
 This is NFlags
 
         Commands:
-        subcommand      Subcommand Description
+        command Sub command Description
 
         Parameters:
-        <param> Param description
+        <param> Param description (Default: 'ParamDefaultValue')
         <paramSeries...>        paramSeriesDescription
 
         Options:
         --flag1, -f     Flag description
-        --option <option>, -o <option>  Option description
+        --option <option>, -o <option>  Option description (Default: 'optionDefaultValue')
         --help, -h      Prints this help
+
 
 
 $> dotnet NFlags.QuickStart.dll subcommand
 This is subcommand: SubParameterValue
 $> dotnet NFlags.QuickStart.dll subcommand yyy
 This is subcommand: yyy
-$> dotnet NFlags.QuickStart.dll subcommand --help
+$> dotnet NFlags.QuickStart.dll command --help
 Usage:
-        QuickStart [OPTIONS]... [PARAMETERS]...
+        QuickStart command [OPTIONS]... [PARAMETERS]...
 
 This is NFlags
 
         Parameters:
-        <SubParameter>  SubParameter description
+        <Parameter>     Sub parameter description (Default: 'SubParameterValue')
 
         Options:
         --help, -h      Prints this help
@@ -320,17 +321,20 @@ Usage:
 Application description
 
         Commands:
-        subcommand      Subcommand Description
+        show    Show somethig
+        list    List something
 
         Parameters:
-        <param1>        Parameter 1 description
+        <param1>        Parameter 1 description (Default: '.')
 
         Options:
         /verbose, /v    Verbose description
         /clear  Clear description
-        /option1=<option1>, /o1=<option1>       Option 1 description
-        /option2=<option2>      Option 2 description
-        /help, /h       Print this help
+        /option1=<option1>, /o1=<option1>       Option 1 description (Default: 'default')
+        /option2=<option2>      Option 2 description (Default: 'default2')
+        /help, /h       Prints this help
+
+
 
 ```
 
@@ -342,17 +346,19 @@ Usage:
 Application description
 
         Commands:
-        subcommand      Subcommand Description
+        show    Show somethig
+        list    List something
 
         Parameters:
-        <param1>        Parameter 1 description
+        <param1>        Parameter 1 description (Default: '.')
 
         Options:
         --verbose, -v   Verbose description
         --clear Clear description
-        --option1 <option1>, -o1 <option1>      Option 1 description
-        --option2 <option2>     Option 2 description
-        --help, -h      Print this help
+        --option1 <option1>, -o1 <option1>      Option 1 description (Default: 'default')
+        --option2 <option2>     Option 2 description (Default: 'default2')
+        --help, -h      Prints this help
+
 
 ```
 
