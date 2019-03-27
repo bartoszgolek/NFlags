@@ -211,5 +211,56 @@ namespace NFlags.Tests
             Assert.Equal(5, a.Parameter2);
             Assert.Equal(new[] {6, 7}, a.ParameterSeries);
         }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintFlagAndOptionsInGroups()
+        {
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(Dialect.Gnu)
+                    .SetOutput(outputAggregator)
+                    .SetName("groups")
+                    .SetDescription("some description")
+                )
+                .Root<GroupedArgumentsType>(configurator => { })
+                .Run(new[] { "--help" });
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tgroups [OPTIONS]... [PARAMETERS]...",
+                "",
+                "some description",
+                "",
+                "\tParameters:",
+                "\t<param1>",
+                "\t<param2>",
+                "\t<param3>",
+                "",
+                "\tOptions:",
+                "\t--flag2",
+                "\t--flag4",
+                "\t--flag7",
+                "\t--option2 <option2>\t(Default: 0)",
+                "\t--option4 <option4>\t(Default: 0)",
+                "\t--option7 <option7>\t(Default: 0)",
+                "\t--help, -h\tPrints this help",
+                "",
+                "\tgroup1:",
+                "\t\t--flag1",
+                "\t\t--flag5",
+                "\t\t--option1 <option1>\t(Default: 0)",
+                "\t\t--option3 <option3>\t(Default: 0)",
+                "",
+                "\tgroup2:",
+                "\t\t--flag3",
+                "\t\t--option5 <option5>\t(Default: 0)",
+                "",
+                "\tgroup3:",
+                "\t\t--flag6",
+                "\t\t--option6 <option6>\t(Default: 0)",
+                ""
+            );
+        }
     }
 }

@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NFlags.Arguments;
 using NFlags.Commands;
@@ -73,18 +76,39 @@ namespace NFlags.Utils
             if (!_commandConfig.Options.Any())
                 return;
 
+            var groups = new Dictionary<string, StringBuilder>();
+
             var optionFormatter = OptionFormatter.GetFormatter(_commandConfig.NFlagsConfig.Dialect);
 
             builder.AppendLine("\tOptions:");
             foreach (var option in _commandConfig.Options)
             {
-                var line = "\t" + optionFormatter.FormatName(option);
+                var indentation = "\t";
+                var optionGroup = option.Group ?? string.Empty;
+                if (optionGroup != "")
+                    indentation = "\t\t";
+
+                var line = indentation + optionFormatter.FormatName(option);
                 if (option.Abr != null)
                     line += ", " + optionFormatter.FormatAbr(option);
 
                 line += PrintDescription(option);
 
-                builder.AppendLine(line);
+                if (optionGroup != "")
+                {
+                    if (!groups.ContainsKey(optionGroup))
+                        groups.Add(optionGroup, new StringBuilder().AppendLine($"\t{optionGroup}:"));
+
+                    groups[optionGroup].AppendLine(line);
+                }
+                else
+                    builder.AppendLine(line);
+            }
+
+            foreach (var kvp in groups)
+            {
+                builder.AppendLine("");
+                builder.Append(kvp.Value.ToString());
             }
 
             builder.AppendLine("");

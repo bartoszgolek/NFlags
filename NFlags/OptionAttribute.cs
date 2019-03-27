@@ -127,6 +127,12 @@ namespace NFlags
         /// </summary>
         public object DefaultValue { get;  set; }
 
+        /// <summary>
+        /// Set group
+        /// </summary>
+        public string Group { get;  set; }
+
+
         internal int Order { get; }
     }
 }
