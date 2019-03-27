@@ -133,8 +133,8 @@ namespace NFlags.Arguments
         /// <summary>
         /// Set group
         /// </summary>
-        /// <param name="group"></param>
-        /// <returns></returns>
+        /// <param name="group">Group name</param>
+        /// <returns>Self instance</returns>
         public OptionBuilder<T> Group(string group)
         {
             _group = group;

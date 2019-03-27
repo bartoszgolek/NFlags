@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFlags.Configuration", "Exa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFlags.Kestrel", "Examples\NFlags.Kestrel\NFlags.Kestrel.csproj", "{6BB5509C-3CCA-49B4-A3BC-2FA7137A9A76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFlags.Groups", "Examples\NFlags.Groups\NFlags.Groups.csproj", "{D5795E00-0F63-46AC-A750-63E1C9F5F032}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{6BB5509C-3CCA-49B4-A3BC-2FA7137A9A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BB5509C-3CCA-49B4-A3BC-2FA7137A9A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BB5509C-3CCA-49B4-A3BC-2FA7137A9A76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5795E00-0F63-46AC-A750-63E1C9F5F032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5795E00-0F63-46AC-A750-63E1C9F5F032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5795E00-0F63-46AC-A750-63E1C9F5F032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5795E00-0F63-46AC-A750-63E1C9F5F032}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,5 +97,6 @@ Global
 		{7EC4D026-1E33-4621-B919-973122CA61E8} = {95718B1C-2632-42E1-A88A-F0CE18326711}
 		{134CC18B-8005-42FD-86D0-8C29F9ABF8DA} = {95718B1C-2632-42E1-A88A-F0CE18326711}
 		{6BB5509C-3CCA-49B4-A3BC-2FA7137A9A76} = {95718B1C-2632-42E1-A88A-F0CE18326711}
+		{D5795E00-0F63-46AC-A750-63E1C9F5F032} = {95718B1C-2632-42E1-A88A-F0CE18326711}
 	EndGlobalSection
 EndGlobal

@@ -345,15 +345,15 @@ namespace NFlags.Tests
             NFlags.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
-                    .SetName("custName")
+                    .SetName("groups")
                     .SetDescription("some description")
                 )
                 .Root(configurator => configurator
                     .RegisterFlag(b => b.Name("flag1").Group("group1"))
                     .RegisterFlag(b => b.Name("flag2"))
-                    .RegisterFlag(b => b.Name("flag3").Group("group1"))
+                    .RegisterFlag(b => b.Name("flag3").Group("group2"))
                     .RegisterFlag(b => b.Name("flag4"))
-                    .RegisterFlag(b => b.Name("flag5").Group("group2"))
+                    .RegisterFlag(b => b.Name("flag5").Group("group1"))
                     .RegisterFlag(b => b.Name("flag6").Group("group3"))
                     .RegisterFlag(b => b.Name("flag7"))
                     .RegisterOption<int>(b => b.Name("option1").Group("group1"))
@@ -372,21 +372,37 @@ namespace NFlags.Tests
             NFAssert.HelpEquals(
                 outputAggregator,
                 "Usage:",
-                "\tcustName [OPTIONS]... [PARAMETERS]...",
+                "\tgroups [OPTIONS]... [PARAMETERS]...",
                 "",
                 "some description",
                 "",
                 "\tParameters:",
-                "\t<param1>\tParam 1 Description (Default: "+ 8.5 + ")",
-                "\t<param2>\tParam 2 Description (Default: 'default')",
-                "\t<param3>\t(Default: 'default')",
+                "\t<param1>",
+                "\t<param2>",
+                "\t<param3>",
                 "",
                 "\tOptions:",
-                "\t" + _longPrefix + "flag1\tFlag 1 Description",
-                "\t" + _longPrefix + "flag2, " + _shortPrefix + "f2\tFlag 2 Description",
-                "\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\tOption 1 Description (Default: 1)",
-                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>, " + _shortPrefix + "o2" + _optionValueSeparator + "<option2>\tOption 2 Description (Default: " + 2.1 + ")",
+                "\t" + _longPrefix + "flag2",
+                "\t" + _longPrefix + "flag4",
+                "\t" + _longPrefix + "flag7",
+                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>\t(Default: 0)",
+                "\t" + _longPrefix + "option4" + _optionValueSeparator + "<option4>\t(Default: 0)",
+                "\t" + _longPrefix + "option7" + _optionValueSeparator + "<option7>\t(Default: 0)",
                 "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "",
+                "\tgroup1:",
+                "\t\t" + _longPrefix + "flag1",
+                "\t\t" + _longPrefix + "flag5",
+                "\t\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\t(Default: 0)",
+                "\t\t" + _longPrefix + "option3" + _optionValueSeparator + "<option3>\t(Default: 0)",
+                "",
+                "\tgroup2:",
+                "\t\t" + _longPrefix + "flag3",
+                "\t\t" + _longPrefix + "option5" + _optionValueSeparator + "<option5>\t(Default: 0)",
+                "",
+                "\tgroup3:",
+                "\t\t" + _longPrefix + "flag6",
+                "\t\t" + _longPrefix + "option6" + _optionValueSeparator + "<option6>\t(Default: 0)",
                 ""
             );
         }

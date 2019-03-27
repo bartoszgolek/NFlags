@@ -130,8 +130,8 @@ namespace NFlags.Arguments
         /// <summary>
         /// Set group
         /// </summary>
-        /// <param name="group"></param>
-        /// <returns></returns>
+        /// <param name="group">Group name</param>
+        /// <returns>Self instance</returns>
         public FlagBuilder Group(string group)
         {
             _group = group;

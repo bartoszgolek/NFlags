@@ -121,7 +121,7 @@ NFlags.Configure(configurator => configurator.SetDialect(Dialect.Gnu));
 NFlags always has at least one root command
 
 #### Set flag
-Flag is an prefixed argument without value. It can be turned on or off.
+Flag is an prefixed argument with boolean value. It can be turned on or off.
 Flag abbreviation can be also set.
 There is also default value which will be negated when flag will be passed as argument.
 ```c#
@@ -148,6 +148,8 @@ NFlags
 
 When registering flag, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.
 Same goes to setting config path, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.
+
+If flag default value is set to `True`, falg will be set to `False` when passed from CLI.
 
 ### Set option
 Option is an prefixed argument with value.
@@ -215,6 +217,62 @@ There is also non-generic method where argument type is string
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries("paramSeries", "Param series description"));
 ``` 
+
+### Argument grouping
+Both flags and options can attached to groups and printed in separate section in help.
+```c#
+NFlags.Configure(c => {}).Root(c => c.RegisterFlag(b => b.Name("flag").Group("group"));
+NFlags.Configure(c => {}).Root(c => c.RegisterOption<string>(b => b.Name("option").Group("group"));
+```
+
+The following code:
+```c#
+    NFlags
+        .Configure(c => c
+            .SetDialect(Dialect.Gnu)
+        )
+        .Root(c => c
+            .RegisterParameter<string>(b => b.Name("param1"))
+            .RegisterFlag(b => b.Name("flag1"))
+            .RegisterFlag(b => b.Name("group1-flag1").Group("group1"))
+            .RegisterFlag(b => b.Name("group2-flag1").Group("group2"))
+            .RegisterFlag(b => b.Name("group1-flag2").Group("group1"))
+            .RegisterFlag(b => b.Name("flag2"))
+            .RegisterOption<string>(b => b.Name("option1"))
+            .RegisterOption<string>(b => b.Name("group1-option1").Group("group1"))
+            .RegisterOption<string>(b => b.Name("group2-option1").Group("group2"))
+            .RegisterOption<string>(b => b.Name("group1-option2").Group("group1"))
+            .RegisterOption<string>(b => b.Name("option2"))
+            .PrintHelpOnExecute()
+        )
+        .Run(args);
+```
+will print following help test
+```
+$> dotnet NFlags.Groups.dll
+Usage:
+        NFlags.Groups [OPTIONS]... [PARAMETERS]...
+
+        Parameters:
+        <param1>
+
+        Options:
+        --flag1
+        --flag2
+        --option1 <option1>
+        --option2 <option2>
+        --help, -h      Prints this help
+
+        group1:
+                --group1-flag1
+                --group1-flag2
+                --group1-option1 <group1-option1>
+                --group1-option2 <group1-option2>
+
+        group2:
+                --group2-flag1
+                --group2-option1 <group2-option1>
+```
 
 ### Attach code to execution
 
