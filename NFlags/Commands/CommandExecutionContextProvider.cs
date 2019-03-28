@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NFlags.Arguments;
@@ -15,6 +16,7 @@ namespace NFlags.Commands
         private readonly ParameterSeries _parameterSeries;
         private readonly Shifter<string> _args;
         private readonly CommandArgs _commandArgs;
+        private readonly IDictionary<string, ArrayConstValueProvider> _optionValues;
 
         public CommandExecutionContextProvider(
             CommandConfig commandConfig,
@@ -26,6 +28,7 @@ namespace NFlags.Commands
             _parameterSeries = commandConfig.ParameterSeries;
             _args = new Shifter<string>(args);
             _commandArgs = InitDefaultCommandArgs();
+            _optionValues = new Dictionary<string, ArrayConstValueProvider>();
         }
 
         public CommandExecutionContext GetFromArgs()
@@ -58,6 +61,9 @@ namespace NFlags.Commands
                     ReadParam(arg);
 
             }
+
+            foreach (var optionValue in _optionValues)
+                _commandArgs.AddOptionValueProvider(optionValue.Key, optionValue.Value);
 
             var noArgsDefaultCommand = GetDefaultCommand();
             if (noArgsDefaultCommand != null)
@@ -153,7 +159,7 @@ namespace NFlags.Commands
             {
                 if (opt.ValueType == typeof(bool))
                     _commandArgs.AddOptionValueProvider(opt.Name, new ConstValueProvider(!(bool) opt.DefaultValue));
-                
+
                 return true;
             }
 
@@ -161,8 +167,23 @@ namespace NFlags.Commands
                 .GetReader(_commandConfig.NFlagsConfig.Dialect.OptionValueMode)
                 .ReadValue(_args, arg);
 
-            _commandArgs.AddOptionValueProvider(opt.Name,
-                new ConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
+            if (opt.ValueType.IsArray)
+            {
+                if (_optionValues.ContainsKey(opt.Name))
+                {
+                    _optionValues[opt.Name].Add(ConvertValueToExpectedType(optionValue, opt.ValueType));
+                }
+                else if (opt.ValueType.IsArray)
+                {
+                    _optionValues.Add(opt.Name,
+                        new ArrayConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
+                }
+            }
+            else
+            {
+                _commandArgs.AddOptionValueProvider(opt.Name,
+                        new ConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
+            }
 
             return true;
         }
