@@ -16,7 +16,7 @@ namespace NFlags.Commands
         public T GetValue<T>()
         {
             return (T)_valueProviders
-                .Select(valueProvider => valueProvider.ReadValue<T>())
+                .Select(valueProvider => valueProvider.ReadValue())
                 .FirstOrDefault(value => value != null);
         }
     }

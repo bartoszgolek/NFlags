@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NFlags.Arguments;
@@ -16,7 +15,7 @@ namespace NFlags.Commands
         private readonly ParameterSeries _parameterSeries;
         private readonly Shifter<string> _args;
         private readonly CommandArgs _commandArgs;
-        private readonly IDictionary<string, ArrayConstValueProvider> _optionValues;
+        private readonly IDictionary<string, ArrayAggregator> _optionValues;
 
         public CommandExecutionContextProvider(
             CommandConfig commandConfig,
@@ -28,7 +27,7 @@ namespace NFlags.Commands
             _parameterSeries = commandConfig.ParameterSeries;
             _args = new Shifter<string>(args);
             _commandArgs = InitDefaultCommandArgs();
-            _optionValues = new Dictionary<string, ArrayConstValueProvider>();
+            _optionValues = new Dictionary<string, ArrayAggregator>();
         }
 
         public CommandExecutionContext GetFromArgs()
@@ -63,7 +62,16 @@ namespace NFlags.Commands
             }
 
             foreach (var optionValue in _optionValues)
-                _commandArgs.AddOptionValueProvider(optionValue.Key, optionValue.Value);
+            {
+                _commandArgs.AddOptionValueProvider(
+                    optionValue.Key,
+                    new ConstValueProvider(
+                        optionValue.Value.GetArray(
+                            _commandConfig.Options.Single(o => o.Name == optionValue.Key).ValueType)
+                        )
+                    );
+            }
+
 
             var noArgsDefaultCommand = GetDefaultCommand();
             if (noArgsDefaultCommand != null)
@@ -176,7 +184,7 @@ namespace NFlags.Commands
                 else if (opt.ValueType.IsArray)
                 {
                     _optionValues.Add(opt.Name,
-                        new ArrayConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType())));
+                        new ArrayAggregator(ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType())));
                 }
             }
             else

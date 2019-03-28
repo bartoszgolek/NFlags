@@ -9,9 +9,9 @@ namespace NFlags.ValueProviders
             _value = value;
         }
 
-        public T ReadValue<T>()
+        public object ReadValue()
         {
-            return (T)_value;
+            return _value;
         }
     }
 }
