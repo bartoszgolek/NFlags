@@ -2,6 +2,6 @@ namespace NFlags.ValueProviders
 {
     internal interface IValueProvider
     {
-        object readValue();
+        T ReadValue<T>();
     }
 }

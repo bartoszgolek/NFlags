@@ -171,12 +171,12 @@ namespace NFlags.Commands
             {
                 if (_optionValues.ContainsKey(opt.Name))
                 {
-                    _optionValues[opt.Name].Add(ConvertValueToExpectedType(optionValue, opt.ValueType));
+                    _optionValues[opt.Name].Add(ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType()));
                 }
                 else if (opt.ValueType.IsArray)
                 {
                     _optionValues.Add(opt.Name,
-                        new ArrayConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
+                        new ArrayConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType())));
                 }
             }
             else

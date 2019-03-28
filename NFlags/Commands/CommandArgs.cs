@@ -39,7 +39,7 @@ namespace NFlags.Commands
         /// <returns>Flag value</returns>
         public bool GetFlag(string name)
         {
-            return (bool) _options[name].GetValue();
+            return _options[name].GetValue<bool>();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace NFlags.Commands
         {
             if (!_options.ContainsKey(name))
                 _options.Add(name, new ValueProvidersCollection());
-            
+
             _options[name].RegisterValueProvider(valueProvider);
         }
 
@@ -69,7 +69,7 @@ namespace NFlags.Commands
         /// <returns>Option value</returns>
         public T GetOption<T>(string name)
         {
-            return (T)_options[name].GetValue();
+            return _options[name].GetValue<T>();
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace NFlags.Commands
         {
             if (!_parameters.ContainsKey(name))
                 _parameters.Add(name, new ValueProvidersCollection());
-            
+
             _parameters[name].RegisterValueProvider(valueProvider);
         }
 
@@ -99,7 +99,7 @@ namespace NFlags.Commands
         /// <returns>Parameter value</returns>
         public T GetParameter<T>(string name)
         {
-            return (T)_parameters[name].GetValue();
+            return _parameters[name].GetValue<T>();
         }
 
         /// <summary>

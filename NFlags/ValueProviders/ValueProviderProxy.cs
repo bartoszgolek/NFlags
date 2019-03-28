@@ -11,9 +11,9 @@ namespace NFlags.ValueProviders
             _proxy = proxy;
         }
 
-        public object readValue()
+        public T ReadValue<T>()
         {
-            return _proxy();
+            return (T)_proxy();
         }
     }
 }

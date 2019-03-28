@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NFlags.ValueProviders
 {
@@ -17,9 +19,11 @@ namespace NFlags.ValueProviders
             _value.Add(value);
         }
 
-        public object readValue()
+        public T ReadValue<T>()
         {
-            return _value.ToArray();
+            var elementType = typeof(T).GetElementType();
+
+            return (T)Convert.ChangeType(_value.Select(input => Convert.ChangeType(input, elementType)).ToArray(), typeof(T));
         }
     }
 }
