@@ -15,6 +15,7 @@ namespace NFlags.Arguments
         private string _configPath;
         private bool _isEnvironmentVariableLazy;
         private bool _isConfigPathLazy;
+        private bool _allowMultiple;
 
         /// <summary>
         /// Set name of the argument.
