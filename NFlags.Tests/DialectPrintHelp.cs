@@ -337,5 +337,74 @@ namespace NFlags.Tests
                 ""
             );
         }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintFlagAndOptionsInGroups()
+        {
+            var outputAggregator = new OutputAggregator();
+            NFlags.Configure(configurator => configurator
+                    .SetDialect(_dialect)
+                    .SetOutput(outputAggregator)
+                    .SetName("groups")
+                    .SetDescription("some description")
+                )
+                .Root(configurator => configurator
+                    .RegisterFlag(b => b.Name("flag1").Group("group1"))
+                    .RegisterFlag(b => b.Name("flag2"))
+                    .RegisterFlag(b => b.Name("flag3").Group("group2"))
+                    .RegisterFlag(b => b.Name("flag4"))
+                    .RegisterFlag(b => b.Name("flag5").Group("group1"))
+                    .RegisterFlag(b => b.Name("flag6").Group("group3"))
+                    .RegisterFlag(b => b.Name("flag7"))
+                    .RegisterOption<int>(b => b.Name("option1").Group("group1"))
+                    .RegisterOption<int>(b => b.Name("option2"))
+                    .RegisterOption<int>(b => b.Name("option3").Group("group1"))
+                    .RegisterOption<int>(b => b.Name("option4"))
+                    .RegisterOption<int>(b => b.Name("option5").Group("group2"))
+                    .RegisterOption<int>(b => b.Name("option6").Group("group3"))
+                    .RegisterOption<int>(b => b.Name("option7"))
+                    .RegisterParameter<string>(b => b.Name("param1"))
+                    .RegisterParameter<string>(b => b.Name("param2"))
+                    .RegisterParameter<string>(b => b.Name("param3"))
+                )
+                .Run(new[] { "" + _longPrefix + "help" });
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tgroups [OPTIONS]... [PARAMETERS]...",
+                "",
+                "some description",
+                "",
+                "\tParameters:",
+                "\t<param1>",
+                "\t<param2>",
+                "\t<param3>",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "flag2",
+                "\t" + _longPrefix + "flag4",
+                "\t" + _longPrefix + "flag7",
+                "\t" + _longPrefix + "option2" + _optionValueSeparator + "<option2>\t(Default: 0)",
+                "\t" + _longPrefix + "option4" + _optionValueSeparator + "<option4>\t(Default: 0)",
+                "\t" + _longPrefix + "option7" + _optionValueSeparator + "<option7>\t(Default: 0)",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "",
+                "\tgroup1:",
+                "\t\t" + _longPrefix + "flag1",
+                "\t\t" + _longPrefix + "flag5",
+                "\t\t" + _longPrefix + "option1" + _optionValueSeparator + "<option1>\t(Default: 0)",
+                "\t\t" + _longPrefix + "option3" + _optionValueSeparator + "<option3>\t(Default: 0)",
+                "",
+                "\tgroup2:",
+                "\t\t" + _longPrefix + "flag3",
+                "\t\t" + _longPrefix + "option5" + _optionValueSeparator + "<option5>\t(Default: 0)",
+                "",
+                "\tgroup3:",
+                "\t\t" + _longPrefix + "flag6",
+                "\t\t" + _longPrefix + "option6" + _optionValueSeparator + "<option6>\t(Default: 0)",
+                ""
+            );
+        }
     }
 }

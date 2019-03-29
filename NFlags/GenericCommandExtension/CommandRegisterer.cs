@@ -21,11 +21,11 @@ namespace NFlags.GenericCommandExtension
 
             const string parameterSeriesRegistrationType = "ParameterSeries";
             RegisterArgumentInstance(
-                parameterSeriesRegistrationType, 
-                TypeHelper.GetMemberType(member).GetElementType(), 
+                parameterSeriesRegistrationType,
+                TypeHelper.GetMemberType(member).GetElementType(),
                 new ParameterSeries
                 {
-                    Name = parameterSeriesAttribute.Name, 
+                    Name = parameterSeriesAttribute.Name,
                     Description = parameterSeriesAttribute.Description,
                     ValueType = TypeHelper.GetMemberType(member).GetElementType()
                 }
@@ -38,8 +38,8 @@ namespace NFlags.GenericCommandExtension
 
             const string parameterRegistrationType = "Parameter";
             RegisterArgumentInstance(
-                parameterRegistrationType, 
-                TypeHelper.GetMemberType(member), 
+                parameterRegistrationType,
+                TypeHelper.GetMemberType(member),
                 new Parameter
                 {
                     Name = parameterAttribute.Name,
@@ -58,7 +58,7 @@ namespace NFlags.GenericCommandExtension
         {
             ValidatePropertySetter(member);
             ValidateFlagMemberType(member);
-            
+
             var flag = new Flag
             {
                 Name = flagAttribute.Name,
@@ -69,8 +69,9 @@ namespace NFlags.GenericCommandExtension
                 EnvironmentVariable = flagAttribute.EnvironmentVariable,
                 IsEnvironmentVariableLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
                 ConfigPath = flagAttribute.ConfigPath,
-                IsConfigPathLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member))
-            }; 
+                IsConfigPathLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
+                Group = flagAttribute.Group
+            };
 
             _commandConfigurator.RegisterFlagInstance(flag);
         }
@@ -79,20 +80,22 @@ namespace NFlags.GenericCommandExtension
         {
             ValidatePropertySetter(member);
             const string optionRegistrationType = "Option";
+            var argumentType = GetArgumentType(TypeHelper.GetMemberType(member));
             RegisterArgumentInstance(
-                optionRegistrationType, 
-                TypeHelper.GetMemberType(member), 
+                optionRegistrationType,
+                TypeHelper.GetMemberType(member),
                 new Option
                 {
                     Name = optionAttribute.Name,
                     Description = optionAttribute.Description,
-                    DefaultValue = optionAttribute.DefaultValue,
+                    DefaultValue = optionAttribute.DefaultValue ?? GetDefault(argumentType),
                     Abr = optionAttribute.Abr,
                     EnvironmentVariable = optionAttribute.EnvironmentVariable,
                     IsEnvironmentVariableLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
                     ConfigPath = optionAttribute.ConfigPath,
                     IsConfigPathLazy = TypeHelper.IsLazy(TypeHelper.GetMemberType(member)),
-                    ValueType = GetArgumentType(TypeHelper.GetMemberType(member))
+                    ValueType = argumentType,
+                    Group = optionAttribute.Group
                 }
             );
         }
@@ -125,7 +128,7 @@ namespace NFlags.GenericCommandExtension
         {
             var memberType = TypeHelper.GetMemberType(member);
             var flagType = GetArgumentType(memberType);
-            
+
             if (flagType != typeof(bool))
                 throw new IncorrectFlagMemberTypeException(member.Name, memberType);
         }
@@ -135,6 +138,11 @@ namespace NFlags.GenericCommandExtension
             return TypeHelper.IsLazy(memberType)
                 ? memberType.GenericTypeArguments[0]
                 : memberType;
+        }
+
+        public static object GetDefault(Type type)
+        {
+            return type.IsValueType ? Activator.CreateInstance(type) : null;
         }
     }
 }

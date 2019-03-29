@@ -14,6 +14,7 @@ namespace NFlags.Arguments
         private string _configPath;
         private bool _isEnvironmentVariableLazy;
         private bool _isConfigPathLazy;
+        private string _group;
 
         /// <summary>
         /// Set name of the argument.
@@ -127,6 +128,18 @@ namespace NFlags.Arguments
         }
 
         /// <summary>
+        /// Set group
+        /// </summary>
+        /// <param name="group">Group name</param>
+        /// <returns>Self instance</returns>
+        public FlagBuilder Group(string group)
+        {
+            _group = group;
+
+            return this;
+        }
+
+        /// <summary>
         /// Build flag
         /// </summary>
         /// <returns>Flag</returns>
@@ -142,7 +155,8 @@ namespace NFlags.Arguments
                 ConfigPath = _configPath,
                 IsConfigPathLazy = _isConfigPathLazy,
                 Abr = _abr,
-                IsPersistent = _isPersistent
+                IsPersistent = _isPersistent,
+                Group = _group
             };
         }
     }
