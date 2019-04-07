@@ -41,35 +41,36 @@ $> dotnet NFlags.QuickStart.dll xxx
 This is root command: xxx
 $> dotnet NFlags.QuickStart.dll --help
 Usage:
-        QuickStart [COMMAND] [FLAGS]... [OPTIONS]... [PARAMETERS]...
+        QuickStart [COMMAND] [OPTIONS]... [PARAMETERS]...
 
 This is NFlags
 
         Commands:
-        subcommand      Subcommand Description
+        command Sub command Description
 
         Parameters:
-        <param> Param description
+        <param> Param description (Default: 'ParamDefaultValue')
         <paramSeries...>        paramSeriesDescription
 
         Options:
         --flag1, -f     Flag description
-        --option <option>, -o <option>  Option description
+        --option <option>, -o <option>  Option description (Default: 'optionDefaultValue')
         --help, -h      Prints this help
+
 
 
 $> dotnet NFlags.QuickStart.dll subcommand
 This is subcommand: SubParameterValue
 $> dotnet NFlags.QuickStart.dll subcommand yyy
 This is subcommand: yyy
-$> dotnet NFlags.QuickStart.dll subcommand --help
+$> dotnet NFlags.QuickStart.dll command --help
 Usage:
-        QuickStart [FLAGS]... [PARAMETERS]...
+        QuickStart command [OPTIONS]... [PARAMETERS]...
 
 This is NFlags
 
         Parameters:
-        <SubParameter>  SubParameter description
+        <Parameter>     Sub parameter description (Default: 'SubParameterValue')
 
         Options:
         --help, -h      Prints this help
