@@ -110,6 +110,9 @@ Configuration adapter set by this method is used to read values from configurati
 NFlags.Configure(configurator => configurator.SetConfiguration(...);
 ```
 
+There are two types of configuration providers `IConfig` and `IGenericConfig`.
+`IGenericConfig` require to return value in expected type (for argument using it), where  When using `IConfig` value returned by `Get` method is parsed using Converters. See [Converters](#converters) section.  
+
 #### Set dialect
 Dialect defines how flags and options are prefixed and how option value follows option.
 ```c#
@@ -154,7 +157,7 @@ If flag default value is set to `True`, falg will be set to `False` when passed 
 ### Set option
 Option is an prefixed argument with value.
 Option abbreviation can be also set.
-Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
+Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see [converters](#converters) section.
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption("option", "o", "option description", "defaultOptionValue"));
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterOption("option", "option description", "defaultOptionValue"));
@@ -182,7 +185,7 @@ Same goes to setting config path, builder contains either `EnvironmentVariable` 
 
 ### Set parameter
 Parameter is an unprefixed value argument. Parameters are read by registration order.
-Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
+Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see [converters](#converters) section.
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParameter("param", "Param description", "paramDefaultValue"));
 ```
@@ -208,7 +211,7 @@ Same goes to setting config path, builder contains either `EnvironmentVariable` 
 ### Set parameter series
 Parameter series is a collection of parameters after last named parameter.
 Parameter series can be used to parse unknown count of parameters to process i.e. strings to concat.
-Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see Converters section.
+Values are converted to type T. CLR types, classes with implicit operator from string and classes with string argument constructor are supported by default. For other types see [converters](#converters) section.
 
 ```c#
 NFlags.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries<int>("paramSeries", "Param series description"));
@@ -509,6 +512,34 @@ resolved when accessed by `Value` property of `Lazy<>` type.
         [Flag(Name = "parameter", ConfigPath = "config.parameter", EnvironmentVariable = "NFLAGS_FLAG_PARAMETER_ENV", DefaultValue = 1.1)]
         public Lazy<double> Parameter;
     }
+```
+
+## Array support
+
+When option is registered with array type NFlags allows to pass argument multiple times from CLI and aggregate it into array. 
+
+Running the following code:
+```c#
+    NFlags.Configure(c => c
+            .SetDescription("Application description")
+            .SetDialect(Dialect.Gnu)
+            .SetOutput(Output.Console))
+        .Root(c => c
+            .RegisterOption<string[]>(b => b.Name("array-option").DefaultValue(new string[0]))
+            .SetExecute((commandArgs, output) =>
+            {
+                foreach (var option in commandArgs.GetOption<string[]>("carray-option"))
+                    output.WriteLine(option);
+            })
+        )
+        .Run(args);
+```
+Will result:
+```
+$> dotnet NFlags.Array.dll --array-option a --array-option b --array-option c
+a
+b
+c
 ```
 
 ## Converters
