@@ -17,6 +17,7 @@ namespace NFlags
         /// <param name="output">Output writing interface</param>
         /// <param name="environment">Environment variables provider</param>
         /// <param name="config">Configuration values provider</param>
+        /// <param name="genericConfig">Generic configuration values provider</param>
         /// <param name="helpPrinter">Help printer to generate help text</param>
         /// <param name="isExceptionHandlingEnabled">Is Exception handling enabled. Use exit code if enabled, otherwise throw exceptions. Default False</param>
         /// <param name="argumentConverters">List of param converters</param>
@@ -27,6 +28,7 @@ namespace NFlags
             IOutput output,
             IEnvironment environment,
             IConfig config,
+            IGenericConfig genericConfig,
             IHelpPrinter helpPrinter,
             bool isExceptionHandlingEnabled,
             IArgumentConverter[] argumentConverters)
@@ -38,6 +40,7 @@ namespace NFlags
             Output = output;
             Environment = environment;
             Config = config;
+            GenericConfig = genericConfig;
             HelpPrinter = helpPrinter;
             ArgumentConverters = argumentConverters;
         }
@@ -81,6 +84,11 @@ namespace NFlags
         /// Configuration values provider
         /// </summary>
         public IConfig Config { get; }
+
+        /// <summary>
+        /// Generic configuration values provider
+        /// </summary>
+        public IGenericConfig GenericConfig { get; }
 
         /// <summary>
         /// Help printer to generate help text

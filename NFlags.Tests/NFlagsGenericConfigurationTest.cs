@@ -6,12 +6,12 @@ using NFAssert = NFlags.Tests.Helpers.Assert;
 
 namespace NFlags.Tests
 {
-    public class NFlagsRegisterWithConfigValues
+    public class NFlagsGenericConfigurationTest
     {
         [Fact]
         public void RegisterCommand_ShouldPassDefaultValuesToExecute()
         {
-            var testConfig = new TestConfig();
+            var testConfig = new TestGenericConfig();
 
             CommandArgs a = null;
             NFlags
@@ -48,13 +48,13 @@ namespace NFlags.Tests
         [Fact]
         public void RegisterCommand_ShouldPassConfigurationValuesToValuesToExecute()
         {
-            var testConfig = new TestConfig()
-                .SetConfigValue("NFLAG_TEST_FLAG1", "false")
-                .SetConfigValue("NFLAG_TEST_FLAG2", "true")
-                .SetConfigValue("NFLAG_TEST_OPTION1", "3")
+            var testConfig = new TestGenericConfig()
+                .SetConfigValue("NFLAG_TEST_FLAG1", false)
+                .SetConfigValue("NFLAG_TEST_FLAG2", true)
+                .SetConfigValue("NFLAG_TEST_OPTION1", 3)
                 .SetConfigValue("NFLAG_TEST_OPTION2", "xyz")
-                .SetConfigValue("NFLAG_TEST_PARAMETER1", 2.53.ToString(CultureInfo.CurrentCulture))
-                .SetConfigValue("NFLAG_TEST_PARAMETER2", "5");
+                .SetConfigValue("NFLAG_TEST_PARAMETER1", 2.53)
+                .SetConfigValue("NFLAG_TEST_PARAMETER2", 5);
 
             CommandArgs a = null;
             NFlags
@@ -89,11 +89,11 @@ namespace NFlags.Tests
         [Fact]
         public void RegisterCommand_ShouldPassArgumentsToValuesToExecute_EvenIfConfigurationValuesAreSet()
         {
-            var testEnvironment = new TestConfig()
-                .SetConfigValue("NFLAG_TEST_OPTION1", "3")
+            var testEnvironment = new TestGenericConfig()
+                .SetConfigValue("NFLAG_TEST_OPTION1", 3)
                 .SetConfigValue("NFLAG_TEST_OPTION2", "xyz")
-                .SetConfigValue("NFLAG_TEST_PARAMETER1", 2.53.ToString(CultureInfo.CurrentCulture))
-                .SetConfigValue("NFLAG_TEST_PARAMETER2", "5");
+                .SetConfigValue("NFLAG_TEST_PARAMETER1", 2.53)
+                .SetConfigValue("NFLAG_TEST_PARAMETER2", 5);
 
             CommandArgs a = null;
             NFlags

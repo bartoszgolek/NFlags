@@ -90,6 +90,7 @@ namespace NFlags.Tests
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)
                     .SetConfiguration(testConfig)
+                    .SetConfiguration(testConfig)
                 )
                 .Root(c => c
                     .RegisterFlag(b =>

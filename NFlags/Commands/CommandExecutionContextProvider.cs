@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NFlags.Arguments;
 using NFlags.TypeConverters;
 using NFlags.Utils;
@@ -117,6 +118,17 @@ namespace NFlags.Commands
 
             if (argument.ConfigPath != null)
             {
+                if (_commandConfig.NFlagsConfig.GenericConfig != null)
+                {
+                    var valueProvider = argument.IsConfigPathLazy
+                        ? (IValueProvider) new ValueProviderProxy(() => ReadConfigGenericValue(argument))
+                        : new ConstValueProvider(ReadConfigGenericValue(argument));
+
+                    valueProvidersCollection.Add(
+                        valueProvider
+                    );
+                }
+
                 if (_commandConfig.NFlagsConfig.Config != null)
                 {
                     var valueProvider = argument.IsConfigPathLazy
@@ -144,6 +156,20 @@ namespace NFlags.Commands
         private object ReadConfigValue(DefaultValueArgument argument)
         {
             return ReadValue(argument, _commandConfig.NFlagsConfig.Config?.Get(argument.ConfigPath));
+        }
+
+        private object ReadConfigGenericValue(DefaultValueArgument argument)
+        {
+            if (_commandConfig.NFlagsConfig.GenericConfig == null) 
+                return null;
+            
+            if (!_commandConfig.NFlagsConfig.GenericConfig.Has(argument.ConfigPath))
+                return null;                
+
+            return _commandConfig.NFlagsConfig.GenericConfig.GetType()
+                .GetMethod("Get", BindingFlags.Public | BindingFlags.Instance)
+                ?.MakeGenericMethod(argument.ValueType)
+                .Invoke(_commandConfig.NFlagsConfig.GenericConfig, new object[] { argument.ConfigPath });
         }
 
         private object ReadValue(Argument argument, string value)

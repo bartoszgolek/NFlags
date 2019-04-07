@@ -23,6 +23,8 @@ namespace NFlags
 
         private IConfig _config;
 
+        private IGenericConfig _genericConfig;
+
         private readonly List<IArgumentConverter> _baseArgumentConverters = new List<IArgumentConverter> {
             new CommonTypeConverter(),
             new ConstructorConverter(),
@@ -105,6 +107,18 @@ namespace NFlags
         }
 
         /// <summary>
+        /// Sets NFlags generic configuration values provider.
+        /// </summary>
+        /// <param name="genericConfig">Configuration values provider</param>
+        /// <returns>Self instance</returns>
+        public NFlagsConfigurator SetConfiguration(IGenericConfig genericConfig)
+        {
+            _genericConfig = genericConfig;
+
+            return this;
+        }
+
+        /// <summary>
         /// Sets help printer to generate help text.
         /// </summary>
         /// <param name="helpPrinter">Help printer</param>
@@ -143,7 +157,7 @@ namespace NFlags
             var converters = new List<IArgumentConverter>(_argumentConverters);
             converters.AddRange(_baseArgumentConverters);
             return new NFlags(
-                new NFlagsConfig( _name, _description, _dialect, _output, _environment, _config, _helpPrinter, _exceptionHandling, converters.ToArray())
+                new NFlagsConfig( _name, _description, _dialect, _output, _environment, _config, _genericConfig, _helpPrinter, _exceptionHandling, converters.ToArray())
             );
         }
     }
