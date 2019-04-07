@@ -454,7 +454,9 @@ namespace NFlags.Commands
 
         private void CheckConverterIsRegistered(Type type)
         {
-            if (_nFlagsConfig.ArgumentConverters.Any(argumentConverter => argumentConverter.CanConvert(type)))
+            var typeToCheck = type.IsArray ? type.GetElementType() : type;
+
+            if (_nFlagsConfig.ArgumentConverters.Any(argumentConverter => argumentConverter.CanConvert(typeToCheck)))
                 return;
 
             throw new MissingConverterException(type);

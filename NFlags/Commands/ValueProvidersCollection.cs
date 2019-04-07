@@ -6,17 +6,17 @@ namespace NFlags.Commands
 {
     internal class ValueProvidersCollection
     {
-        IList<IValueProvider> _valueProviders = new List<IValueProvider>();
+        readonly IList<IValueProvider> _valueProviders = new List<IValueProvider>();
 
         public void RegisterValueProvider(IValueProvider valueProvider)
         {
             _valueProviders.Insert(0, valueProvider);
         }
 
-        public object GetValue()
+        public T GetValue<T>()
         {
-            return _valueProviders
-                .Select(valueProvider => valueProvider.readValue())
+            return (T)_valueProviders
+                .Select(valueProvider => valueProvider.ReadValue())
                 .FirstOrDefault(value => value != null);
         }
     }

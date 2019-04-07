@@ -9,7 +9,7 @@ namespace NFlags.ValueProviders
             _value = value;
         }
 
-        public object readValue()
+        public object ReadValue()
         {
             return _value;
         }

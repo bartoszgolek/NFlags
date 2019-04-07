@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NFlags.Arguments;
 using NFlags.TypeConverters;
 using NFlags.Utils;
@@ -15,6 +16,7 @@ namespace NFlags.Commands
         private readonly ParameterSeries _parameterSeries;
         private readonly Shifter<string> _args;
         private readonly CommandArgs _commandArgs;
+        private readonly IDictionary<string, ArrayAggregator> _optionValues;
 
         public CommandExecutionContextProvider(
             CommandConfig commandConfig,
@@ -26,6 +28,7 @@ namespace NFlags.Commands
             _parameterSeries = commandConfig.ParameterSeries;
             _args = new Shifter<string>(args);
             _commandArgs = InitDefaultCommandArgs();
+            _optionValues = new Dictionary<string, ArrayAggregator>();
         }
 
         public CommandExecutionContext GetFromArgs()
@@ -58,6 +61,18 @@ namespace NFlags.Commands
                     ReadParam(arg);
 
             }
+
+            foreach (var optionValue in _optionValues)
+            {
+                _commandArgs.AddOptionValueProvider(
+                    optionValue.Key,
+                    new ConstValueProvider(
+                        optionValue.Value.GetArray(
+                            _commandConfig.Options.Single(o => o.Name == optionValue.Key).ValueType)
+                        )
+                    );
+            }
+
 
             var noArgsDefaultCommand = GetDefaultCommand();
             if (noArgsDefaultCommand != null)
@@ -103,12 +118,23 @@ namespace NFlags.Commands
 
             if (argument.ConfigPath != null)
             {
-                var config = _commandConfig.NFlagsConfig.Config;
-                if (config != null)
+                if (_commandConfig.NFlagsConfig.GenericConfig != null)
                 {
                     var valueProvider = argument.IsConfigPathLazy
-                        ? (IValueProvider) new ValueProviderProxy(() => ConvertValueToExpectedType(config.Get(argument.ConfigPath), argument.ValueType))
-                        : new ConstValueProvider(ConvertValueToExpectedType(config.Get(argument.ConfigPath), argument.ValueType));
+                        ? (IValueProvider) new ValueProviderProxy(() => ReadConfigGenericValue(argument))
+                        : new ConstValueProvider(ReadConfigGenericValue(argument));
+
+                    valueProvidersCollection.Add(
+                        valueProvider
+                    );
+                }
+
+                if (_commandConfig.NFlagsConfig.Config != null)
+                {
+                    var valueProvider = argument.IsConfigPathLazy
+                        ? (IValueProvider) new ValueProviderProxy(() => ReadConfigValue(argument))
+                        : new ConstValueProvider(ReadConfigValue(argument));
+
                     valueProvidersCollection.Add(
                         valueProvider
                     );
@@ -118,13 +144,56 @@ namespace NFlags.Commands
             if (argument.EnvironmentVariable != null)
             {
                 var valueProvider = argument.IsEnvironmentVariableLazy
-                    ? (IValueProvider) new ValueProviderProxy(() => ConvertValueToExpectedType(_commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable), argument.ValueType))
-                    : new ConstValueProvider(ConvertValueToExpectedType(_commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable), argument.ValueType));
+                    ? (IValueProvider) new ValueProviderProxy(() => ReadEnvironmentVariable(argument))
+                    : new ConstValueProvider(ReadEnvironmentVariable(argument));
 
                 valueProvidersCollection.Add(valueProvider);
             }
 
             return valueProvidersCollection;
+        }
+
+        private object ReadConfigValue(DefaultValueArgument argument)
+        {
+            return ReadValue(argument, _commandConfig.NFlagsConfig.Config?.Get(argument.ConfigPath));
+        }
+
+        private object ReadConfigGenericValue(DefaultValueArgument argument)
+        {
+            if (_commandConfig.NFlagsConfig.GenericConfig == null) 
+                return null;
+            
+            if (!_commandConfig.NFlagsConfig.GenericConfig.Has(argument.ConfigPath))
+                return null;                
+
+            return _commandConfig.NFlagsConfig.GenericConfig.GetType()
+                .GetMethod("Get", BindingFlags.Public | BindingFlags.Instance)
+                ?.MakeGenericMethod(argument.ValueType)
+                .Invoke(_commandConfig.NFlagsConfig.GenericConfig, new object[] { argument.ConfigPath });
+        }
+
+        private object ReadValue(Argument argument, string value)
+        {
+            if (value == null)
+                return null;
+
+            if (argument.ValueType.IsArray)
+            {
+                var values = value.Split(';')
+                    .Select(v => ConvertValueToExpectedType(v, argument.ValueType.GetElementType()))
+                    .ToArray();
+
+                return ArrayUtils.GetArray(
+                    values,
+                    argument.ValueType);
+            }
+
+            return ConvertValueToExpectedType(value, argument.ValueType);
+        }
+
+        private object ReadEnvironmentVariable(DefaultValueArgument argument)
+        {
+            return ReadValue(argument, _commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable));
         }
 
         private void ReadParam(string arg)
@@ -153,7 +222,7 @@ namespace NFlags.Commands
             {
                 if (opt.ValueType == typeof(bool))
                     _commandArgs.AddOptionValueProvider(opt.Name, new ConstValueProvider(!(bool) opt.DefaultValue));
-                
+
                 return true;
             }
 
@@ -161,8 +230,23 @@ namespace NFlags.Commands
                 .GetReader(_commandConfig.NFlagsConfig.Dialect.OptionValueMode)
                 .ReadValue(_args, arg);
 
-            _commandArgs.AddOptionValueProvider(opt.Name,
-                new ConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
+            if (opt.ValueType.IsArray)
+            {
+                if (_optionValues.ContainsKey(opt.Name))
+                {
+                    _optionValues[opt.Name].Add(ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType()));
+                }
+                else if (opt.ValueType.IsArray)
+                {
+                    _optionValues.Add(opt.Name,
+                        new ArrayAggregator(ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType())));
+                }
+            }
+            else
+            {
+                _commandArgs.AddOptionValueProvider(opt.Name,
+                        new ConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
+            }
 
             return true;
         }

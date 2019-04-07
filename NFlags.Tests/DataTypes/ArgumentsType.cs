@@ -1,5 +1,3 @@
-using NFlags.GenericCommandExtension;
-
 namespace NFlags.Tests.DataTypes
 {
     public class ArgumentsType
