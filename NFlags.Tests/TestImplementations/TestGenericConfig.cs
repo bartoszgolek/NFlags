@@ -20,7 +20,7 @@ namespace NFlags.Tests.TestImplementations
 
         public T Get<T>(string name)
         {
-            return _variables.ContainsKey(name) ? (T)_variables[name] : default;
+            return _variables.ContainsKey(name) ? (T)_variables[name] : default(T);
         }
     }
 }
