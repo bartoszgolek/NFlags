@@ -111,7 +111,9 @@ NFlags.Configure(configurator => configurator.SetConfiguration(...);
 ```
 
 There are two types of configuration providers `IConfig` and `IGenericConfig`.
-`IGenericConfig` require to return value in expected type (for argument using it), where  When using `IConfig` value returned by `Get` method is parsed using Converters. See [Converters](#converters) section.  
+`IGenericConfig` require to return value in expected type (for argument using it), where  When using `IConfig` value returned by `Get` method is parsed using Converters. See [Converters](#converters) section.
+
+When both `IConfig` and `IGenericConfig` are provided, generic one takes precedence.   
 
 #### Set dialect
 Dialect defines how flags and options are prefixed and how option value follows option.
