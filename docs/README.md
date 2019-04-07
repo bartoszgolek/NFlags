@@ -449,6 +449,11 @@ Usage:
         --help, -h      Prints this help
 ```
 
+HelpPrinter implementation can be replaced trough configurations to customize help printing.
+```c#
+
+```
+
 ## Generics
 Generics are an alternative method of registering commands arguments. Generic cannot be mixed with basic methods to configure command.
 To use generic way of registering commands with arguments custom type with fields or set properties with dedicated attributes is required.
