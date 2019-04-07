@@ -1,4 +1,5 @@
 using NFlags.Commands;
+using NFlags.Tests.DataTypes;
 using NFlags.Tests.TestImplementations;
 using Xunit;
 
@@ -28,6 +29,26 @@ namespace NFlags.Tests
                 });
 
             Assert.Equal(new[]{ 1, 2, 3}, a.GetOption<int[]>("int-array"));
+        }
+
+        [Fact]
+        public void RegisterCommandGeneric_ReadMultipleParamsIntoArray_WhenAllowMultiple()
+        {
+            ArrayArgumentType a = null;
+
+            NFlags
+                .Configure(c => c
+                    .SetDialect(Dialect.Gnu)
+                    .DisableExceptionHandling())
+                .Root<ArrayArgumentType>(c => c.SetExecute((args, output) => a = args )
+                ).Run(new[]
+                {
+                    "--int-array", "1",
+                    "--int-array", "2",
+                    "--int-array", "3"
+                });
+
+            Assert.Equal(new[]{ 1, 2, 3}, a.Option);
         }
 
         [Fact]
