@@ -21,7 +21,7 @@ namespace NFlags
 
         private bool _exceptionHandling = true;
 
-        private IConfig _config = null;
+        private IConfig _config;
 
         private readonly List<IArgumentConverter> _baseArgumentConverters = new List<IArgumentConverter> {
             new CommonTypeConverter(),
@@ -30,6 +30,7 @@ namespace NFlags
         };
 
         private readonly List<IArgumentConverter> _argumentConverters = new List<IArgumentConverter>();
+        private IHelpPrinter _helpPrinter = HelpPrinter.Default;
 
         /// <summary>
         /// Set name of application, for help printing.
@@ -104,6 +105,18 @@ namespace NFlags
         }
 
         /// <summary>
+        /// Sets help printer to generate help text.
+        /// </summary>
+        /// <param name="helpPrinter">Help printer</param>
+        /// <returns>Self instance</returns>
+        public NFlagsConfigurator SetHelpPrinter(IHelpPrinter helpPrinter)
+        {
+            _helpPrinter = helpPrinter;
+
+            return this;
+        }
+
+        /// <summary>
         /// Registers Converter to convert argument values
         /// </summary>
         /// <param name="argumentConverter">Param Converter to register</param>
@@ -130,7 +143,7 @@ namespace NFlags
             var converters = new List<IArgumentConverter>(_argumentConverters);
             converters.AddRange(_baseArgumentConverters);
             return new NFlags(
-                new NFlagsConfig( _name, _description, _dialect, _output, _environment, _config, _exceptionHandling, converters.ToArray())
+                new NFlagsConfig( _name, _description, _dialect, _output, _environment, _config, _helpPrinter, _exceptionHandling, converters.ToArray())
             );
         }
     }

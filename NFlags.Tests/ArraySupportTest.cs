@@ -1,4 +1,5 @@
 using NFlags.Commands;
+using NFlags.Tests.TestImplementations;
 using Xunit;
 
 namespace NFlags.Tests
@@ -51,6 +52,29 @@ namespace NFlags.Tests
                 });
 
             Assert.Equal(3, a.GetOption<int>("int-array"));
+        }
+
+        [Fact]
+        public void RegisterCommand_ReadConfigValueIntoArray()
+        {
+            CommandArgs a = null;
+
+            var testConfig = new TestConfig();
+            testConfig.SetConfigValue("Test:Array", "1;2;3");
+
+            NFlags
+                .Configure(c => c
+                    .SetDialect(Dialect.Gnu)
+                    .SetConfiguration(testConfig)
+                    .DisableExceptionHandling())
+                .Root(c => c
+                    .RegisterOption<int[]>(b =>
+                        b.Name("int-array").ConfigPath("Test:Array")
+                    )
+                    .SetExecute((args, output) => a = args )
+                ).Run(new string[0]);
+
+            Assert.Equal(new[]{ 1, 2, 3}, a.GetOption<int[]>("int-array"));
         }
     }
 }

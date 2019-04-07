@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using NFlags.Utils;
 
 namespace NFlags.Commands
 {
@@ -20,7 +19,7 @@ namespace NFlags.Commands
                     stringBuilder.AppendLine();
                 }
                 
-                stringBuilder.Append(new HelpPrinter(commandConfig).Print());
+                stringBuilder.Append(commandConfig.NFlagsConfig.HelpPrinter.PrintHelp(commandConfig));
 
                 output.Write(stringBuilder.ToString());
 

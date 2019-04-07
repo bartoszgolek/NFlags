@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NFlags.Utils;
 
 namespace NFlags.ValueProviders
 {
@@ -21,14 +22,7 @@ namespace NFlags.ValueProviders
 
         public object GetArray(Type arrayType)
         {
-            var elementType = arrayType.GetElementType();
-            var instance = Array.CreateInstance(elementType, _value.Count);
-            for (var i = 0; i < _value.Count; i++)
-            {
-                instance.SetValue(_value[i], i);
-            }
-
-            return instance;
+            return ArrayUtils.GetArray(_value.ToArray(), arrayType);
         }
     }
 }

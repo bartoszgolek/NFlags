@@ -117,12 +117,12 @@ namespace NFlags.Commands
 
             if (argument.ConfigPath != null)
             {
-                var config = _commandConfig.NFlagsConfig.Config;
-                if (config != null)
+                if (_commandConfig.NFlagsConfig.Config != null)
                 {
                     var valueProvider = argument.IsConfigPathLazy
-                        ? (IValueProvider) new ValueProviderProxy(() => ConvertValueToExpectedType(config.Get(argument.ConfigPath), argument.ValueType))
-                        : new ConstValueProvider(ConvertValueToExpectedType(config.Get(argument.ConfigPath), argument.ValueType));
+                        ? (IValueProvider) new ValueProviderProxy(() => ReadConfigValue(argument))
+                        : new ConstValueProvider(ReadConfigValue(argument));
+
                     valueProvidersCollection.Add(
                         valueProvider
                     );
@@ -132,13 +132,42 @@ namespace NFlags.Commands
             if (argument.EnvironmentVariable != null)
             {
                 var valueProvider = argument.IsEnvironmentVariableLazy
-                    ? (IValueProvider) new ValueProviderProxy(() => ConvertValueToExpectedType(_commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable), argument.ValueType))
-                    : new ConstValueProvider(ConvertValueToExpectedType(_commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable), argument.ValueType));
+                    ? (IValueProvider) new ValueProviderProxy(() => ReadEnvironmentVariable(argument))
+                    : new ConstValueProvider(ReadEnvironmentVariable(argument));
 
                 valueProvidersCollection.Add(valueProvider);
             }
 
             return valueProvidersCollection;
+        }
+
+        private object ReadConfigValue(DefaultValueArgument argument)
+        {
+            return ReadValue(argument, _commandConfig.NFlagsConfig.Config?.Get(argument.ConfigPath));
+        }
+
+        private object ReadValue(Argument argument, string value)
+        {
+            if (value == null)
+                return null;
+
+            if (argument.ValueType.IsArray)
+            {
+                var values = value.Split(';')
+                    .Select(v => ConvertValueToExpectedType(v, argument.ValueType.GetElementType()))
+                    .ToArray();
+
+                return ArrayUtils.GetArray(
+                    values,
+                    argument.ValueType);
+            }
+
+            return ConvertValueToExpectedType(value, argument.ValueType);
+        }
+
+        private object ReadEnvironmentVariable(DefaultValueArgument argument)
+        {
+            return ReadValue(argument, _commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable));
         }
 
         private void ReadParam(string arg)
