@@ -4,7 +4,7 @@
     {
         public static int Main(string[] args)
         {
-            return NFlags.Configure(configure => configure
+            return Cli.Configure(configure => configure
                 .SetDialect(Dialect.Gnu)
                 .SetName("QuickStart")
                 .SetDescription("This is NFlags")

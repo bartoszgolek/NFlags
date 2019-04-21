@@ -11,7 +11,7 @@ namespace NFlags.Tests
             CommandArgs a = null;
 
             var strings = new[] {"--option", "optValue"};
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -28,7 +28,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -49,7 +49,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -72,7 +72,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -93,7 +93,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -114,7 +114,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -137,7 +137,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -160,7 +160,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -181,7 +181,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -200,7 +200,7 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetMultipleFlags_IfContainedInArgs()
         {
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -216,7 +216,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -239,7 +239,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -260,7 +260,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -281,7 +281,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -302,7 +302,7 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetMultipleFlags_IfFlagHasNoAbrAndContainedInArgs()
         {
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -316,7 +316,7 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldSetFirstParam_IfContainedInArgs()
         {
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -331,7 +331,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -354,7 +354,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -375,7 +375,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator
@@ -398,7 +398,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                 )
                 .Root(configurator => configurator

@@ -6,7 +6,7 @@ namespace NFlags
     /// <summary>
     /// Represents configuration of NFlags.
     /// </summary>
-    public class NFlagsConfig
+    public class CliConfig
     {
         /// <summary>
         /// Creates new instance of NFlags config
@@ -21,7 +21,7 @@ namespace NFlags
         /// <param name="helpPrinter">Help printer to generate help text</param>
         /// <param name="isExceptionHandlingEnabled">Is Exception handling enabled. Use exit code if enabled, otherwise throw exceptions. Default False</param>
         /// <param name="argumentConverters">List of param converters</param>
-        public NFlagsConfig(
+        public CliConfig(
             string name,
             string description,
             Dialect dialect,

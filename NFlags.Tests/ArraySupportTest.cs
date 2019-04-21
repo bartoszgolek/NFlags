@@ -12,7 +12,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .DisableExceptionHandling())
@@ -36,7 +36,7 @@ namespace NFlags.Tests
         {
             ArrayArgumentType a = null;
 
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .DisableExceptionHandling())
@@ -56,7 +56,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .DisableExceptionHandling())
@@ -83,7 +83,7 @@ namespace NFlags.Tests
             var testConfig = new TestConfig();
             testConfig.SetConfigValue("Test:Array", "1;2;3");
 
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(testConfig)

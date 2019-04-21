@@ -12,7 +12,7 @@ namespace NFlags.Tests
         public void NFlags_ShouldThrowException_IfTooManyArgumentsAndExceptionHandlingIsDisabled()
         {
             Assert.Throws<TooManyParametersException>(() =>
-                NFlags.Configure(c => c.DisableExceptionHandling())
+                Cli.Configure(c => c.DisableExceptionHandling())
                     .Root(c => { })
                     .Run(new[] {"s"})
                 );
@@ -22,7 +22,7 @@ namespace NFlags.Tests
         public void NFlags_ShouldReturnErrorExitCode_IfTooManyArguments()
         {
             const int errorExitCode = 255;
-            var exitCode = NFlags.Configure(c => { })
+            var exitCode = Cli.Configure(c => { })
                 .Root(c => { })
                 .Run(new[] {"s"});
 
@@ -33,7 +33,7 @@ namespace NFlags.Tests
         public void TestParams_ShouldPrintMessageWithHelp_IfCannotConvertValue()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(c => c
+            Cli.Configure(c => c
                     .SetOutput(outputAggregator)
                 )
                 .Root(c => { })
@@ -57,7 +57,7 @@ namespace NFlags.Tests
         {
             var rootCmdCalled = false;
 
-            NFlags.Configure(c => { })
+            Cli.Configure(c => { })
                 .Root(c => c.SetExecute((args, output) =>
                 {
                     rootCmdCalled = true;
@@ -73,7 +73,7 @@ namespace NFlags.Tests
         {
             var subCmdCalled = false;
 
-            NFlags.Configure(c => { })
+            Cli.Configure(c => { })
                 .Root(c => c.
                     RegisterCommand("sub", "desc", sc => sc.
                         SetExecute((args, output) =>
@@ -93,7 +93,7 @@ namespace NFlags.Tests
         {
             var subCmdCalled = false;
 
-            NFlags.Configure(c => { })
+            Cli.Configure(c => { })
                 .Root(c => c.
                     RegisterCommand("sub", "desc", sc => sc.
                         RegisterCommand("sub1", "desc1", sc1 => sc1.
@@ -119,7 +119,7 @@ namespace NFlags.Tests
         {
             var sub2CmdCalled = false;
 
-            NFlags.Configure(c => { })
+            Cli.Configure(c => { })
                 .Root(c => c.
                     RegisterCommand("sub", "desc", sc => sc.
                         RegisterCommand("sub1", "desc1", sc1 => sc1.
@@ -147,7 +147,7 @@ namespace NFlags.Tests
             const string expectedOutput = "";
 
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetOutput(outputAggregator)
                 )
                 .Root(c => c
@@ -162,7 +162,7 @@ namespace NFlags.Tests
         public void TestParams_ShouldPrintSubCommandHelp_IfSubCommandCalled()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                     .SetOutput(outputAggregator)
                 )
@@ -203,7 +203,7 @@ namespace NFlags.Tests
         public void NFlags_ShouldPrintHelpForNthLevelSubCommand()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(c => c.SetOutput(outputAggregator))
+            Cli.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterCommand("sub", "desc", sc => sc.
                         RegisterCommand("sub1", "desc1", sc1 => sc1.
@@ -230,7 +230,7 @@ namespace NFlags.Tests
         public void NFlags_ShouldPrintHelpForPersistentFlags()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(c => c.SetOutput(outputAggregator))
+            Cli.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentFlag("flag1", "f1", "dFlag1", false).
                     RegisterPersistentFlag("flag2", "dFlag2", false)
@@ -254,7 +254,7 @@ namespace NFlags.Tests
         public void NFlags_ShouldPrintHelpForPersistentFlagsAtNthLevelSubCommand()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(c => c.SetOutput(outputAggregator))
+            Cli.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentFlag("flag1", "f1", "dFlag1", false).
                     RegisterCommand("sub", "desc", sc => sc.
@@ -285,7 +285,7 @@ namespace NFlags.Tests
         public void NFlags_ShouldPrintHelpForPersistentOptions()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(c => c.SetOutput(outputAggregator))
+            Cli.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentOption("option1", "o1", "dOption1", "").
                     RegisterPersistentOption("option2", "dOption2", "")
@@ -309,7 +309,7 @@ namespace NFlags.Tests
         public void NFlags_ShouldPrintHelpForPersistentOptionsAtNthLevelSubCommand()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(c => c.SetOutput(outputAggregator))
+            Cli.Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.
                     RegisterPersistentOption("option1", "o1", "dOption1", "").
                     RegisterCommand("sub", "desc", sc => sc.

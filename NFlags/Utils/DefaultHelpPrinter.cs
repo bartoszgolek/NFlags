@@ -43,7 +43,7 @@ namespace NFlags.Utils
                 builder.AppendLine("Usage:");
                 var line = "\t";
 
-                line += _commandConfig.NFlagsConfig.Name;
+                line += _commandConfig.CliConfig.Name;
                 line += string.Join(" ", _commandConfig.Parents.ToArray());
 
                 if (!string.IsNullOrEmpty(_commandConfig.Name))
@@ -58,10 +58,10 @@ namespace NFlags.Utils
                 builder.AppendLine(line);
                 builder.AppendLine("");
 
-                if (string.IsNullOrEmpty(_commandConfig.NFlagsConfig.Description))
+                if (string.IsNullOrEmpty(_commandConfig.CliConfig.Description))
                     return;
 
-                builder.AppendLine(_commandConfig.NFlagsConfig.Description);
+                builder.AppendLine(_commandConfig.CliConfig.Description);
                 builder.AppendLine("");
             }
 
@@ -88,7 +88,7 @@ namespace NFlags.Utils
 
                 var groups = new Dictionary<string, StringBuilder>();
 
-                var optionFormatter = OptionFormatter.GetFormatter(_commandConfig.NFlagsConfig.Dialect);
+                var optionFormatter = OptionFormatter.GetFormatter(_commandConfig.CliConfig.Dialect);
 
                 builder.AppendLine("\tOptions:");
                 foreach (var option in _commandConfig.Options)

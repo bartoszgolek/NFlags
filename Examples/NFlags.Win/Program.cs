@@ -4,12 +4,12 @@
     {
         public static void Main(string[] args)
         {
-            NFlags.Configure(ConfigureNFlags)
+            Cli.Configure(ConfigureNFlags)
                 .Root(RootCommand.Configure)
                 .Run(args);
         }
 
-        private static void ConfigureNFlags(NFlagsConfigurator configurator)
+        private static void ConfigureNFlags(CliConfigurator configurator)
         {
             configurator
                 .SetDescription("Application description")

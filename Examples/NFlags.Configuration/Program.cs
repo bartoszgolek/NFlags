@@ -15,7 +15,7 @@ namespace NFlags.Configuration
             
             var configuration = builder.Build();
 
-            NFlags.Configure(c => c
+            Cli.Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(new ConfigurationExtensionProvider(configuration))
                 )

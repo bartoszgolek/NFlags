@@ -11,7 +11,7 @@ namespace NFlags.Tests
         public void TestRun_ShouldPrintHelpWhenCommandExecuted()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags
+            Cli
                 .Configure(c => c.SetOutput(outputAggregator))
                 .Root(c => c.PrintHelpOnExecute())
                 .Run(new string[0]);
@@ -30,7 +30,7 @@ namespace NFlags.Tests
         public void TestRun_ShouldPrintHelpWhenGenericCommandExecuted()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags
+            Cli
                 .Configure(c => c.SetOutput(outputAggregator))
                 .Root<EmptyArgumentsType>(c => c.PrintHelpOnExecute())
                 .Run(new string[0]);
@@ -49,7 +49,7 @@ namespace NFlags.Tests
         public void TestRun_ShouldPrintSubCommandHelp_IfPrintHelpOnExecuteIsSetForSubCommand()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags
+            Cli
                 .Configure(c => c.SetOutput(outputAggregator))
                 .Root<EmptyArgumentsType>(c => c
                     .PrintHelpOnExecute()
@@ -74,7 +74,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<MissingCommandImplementationException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root(c => { })
                     .Run(new string[0]);

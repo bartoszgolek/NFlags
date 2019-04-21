@@ -12,7 +12,7 @@ namespace NFlags.Commands
     public class CommandConfigurator
     {
         private readonly List<string> _parents;
-        private readonly NFlagsConfig _nFlagsConfig;
+        private readonly CliConfig _cliConfig;
         private readonly List<CommandConfigurator> _commands = new List<CommandConfigurator>();
         private CommandConfigurator _defaultCommand;
         private readonly List<Parameter> _parameters = new List<Parameter>();
@@ -21,20 +21,20 @@ namespace NFlags.Commands
         private bool _printHelpOnExecute;
         private Func<CommandArgs, IOutput, int> _execute;
 
-        private CommandConfigurator(string name, List<string> parents, string description, NFlagsConfig nFlagsConfig)
+        private CommandConfigurator(string name, List<string> parents, string description, CliConfig cliConfig)
         {
             Name = name;
             Description = description;
             _parents = parents;
-            _nFlagsConfig = nFlagsConfig;
+            _cliConfig = cliConfig;
         }
 
-        internal CommandConfigurator(string name, string description, NFlagsConfig nFlagsConfig)
+        internal CommandConfigurator(string name, string description, CliConfig cliConfig)
         {
             Name = name;
             Description = description;
             _parents = new List<string>();
-            _nFlagsConfig = nFlagsConfig;
+            _cliConfig = cliConfig;
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace NFlags.Commands
 
         private CommandConfigurator RegisterNewCommand(string name, string description, Action<CommandConfigurator> configureCommand)
         {
-            var commandConfigurator = new CommandConfigurator(name, GetCommandParents(), description, _nFlagsConfig);
+            var commandConfigurator = new CommandConfigurator(name, GetCommandParents(), description, _cliConfig);
             configureCommand(commandConfigurator);
             _commands.Add(commandConfigurator);
 
@@ -429,7 +429,7 @@ namespace NFlags.Commands
         {
             return new Command(
                 new CommandConfig(
-                    _nFlagsConfig,
+                    _cliConfig,
                     Name,
                     _printHelpOnExecute,
                     _parents,
@@ -456,7 +456,7 @@ namespace NFlags.Commands
         {
             var typeToCheck = type.IsArray ? type.GetElementType() : type;
 
-            if (_nFlagsConfig.ArgumentConverters.Any(argumentConverter => argumentConverter.CanConvert(typeToCheck)))
+            if (_cliConfig.ArgumentConverters.Any(argumentConverter => argumentConverter.CanConvert(typeToCheck)))
                 return;
 
             throw new MissingConverterException(type);

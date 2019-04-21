@@ -19,7 +19,7 @@ namespace NFlags.Commands
                     stringBuilder.AppendLine();
                 }
                 
-                stringBuilder.Append(commandConfig.NFlagsConfig.HelpPrinter.PrintHelp(commandConfig));
+                stringBuilder.Append(commandConfig.CliConfig.HelpPrinter.PrintHelp(commandConfig));
 
                 output.Write(stringBuilder.ToString());
 

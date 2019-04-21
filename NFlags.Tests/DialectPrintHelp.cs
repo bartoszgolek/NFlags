@@ -23,7 +23,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithDefaultName()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator =>
+            Cli.Configure(configurator =>
                 {
                     configurator
                         .SetDialect(_dialect)
@@ -47,7 +47,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintSubCommandBasicInfoWithDefaultName()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
                 )
@@ -69,7 +69,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithCustomName()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetName("custName")
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
@@ -92,7 +92,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithDescription()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDescription("some description")
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
@@ -117,7 +117,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithFlags()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
                 )
@@ -144,7 +144,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithOptions()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
                 )
@@ -171,7 +171,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithParams()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
                 )
@@ -200,7 +200,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithParametersAndParameterSeries()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
                 )
@@ -231,7 +231,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithParamSeries()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
                 )
@@ -258,7 +258,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintBasicInfoWithNameDescriptionFlagsOptionsAndParams()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
                     .SetName("custName")
@@ -299,7 +299,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintDefaultValueAfterOptionAndParametersDescriptions()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
                     .SetName("custName")
@@ -342,7 +342,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintFlagAndOptionsInGroups()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(_dialect)
                     .SetOutput(outputAggregator)
                     .SetName("groups")

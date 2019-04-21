@@ -4,7 +4,7 @@
     {
         public static int Main(string[] args)
         {
-            return NFlags
+            return Cli
                 .Configure(c => c
                     .RegisterConverter(new UserConverter())
                     .SetDescription("Call 'NFlags.Converters \"user1;user1name;user1password\" \"user2;user2name;user2password\"' to see converters in use.")

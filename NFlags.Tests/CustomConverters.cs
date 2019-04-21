@@ -11,7 +11,7 @@ namespace NFlags.Tests
         public void TestParam_ShouldUseCustomConverterForParameter_IfRegistered()
         {
             CommandArgs args = null;
-            NFlags
+            Cli
                 .Configure(c => c.RegisterConverter(new CustomTypeConverter()))
                 .Root(c => c
                     .RegisterParameter<CustomType>("custom", "CustomType", null)
@@ -27,7 +27,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<MissingConverterException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root(c => c
                         .RegisterParameter<CustomType>("custom", "CustomType", null)
@@ -39,7 +39,7 @@ namespace NFlags.Tests
         public void TestParam_ShouldUseCustomConverterForParameterSeries_IfRegistered()
         {
             CommandArgs args = null;
-            NFlags
+            Cli
                 .Configure(c => c.RegisterConverter(new CustomTypeConverter()))
                 .Root(c => c
                     .RegisterParameterSeries<CustomType>("custom", "CustomType")
@@ -55,7 +55,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<MissingConverterException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root(c => c
                         .RegisterParameterSeries<CustomType>("custom", "CustomType")
@@ -67,7 +67,7 @@ namespace NFlags.Tests
         public void TestOption_ShouldUseCustomConverterForOption_IfRegistered()
         {
             CommandArgs args = null;
-            NFlags
+            Cli
                 .Configure(c => c.RegisterConverter(new CustomTypeConverter()))
                 .Root(c => c
                     .RegisterOption<CustomType>("custom", "CustomType", null)
@@ -83,7 +83,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<MissingConverterException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root(c => c
                         .RegisterOption<CustomType>("custom", "CustomType", null)

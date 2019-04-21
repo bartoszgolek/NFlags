@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NFlags.Commands;
@@ -10,7 +9,7 @@ namespace NFlags.Kestrel
     {
         public static void Main(string[] args)
         {
-            NFlags.Configure(c => c
+            Cli.Configure(c => c
                     .SetName("NFlags.Kestrel")
                     .SetDescription("NFlags Kestrel Example")
                     .SetDialect(Dialect.Gnu)
