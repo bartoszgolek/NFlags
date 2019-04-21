@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NFlags.Arguments;
@@ -8,24 +9,46 @@ namespace NFlags.Utils
 {
     /// <inheritdoc />
     /// <summary>
-    /// Default print helper for NFlags. 
+    /// Default print helper for NFlags.
     /// </summary>
     public class DefaultHelpPrinter : IHelpPrinter
     {
+        private readonly DefaultHelpPrinterOptions _options;
+
+        /// <summary>
+        /// Create new instance of DefaultHelpPrinter
+        /// </summary>
+        public DefaultHelpPrinter()
+        {
+            _options = new DefaultHelpPrinterOptions();
+        }
+
+        /// <summary>
+        /// Create new instance of DefaultHelpPrinter
+        /// </summary>
+        /// <param name="options">Help printer options</param>
+        public DefaultHelpPrinter(DefaultHelpPrinterOptions options)
+        {
+            _options = options;
+        }
+
         /// <inheritdoc />
         public string PrintHelp(CommandConfig commandConfig)
         {
-            return new HelpPrinterInt(commandConfig).Print();
+            return new HelpPrinterInt(commandConfig, _options).Print();
         }
 
         private class HelpPrinterInt
         {
             private readonly CommandConfig _commandConfig;
+            private readonly DefaultHelpPrinterOptions _options;
 
-            public HelpPrinterInt(CommandConfig commandConfig)
+            public HelpPrinterInt(CommandConfig commandConfig, DefaultHelpPrinterOptions options)
             {
                 _commandConfig = commandConfig;
+                _options = options;
             }
+
 
             public string Print()
             {
@@ -150,7 +173,7 @@ namespace NFlags.Utils
                 builder.AppendLine("");
             }
 
-            private static string PrintDescription(DefaultValueArgument argument)
+            private string PrintDescription(DefaultValueArgument argument)
             {
                 var description = "";
                 var separator = "\t";
@@ -164,8 +187,18 @@ namespace NFlags.Utils
                     string.IsNullOrEmpty(argument.EnvironmentVariable) && string.IsNullOrEmpty(argument.ConfigPath))
                     return description;
 
-                description += separator + "(";
-                separator = "";
+                var additionalDescription = PrintAdditionalDescription(argument);
+                if (additionalDescription != String.Empty)
+                    description += separator + "(" + additionalDescription + ")";
+
+                return description;
+            }
+
+            private string PrintAdditionalDescription(DefaultValueArgument argument)
+            {
+                var description = string.Empty;
+
+                var separator = "";
                 if (argument.RequireValue && argument.DefaultValue != null)
                 {
                     description += separator + PrintDefaultValue(argument);
@@ -178,30 +211,38 @@ namespace NFlags.Utils
                     separator = ", ";
                 }
 
-                if (!string.IsNullOrEmpty(argument.ConfigPath)) 
+                if (!string.IsNullOrEmpty(argument.ConfigPath))
                     description += separator + PrintConfigPath(argument);
-
-                description += ")";
 
                 return description;
             }
 
-            private static object PrintDefaultValue(DefaultValueArgument argument)
+            private string PrintDefaultValue(DefaultValueArgument argument)
             {
-                if (argument.ValueType == typeof(string))
-                    return $"Default: '{argument.DefaultValue}'";
-
-                return $"Default: {argument.DefaultValue}";
+                return _options.PrintDefaultValues
+                    ? string.Format(_options.DefaultValueText, Enquote(argument.ValueType, argument.DefaultValue))
+                    : string.Empty;
             }
 
-            private static object PrintEnvironmentVariable(DefaultValueArgument argument)
+            private string PrintEnvironmentVariable(DefaultValueArgument argument)
             {
-                return $"Environment variable: '{argument.EnvironmentVariable}'";
+                return _options.PrintEnvironmentBindings
+                    ? string.Format(_options.EnvironmentBindingsText, Enquote(typeof(string), argument.EnvironmentVariable))
+                    : string.Empty;
             }
 
-            private static object PrintConfigPath(DefaultValueArgument argument)
+            private string PrintConfigPath(DefaultValueArgument argument)
             {
-                return $"Config path: '{argument.ConfigPath}'";
+                return _options.PrintConfigurationBindings
+                    ? string.Format(_options.ConfigurationBindingsText, Enquote(typeof(string), argument.ConfigPath))
+                    : string.Empty;
+            }
+
+            private static string Enquote(Type type, object value)
+            {
+                return type == typeof(string)
+                    ? $"'{value}'"
+                    : value.ToString();
             }
         }
     }

@@ -1,4 +1,3 @@
-using NFlags.Commands;
 using NFlags.Utils;
 
 namespace NFlags
@@ -9,8 +8,16 @@ namespace NFlags
     public static class HelpPrinter
     {
         /// <summary>
-        /// Default help printer implementation. 
+        /// Default help printer implementation.
         /// </summary>
         public static readonly IHelpPrinter Default = new DefaultHelpPrinter();
+
+        /// <summary>
+        /// Default help printer implementation.
+        /// </summary>
+        public static IHelpPrinter DefaultWithOptions(DefaultHelpPrinterOptions options)
+        {
+            return new DefaultHelpPrinter(options);
+        }
     }
 }
