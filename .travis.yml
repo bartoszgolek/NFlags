@@ -3,9 +3,9 @@ solution: NFlags.sln
 
 matrix:
   include:
-    - dotnet: 2.1.10
+    - dotnet: 2.1
       mono: none
-    - dotnet: 2.2.4
+    - dotnet: 2.2
       mono: none
 
 script:
