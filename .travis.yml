@@ -7,9 +7,9 @@ matrix:
     - dotnet: 2.1
       mono: none
       env: FRAMEWORK=netcoreapp2.1
-    - dotnet: 2.2
-      mono: none
-      env: FRAMEWORK=netcoreapp2.2
+#    - dotnet: 2.2
+#      mono: none
+#      env: FRAMEWORK=netcoreapp2.2
 
 script:
   - dotnet build -f $FRAMEWORK
