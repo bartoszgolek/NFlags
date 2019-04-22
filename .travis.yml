@@ -1,7 +1,13 @@
 language: csharp
 solution: NFlags.sln
-mono: none
-dotnet: 2.0.0
+
+matrix:
+  include:
+    - dotnet: 2.1.10
+      mono: none
+    - dotnet: 2.2.4
+      mono: none
+
 script:
   - dotnet build
   - ./test.sh
