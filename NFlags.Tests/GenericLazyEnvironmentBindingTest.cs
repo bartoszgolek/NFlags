@@ -12,7 +12,7 @@ namespace NFlags.Tests
             var testEnvironment = new TestEnvironment();
 
             LazyEnvironmentArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)
@@ -34,7 +34,7 @@ namespace NFlags.Tests
             var testEnvironment = new TestEnvironment();
 
             LazyEnvironmentArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)
@@ -56,7 +56,7 @@ namespace NFlags.Tests
             var testEnvironment = new TestEnvironment();
 
             LazyEnvironmentArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)
@@ -78,7 +78,7 @@ namespace NFlags.Tests
             var testEnvironment = new TestEnvironment();
 
             ArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)
@@ -100,7 +100,7 @@ namespace NFlags.Tests
             var testEnvironment = new TestEnvironment();
 
             ArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)
@@ -122,7 +122,7 @@ namespace NFlags.Tests
             var testEnvironment = new TestEnvironment();
 
             ArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)

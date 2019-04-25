@@ -12,7 +12,7 @@ namespace NFlags.Tests
             var testConfig = new TestConfig();
 
             LazyConfigPathArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(testConfig)
@@ -34,7 +34,7 @@ namespace NFlags.Tests
             var testConfig = new TestConfig();
 
             LazyConfigPathArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(testConfig)
@@ -56,7 +56,7 @@ namespace NFlags.Tests
             var testConfig = new TestConfig();
 
             LazyConfigPathArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(testConfig)
@@ -78,7 +78,7 @@ namespace NFlags.Tests
             var testConfig = new TestConfig();
 
             NonLazyConfigPathArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(testConfig)
@@ -100,7 +100,7 @@ namespace NFlags.Tests
             var testConfig = new TestConfig();
 
             NonLazyConfigPathArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(testConfig)
@@ -122,7 +122,7 @@ namespace NFlags.Tests
             var testConfig = new TestConfig();
 
             NonLazyConfigPathArgumentsType commandArgs = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(testConfig)

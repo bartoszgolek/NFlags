@@ -118,7 +118,7 @@ namespace NFlags.Commands
 
             if (argument.ConfigPath != null)
             {
-                if (_commandConfig.NFlagsConfig.GenericConfig != null)
+                if (_commandConfig.CliConfig.GenericConfig != null)
                 {
                     var valueProvider = argument.IsConfigPathLazy
                         ? (IValueProvider) new ValueProviderProxy(() => ReadConfigGenericValue(argument))
@@ -129,7 +129,7 @@ namespace NFlags.Commands
                     );
                 }
 
-                if (_commandConfig.NFlagsConfig.Config != null)
+                if (_commandConfig.CliConfig.Config != null)
                 {
                     var valueProvider = argument.IsConfigPathLazy
                         ? (IValueProvider) new ValueProviderProxy(() => ReadConfigValue(argument))
@@ -155,21 +155,21 @@ namespace NFlags.Commands
 
         private object ReadConfigValue(DefaultValueArgument argument)
         {
-            return ReadValue(argument, _commandConfig.NFlagsConfig.Config?.Get(argument.ConfigPath));
+            return ReadValue(argument, _commandConfig.CliConfig.Config?.Get(argument.ConfigPath));
         }
 
         private object ReadConfigGenericValue(DefaultValueArgument argument)
         {
-            if (_commandConfig.NFlagsConfig.GenericConfig == null) 
+            if (_commandConfig.CliConfig.GenericConfig == null) 
                 return null;
             
-            if (!_commandConfig.NFlagsConfig.GenericConfig.Has(argument.ConfigPath))
+            if (!_commandConfig.CliConfig.GenericConfig.Has(argument.ConfigPath))
                 return null;                
 
-            return _commandConfig.NFlagsConfig.GenericConfig.GetType()
+            return _commandConfig.CliConfig.GenericConfig.GetType()
                 .GetMethod("Get", BindingFlags.Public | BindingFlags.Instance)
                 ?.MakeGenericMethod(argument.ValueType)
-                .Invoke(_commandConfig.NFlagsConfig.GenericConfig, new object[] { argument.ConfigPath });
+                .Invoke(_commandConfig.CliConfig.GenericConfig, new object[] { argument.ConfigPath });
         }
 
         private object ReadValue(Argument argument, string value)
@@ -193,7 +193,7 @@ namespace NFlags.Commands
 
         private object ReadEnvironmentVariable(DefaultValueArgument argument)
         {
-            return ReadValue(argument, _commandConfig.NFlagsConfig.Environment.Get(argument.EnvironmentVariable));
+            return ReadValue(argument, _commandConfig.CliConfig.Environment.Get(argument.EnvironmentVariable));
         }
 
         private void ReadParam(string arg)
@@ -212,7 +212,7 @@ namespace NFlags.Commands
         private bool ReadOpt(string arg)
         {
             var opt = _commandConfig.Options.FirstOrDefault(
-                option => ArgMatcher.GetMatcher(_commandConfig.NFlagsConfig.Dialect).IsOptionMatching(option, arg)
+                option => ArgMatcher.GetMatcher(_commandConfig.CliConfig.Dialect).IsOptionMatching(option, arg)
             );
 
             if (opt == null)
@@ -227,7 +227,7 @@ namespace NFlags.Commands
             }
 
             var optionValue = OptionReader
-                .GetReader(_commandConfig.NFlagsConfig.Dialect.OptionValueMode)
+                .GetReader(_commandConfig.CliConfig.Dialect.OptionValueMode)
                 .ReadValue(_args, arg);
 
             if (opt.ValueType.IsArray)
@@ -259,7 +259,7 @@ namespace NFlags.Commands
             if (expectedType == typeof(string))
                 return value;
 
-            foreach (var converter in _commandConfig.NFlagsConfig.ArgumentConverters)
+            foreach (var converter in _commandConfig.CliConfig.ArgumentConverters)
                 if (converter.CanConvert(expectedType))
                     return converter.Convert(expectedType, value);
 

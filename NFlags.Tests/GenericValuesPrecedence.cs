@@ -86,7 +86,7 @@ namespace NFlags.Tests
         {
             ValuePrecedence a = null;
 
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)

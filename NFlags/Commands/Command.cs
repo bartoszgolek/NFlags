@@ -52,14 +52,14 @@ namespace NFlags.Commands
             }
             catch (ArgumentValueException e)
             {
-                if (!_commandConfig.NFlagsConfig.IsExceptionHandlingEnabled)
+                if (!_commandConfig.CliConfig.IsExceptionHandlingEnabled)
                     throw;
 
                 return CommandExecutionContextProvider.PrepareHelpCommandExecutionContext(_commandConfig, e.Message);
             }
             catch (TooManyParametersException e)
             {
-                if (!_commandConfig.NFlagsConfig.IsExceptionHandlingEnabled)
+                if (!_commandConfig.CliConfig.IsExceptionHandlingEnabled)
                     throw;
 
                 return CommandExecutionContextProvider.PrepareHelpCommandExecutionContext(_commandConfig, e.Message);

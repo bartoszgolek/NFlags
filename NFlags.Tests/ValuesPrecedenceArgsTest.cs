@@ -85,7 +85,7 @@ namespace NFlags.Tests
         private static CommandArgs RunTest(IEnvironment testEnvironment, IConfig testConfig, string[] cliArgs)
         {
             CommandArgs a = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)

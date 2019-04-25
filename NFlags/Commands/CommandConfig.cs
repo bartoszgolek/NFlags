@@ -12,7 +12,7 @@ namespace NFlags.Commands
         /// <summary>
         /// Creates new instance of command configuration.
         /// </summary>
-        /// <param name="nFlagsConfig">NFlags config</param>
+        /// <param name="cliConfig">NFlags Cli config</param>
         /// <param name="name">Command name</param>
         /// <param name="printHelpOnExecute">If True command will print help instead of running execute method</param>
         /// <param name="parents">Command parents list</param>
@@ -23,7 +23,7 @@ namespace NFlags.Commands
         /// <param name="parameterSeries">Registered parameter series</param>
         /// <param name="execute">Function to execute when command is called</param>
         public CommandConfig(
-            NFlagsConfig nFlagsConfig,
+            CliConfig cliConfig,
             string name,
             bool printHelpOnExecute,
             List<string> parents,
@@ -34,7 +34,7 @@ namespace NFlags.Commands
             ParameterSeries parameterSeries,
             Func<CommandArgs, IOutput, int> execute)
         {
-            NFlagsConfig = nFlagsConfig;
+            CliConfig = cliConfig;
             Name = name;
             Parents = parents;
             Options = options;
@@ -52,9 +52,15 @@ namespace NFlags.Commands
         public List<CommandConfigurator> Commands { get; }
 
         /// <summary>
+        /// NFlags Cli config
+        /// </summary>
+        public CliConfig CliConfig { get; }
+
+        /// <summary>
         /// NFlags config
         /// </summary>
-        public NFlagsConfig NFlagsConfig { get; }
+        [Obsolete("NFlags property is obsolete. Use CliCOnfig instead.")]
+        public CliConfig NFlagsConfig { get; }
 
         /// <summary>
         /// Command name
@@ -62,7 +68,7 @@ namespace NFlags.Commands
         public string Name { get; }
 
         /// <summary>
-        /// If True command will print help instead of running execute method 
+        /// If True command will print help instead of running execute method
         /// </summary>
         public bool PrintHelpOnExecute { get; }
 
@@ -92,7 +98,7 @@ namespace NFlags.Commands
         public Func<CommandArgs, IOutput, int> Execute { get; }
 
         /// <summary>
-        /// Default command to run where subcommand is not defined in params 
+        /// Default command to run where subcommand is not defined in params
         /// </summary>
         public CommandConfigurator DefaultCommand { get; }
     }

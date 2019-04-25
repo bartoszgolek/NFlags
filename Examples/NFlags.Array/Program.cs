@@ -4,7 +4,7 @@
     {
         public static void Main(string[] args)
         {
-            NFlags.Configure(c => c
+            Cli.Configure(c => c
                     .SetDescription("Application description")
                     .SetDialect(Dialect.Gnu)
                     .SetOutput(Output.Console))

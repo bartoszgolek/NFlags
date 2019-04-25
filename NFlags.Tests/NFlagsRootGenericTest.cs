@@ -13,7 +13,7 @@ namespace NFlags.Tests
         {
             var outputAggregator = new OutputAggregator();
 
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetOutput(outputAggregator)
@@ -45,7 +45,7 @@ namespace NFlags.Tests
         public void RegisterCommandT_ShouldPassDefaultValuesToExecute()
         {
             ArgumentsType a = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                 )
@@ -70,7 +70,7 @@ namespace NFlags.Tests
         public void RegisterCommandT_ShouldPassValuesToExecute()
         {
             ArgumentsType a = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                 )

@@ -16,7 +16,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
@@ -36,7 +36,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
@@ -57,7 +57,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
@@ -78,7 +78,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
@@ -99,7 +99,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<MissingConverterException>(() =>
             {
-                NFlags.Configure(configurator => configurator
+                Cli.Configure(configurator => configurator
                         .SetDialect(Dialect.Win)
                     )
                     .Root(configurator => configurator
@@ -114,7 +114,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
@@ -135,7 +135,7 @@ namespace NFlags.Tests
         {
             CommandArgs a = null;
 
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
@@ -154,7 +154,7 @@ namespace NFlags.Tests
         [Fact]
         public void TestParams_ShouldReturnErrorExitCode_IfCannotConvertValue()
         {
-            Assert.Equal(ErrorExitCode, NFlags.Configure(configurator => configurator
+            Assert.Equal(ErrorExitCode, Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                 )
                 .Root(configurator => configurator
@@ -168,7 +168,7 @@ namespace NFlags.Tests
         public void TestParams_ShouldThrowArgumentValueException_IfCannotConvertValueAndExceptionHandlingIsDisabled()
         {
             Assert.Throws<ArgumentValueException>(() =>
-                NFlags.Configure(configurator => configurator
+                Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                     .DisableExceptionHandling()
                 )
@@ -183,7 +183,7 @@ namespace NFlags.Tests
         public void TestParams_ShouldPrintMessageWithHelp_IfCannotConvertValue()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Win)
                     .SetOutput(outputAggregator)
                 )

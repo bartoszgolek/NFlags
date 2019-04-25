@@ -6,6 +6,7 @@ namespace NFlags
     /// <summary>
     /// Provides API for NFlags usage.
     /// </summary>
+    [Obsolete("NFlags class is obsolete. Use Cli instead.")]
     public class NFlags
     {
         /// <summary>
@@ -13,33 +14,9 @@ namespace NFlags
         /// </summary>
         /// <param name="configurator">Param reader configurator.</param>
         /// <returns>Configured param reader.</returns>
-        public static NFlags Configure(Action<NFlagsConfigurator> configurator)
+        public static Cli Configure(Action<CliConfigurator> configurator)
         {
-            var paramReaderConfigurator = new NFlagsConfigurator();
-            configurator(paramReaderConfigurator);
-            return paramReaderConfigurator.CreateNFlags();
+            return Cli.Configure(configurator);
         }
-
-        internal NFlags(NFlagsConfig nFlagsConfig)
-        {
-            NFlagsConfig = nFlagsConfig;
-        }
-
-        /// <summary>
-        /// Configure and get root command
-        /// </summary>
-        /// <param name="configureRootCommand">Action to configure command using CommandConfigurator</param>
-        public Bootstrap Root(Action<CommandConfigurator> configureRootCommand)
-        {
-            var commandConfigurator = new CommandConfigurator("", "", NFlagsConfig);
-            configureRootCommand(commandConfigurator);
-
-            return new Bootstrap(NFlagsConfig, commandConfigurator.CreateCommand());
-        }
-
-        /// <summary>
-        /// Configuration of NFlags
-        /// </summary>
-        public NFlagsConfig NFlagsConfig { get; }
     }
 }

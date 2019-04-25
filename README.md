@@ -15,7 +15,7 @@ For example of usage check **Examples** directory.
 1. Start new console project.
 1. Configure NFLags:
 ```c#
-NFlags.Configure(configure => configure
+Cli.Configure(configure => configure
     .SetDialect(Dialect.Gnu)
     .SetName("QuickStart")
     .SetDescription("This is NFlags")

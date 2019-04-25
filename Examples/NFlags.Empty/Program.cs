@@ -4,7 +4,7 @@
     {
         public static int Main(string[] args)
         {
-            return NFlags.Configure(c => { }).Root(c => { }).Run(args);
+            return Cli.Configure(c => { }).Root(c => { }).Run(args);
         }
     }
 }

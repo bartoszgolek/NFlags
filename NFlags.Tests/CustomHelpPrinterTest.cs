@@ -11,7 +11,7 @@ namespace NFlags.Tests
         {
             var printer = Substitute.For<IHelpPrinter>();
 
-            NFlags.Configure(c => c
+            Cli.Configure(c => c
                     .SetHelpPrinter(printer)
                 )
                 .Root(c => c
@@ -32,7 +32,7 @@ namespace NFlags.Tests
 
             var output = Substitute.For<IOutput>();
             
-            NFlags.Configure(c => c
+            Cli.Configure(c => c
                     .SetHelpPrinter(printer)
                     .SetOutput(output)
                 )

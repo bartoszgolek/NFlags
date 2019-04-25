@@ -7,17 +7,17 @@ namespace NFlags
     /// </summary>
     public class Bootstrap
     {
-        private readonly NFlagsConfig _nFlagsConfig;
+        private readonly CliConfig _cliConfig;
         private readonly Command _rootCommand;
 
         /// <summary>
         /// Creates new instance of NFlags bootstrap
         /// </summary>
         /// <param name="rootCommand">Root command</param>
-        /// <param name="nFlagsConfig">NFlags configuration</param>
-        internal Bootstrap(NFlagsConfig nFlagsConfig, Command rootCommand)
+        /// <param name="cliConfig">NFlags configuration</param>
+        internal Bootstrap(CliConfig cliConfig, Command rootCommand)
         {
-            _nFlagsConfig = nFlagsConfig;
+            _cliConfig = cliConfig;
             _rootCommand = rootCommand;
         }
 
@@ -31,7 +31,7 @@ namespace NFlags
             if (c.Execute == null)
                 throw new MissingCommandImplementationException();
 
-            return c.Execute.Invoke(c.Args, _nFlagsConfig.Output);
+            return c.Execute.Invoke(c.Args, _cliConfig.Output);
         }
     }
 }

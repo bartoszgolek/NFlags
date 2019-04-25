@@ -14,7 +14,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<IncorrectFlagMemberTypeException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root<NotBooleanFlag>(c => { });
             });
@@ -25,7 +25,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<IncorrectParameterSeriesMemberTypeException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root<NotArrayParameterSeries>(c => { });
             });
@@ -36,7 +36,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<PropertyWithoutSetterException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root<ParameterSeriesWithoutSetter>(c => { });
             });
@@ -47,7 +47,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<PropertyWithoutSetterException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root<FlagWithoutSetter>(c => { });
             });
@@ -58,7 +58,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<PropertyWithoutSetterException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root<OptionWithoutSetter>(c => { });
             });
@@ -69,7 +69,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<PropertyWithoutSetterException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root<ParameterWithoutSetter>(c => { });
             });
@@ -80,7 +80,7 @@ namespace NFlags.Tests
         {
             var outputAggregator = new OutputAggregator();
 
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetOutput(outputAggregator)
@@ -116,7 +116,7 @@ namespace NFlags.Tests
         public void RegisterCommandT_ShouldPassDefaultValuesToExecute()
         {
             ArgumentsType a = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                 )
@@ -148,7 +148,7 @@ namespace NFlags.Tests
                 .SetEnvironmentVariable("NFLAG_TEST_PARAMETER2", "89");
 
             ArgumentsType a = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetEnvironment(testEnvironment)
@@ -176,7 +176,7 @@ namespace NFlags.Tests
         public void RegisterCommandT_ShouldPassValuesToExecute()
         {
             ArgumentsType a = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                 )
@@ -216,7 +216,7 @@ namespace NFlags.Tests
         public void PrintHelp_ShouldPrintFlagAndOptionsInGroups()
         {
             var outputAggregator = new OutputAggregator();
-            NFlags.Configure(configurator => configurator
+            Cli.Configure(configurator => configurator
                     .SetDialect(Dialect.Gnu)
                     .SetOutput(outputAggregator)
                     .SetName("groups")

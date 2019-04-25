@@ -11,7 +11,7 @@ namespace NFlags.Tests
         {
             Assert.Throws<TooManyDefaultCommandsException>(() =>
             {
-                NFlags
+                Cli
                     .Configure(c => { })
                     .Root(c => c
                         .RegisterDefaultCommand("defaultCommand", "defaultCommandDescription", dc => { })
@@ -25,7 +25,7 @@ namespace NFlags.Tests
         public void TestRun_ShouldRunDefaultCommandWithParams()
         {
             CommandArgs a = null;
-            NFlags
+            Cli
                 .Configure(c => { })
                 .Root(c => c
                     .RegisterDefaultCommand("defaultCommand", "defaultCommandDescription", dc => dc
@@ -44,7 +44,7 @@ namespace NFlags.Tests
         public void TestRun_ShouldRunDefaultCommandWithDefaults()
         {
             CommandArgs a = null;
-            NFlags
+            Cli
                 .Configure(c => { })
                 .Root(c => c
                     .RegisterDefaultCommand("defaultCommand", "defaultCommandDescription", dc => dc
@@ -63,7 +63,7 @@ namespace NFlags.Tests
         public void TestParam_ShouldRunDefaultOfDefaultCommand()
         {
             CommandArgs a = null;
-            NFlags
+            Cli
                 .Configure(c => { })
                 .Root(c => c
                     .RegisterDefaultCommand("defaultCommand", "defaultCommandDescription", dc => dc

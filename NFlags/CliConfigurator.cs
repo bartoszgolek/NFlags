@@ -7,7 +7,7 @@ namespace NFlags
     /// <summary>
     /// Represents NFlags configuration ability.
     /// </summary>
-    public class NFlagsConfigurator
+    public class CliConfigurator
     {
         private string _name = AppDomain.CurrentDomain.FriendlyName;
 
@@ -16,7 +16,7 @@ namespace NFlags
         private Dialect _dialect = Dialect.Win;
 
         private IOutput _output = Output.Console;
-        
+
         private IEnvironment _environment = Environment.System;
 
         private bool _exceptionHandling = true;
@@ -39,7 +39,7 @@ namespace NFlags
         /// </summary>
         /// <param name="name">Application name</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator SetName(string name)
+        public CliConfigurator SetName(string name)
         {
             _name = name;
 
@@ -51,7 +51,7 @@ namespace NFlags
         /// </summary>
         /// <param name="description">Application description</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator SetDescription(string description)
+        public CliConfigurator SetDescription(string description)
         {
             _description = description;
 
@@ -63,7 +63,7 @@ namespace NFlags
         /// </summary>
         /// <param name="dialect">NFlags dialect</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator SetDialect(Dialect dialect)
+        public CliConfigurator SetDialect(Dialect dialect)
         {
             _dialect = dialect;
 
@@ -75,7 +75,7 @@ namespace NFlags
         /// </summary>
         /// <param name="output">Output printing interface</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator SetOutput(IOutput output)
+        public CliConfigurator SetOutput(IOutput output)
         {
             _output = output;
 
@@ -87,7 +87,7 @@ namespace NFlags
         /// </summary>
         /// <param name="environment">Environment variables provider</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator SetEnvironment(IEnvironment environment)
+        public CliConfigurator SetEnvironment(IEnvironment environment)
         {
             _environment = environment;
 
@@ -99,7 +99,7 @@ namespace NFlags
         /// </summary>
         /// <param name="config">Configuration values provider</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator SetConfiguration(IConfig config)
+        public CliConfigurator SetConfiguration(IConfig config)
         {
             _config = config;
 
@@ -111,7 +111,7 @@ namespace NFlags
         /// </summary>
         /// <param name="genericConfig">Configuration values provider</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator SetConfiguration(IGenericConfig genericConfig)
+        public CliConfigurator SetConfiguration(IGenericConfig genericConfig)
         {
             _genericConfig = genericConfig;
 
@@ -123,7 +123,7 @@ namespace NFlags
         /// </summary>
         /// <param name="helpPrinter">Help printer</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator SetHelpPrinter(IHelpPrinter helpPrinter)
+        public CliConfigurator SetHelpPrinter(IHelpPrinter helpPrinter)
         {
             _helpPrinter = helpPrinter;
 
@@ -135,7 +135,7 @@ namespace NFlags
         /// </summary>
         /// <param name="argumentConverter">Param Converter to register</param>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator RegisterConverter(IArgumentConverter argumentConverter)
+        public CliConfigurator RegisterConverter(IArgumentConverter argumentConverter)
         {
             _argumentConverters.Add(argumentConverter);
 
@@ -146,18 +146,18 @@ namespace NFlags
         /// Disables exception handling. Id used NFlags will throw exceptions instead of return exit code;
         /// </summary>
         /// <returns>Self instance</returns>
-        public NFlagsConfigurator DisableExceptionHandling()
+        public CliConfigurator DisableExceptionHandling()
         {
             _exceptionHandling = false;
             return this;
         }
 
-        internal NFlags CreateNFlags()
+        internal Cli CreateCli()
         {
             var converters = new List<IArgumentConverter>(_argumentConverters);
             converters.AddRange(_baseArgumentConverters);
-            return new NFlags(
-                new NFlagsConfig( _name, _description, _dialect, _output, _environment, _config, _genericConfig, _helpPrinter, _exceptionHandling, converters.ToArray())
+            return new Cli(
+                new CliConfig( _name, _description, _dialect, _output, _environment, _config, _genericConfig, _helpPrinter, _exceptionHandling, converters.ToArray())
             );
         }
     }

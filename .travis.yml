@@ -1,7 +1,9 @@
 language: csharp
 solution: NFlags.sln
+dist: xenial
 mono: none
-dotnet: 2.0.0
+dotnet: 2.1
+
 script:
   - dotnet build
   - ./test.sh

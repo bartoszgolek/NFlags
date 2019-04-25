@@ -14,7 +14,7 @@ namespace NFlags.Tests
             var testConfig = new TestConfig();
 
             CommandArgs a = null;
-            NFlags
+            Cli
                 .Configure(c =>
                 {
                     c
@@ -57,7 +57,7 @@ namespace NFlags.Tests
                 .SetConfigValue("NFLAG_TEST_PARAMETER2", "5");
 
             CommandArgs a = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(testConfig)
@@ -96,7 +96,7 @@ namespace NFlags.Tests
                 .SetConfigValue("NFLAG_TEST_PARAMETER2", "5");
 
             CommandArgs a = null;
-            NFlags
+            Cli
                 .Configure(c => c
                     .SetDialect(Dialect.Gnu)
                     .SetConfiguration(testEnvironment)
