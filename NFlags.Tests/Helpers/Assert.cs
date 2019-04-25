@@ -7,13 +7,18 @@ namespace NFlags.Tests.Helpers
     {
         public static void HelpEquals(OutputAggregator output, params string[] lines)
         {
+            HelpEquals(output.ToString(), lines);
+        }
+
+        public static void HelpEquals(string output, params string[] lines)
+        {
             var expectedResultBuilder = new StringBuilder();
             foreach (var line in lines)
             {
-                expectedResultBuilder.AppendLine(line);                
+                expectedResultBuilder.AppendLine(line);
             }
 
-            Xunit.Assert.Equal(expectedResultBuilder.ToString(), output.ToString());
+            Xunit.Assert.Equal(expectedResultBuilder.ToString(), output);
         }
     }
 }
