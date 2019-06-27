@@ -9,5 +9,6 @@
     <PackageTags>cli;library;parser;parsing;helper</PackageTags>
     <DocumentationFile>bin\Debug\netstandard2.0\NFlags.xml</DocumentationFile>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <PackageVersion>1.7.1</PackageVersion>
   </PropertyGroup>
 </Project>
