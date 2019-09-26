@@ -3,7 +3,7 @@
     <Authors>Bartosz Gołek</Authors>
     <Description>Simple yet powerfull library to made parsing CLI arguments easy. Library also allow You to print usage help "out of box".</Description>
     <PackageProjectUrl>https://github.com/bartoszgolek/NFlags</PackageProjectUrl>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Bartosz Gołek@2017</Copyright>
     <PackageTags>cli;library;parser;parsing;helper</PackageTags>
     <DocumentationFile>bin\Debug\netstandard2.0\NFlags.xml</DocumentationFile>
