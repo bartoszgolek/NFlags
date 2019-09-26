@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <IsPackable>false</IsPackable>
-        <TargetFrameworks>netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
+        <TargetFrameworks>netcoreapp2.1;netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
