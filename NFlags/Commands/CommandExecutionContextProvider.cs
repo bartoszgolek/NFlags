@@ -15,6 +15,10 @@ namespace NFlags.Commands
         private const string HelpFlagAbr = "h";
         private const string HelpDescription = "Prints this help";
 
+        private const string VersionFlag = "version";
+        private const string VersionFlagAbr = "v";
+        private const string VersionDescription = "Prints application version";
+
         private readonly CommandConfig _commandConfig;
         private readonly Shifter<Parameter> _parameters;
         private readonly ParameterSeries _parameterSeries;
@@ -49,6 +53,19 @@ namespace NFlags.Commands
                     DefaultValue = false
                 }
             );
+
+            if (_commandConfig.CliConfig.VersionEnabled)
+            {
+                _commandConfig.Options.Add(
+                    new Flag
+                    {
+                        Name = VersionFlag,
+                        Abr = VersionFlagAbr,
+                        Description = VersionDescription,
+                        DefaultValue = false
+                    }
+                );    
+            }
         }
 
         public CommandExecutionContext GetFromArgs()
@@ -93,9 +110,13 @@ namespace NFlags.Commands
 
             ReadArgsAndOptions();
 
-            return _commandConfig.PrintHelpOnExecute || _commandArgs.GetFlag(HelpFlag)
-                ? PrepareHelpCommandExecutionContext(_commandConfig)
-                : new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
+            if (_commandConfig.CliConfig.VersionEnabled && _commandArgs.GetFlag(VersionFlag))
+                return PreparePrintVersionCommandExecutionContext(_commandConfig);
+            
+            if (_commandConfig.PrintHelpOnExecute || _commandArgs.GetFlag(HelpFlag))
+                return PrepareHelpCommandExecutionContext(_commandConfig);
+                
+            return new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
         }
 
         private void ReadArgsAndOptions()
@@ -120,10 +141,21 @@ namespace NFlags.Commands
             }
         }
 
-
-        private static PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(CommandConfig commandConfig, string additionalPrefixMessage = "")
+        private static PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(CommandConfig commandConfig, string additionalPrefixMessage)
         {
             return new PrintHelpCommandExecutionContext(additionalPrefixMessage, commandConfig);
+        }
+
+
+        private static PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(CommandConfig commandConfig)
+        {
+            return new PrintHelpCommandExecutionContext(commandConfig);
+        }
+
+
+        private static PrintVersionCommandExecutionContext PreparePrintVersionCommandExecutionContext(CommandConfig commandConfig)
+        {
+            return new PrintVersionCommandExecutionContext(commandConfig);
         }
 
         private CommandArgs InitDefaultCommandArgs()

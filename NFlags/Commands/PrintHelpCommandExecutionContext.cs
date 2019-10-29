@@ -9,21 +9,21 @@ namespace NFlags.Commands
         public PrintHelpCommandExecutionContext(string additionalPrefixMessage, CommandConfig commandConfig)
             : base((commandArgs, output) =>
             {
-                var exitCode = 0;
-                var stringBuilder = new StringBuilder();
+                output.WriteLine(additionalPrefixMessage);
+                output.WriteLine();
+                output.Write(commandConfig.CliConfig.HelpPrinter.PrintHelp(commandConfig));
 
-                if (additionalPrefixMessage != "")
-                {
-                    exitCode = ErrorExitCode;
-                    stringBuilder.AppendLine(additionalPrefixMessage);
-                    stringBuilder.AppendLine();
-                }
-                
-                stringBuilder.Append(commandConfig.CliConfig.HelpPrinter.PrintHelp(commandConfig));
+                return ErrorExitCode;
+            }, null)
+        {
+        }
 
-                output.Write(stringBuilder.ToString());
+        public PrintHelpCommandExecutionContext(CommandConfig commandConfig)
+            : base((commandArgs, output) =>
+            {
+                output.Write(commandConfig.CliConfig.HelpPrinter.PrintHelp(commandConfig));
 
-                return exitCode;
+                return 0;
             }, null)
         {
         }

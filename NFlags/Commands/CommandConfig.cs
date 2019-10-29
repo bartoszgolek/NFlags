@@ -59,7 +59,7 @@ namespace NFlags.Commands
         /// <summary>
         /// NFlags config
         /// </summary>
-        [Obsolete("NFlags property is obsolete. Use CliCOnfig instead.")]
+        [Obsolete("NFlags property is obsolete. Use CliConfig instead.")]
         public CliConfig NFlagsConfig { get; }
 
         /// <summary>

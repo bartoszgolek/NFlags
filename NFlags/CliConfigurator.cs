@@ -21,9 +21,12 @@ namespace NFlags
 
         private bool _exceptionHandling = true;
 
+        private bool _versionEnabled;
+        
         private IConfig _config;
 
         private IGenericConfig _genericConfig;
+
 
         private readonly List<IArgumentConverter> _baseArgumentConverters = new List<IArgumentConverter> {
             new CommonTypeConverter(),
@@ -152,12 +155,22 @@ namespace NFlags
             return this;
         }
 
+        /// <summary>
+        /// Enables default version option;
+        /// </summary>
+        /// <returns>Self instance</returns>
+        public CliConfigurator EnableVersionOption()
+        {
+            _versionEnabled = true;
+            return this;
+        }
+
         internal Cli CreateCli()
         {
             var converters = new List<IArgumentConverter>(_argumentConverters);
             converters.AddRange(_baseArgumentConverters);
             return new Cli(
-                new CliConfig( _name, _description, _dialect, _output, _environment, _config, _genericConfig, _helpPrinter, _exceptionHandling, converters.ToArray())
+                new CliConfig( _name, _description, _dialect, _output, _environment, _config, _genericConfig, _helpPrinter, _exceptionHandling, _versionEnabled, converters.ToArray())
             );
         }
     }

@@ -20,6 +20,7 @@ namespace NFlags
         /// <param name="genericConfig">Generic configuration values provider</param>
         /// <param name="helpPrinter">Help printer to generate help text</param>
         /// <param name="isExceptionHandlingEnabled">Is Exception handling enabled. Use exit code if enabled, otherwise throw exceptions. Default False</param>
+        /// <param name="versionEnabled">Is Version option enabled. Register default version option if enabled</param>
         /// <param name="argumentConverters">List of param converters</param>
         public CliConfig(
             string name,
@@ -31,6 +32,7 @@ namespace NFlags
             IGenericConfig genericConfig,
             IHelpPrinter helpPrinter,
             bool isExceptionHandlingEnabled,
+            bool versionEnabled,
             IArgumentConverter[] argumentConverters)
         {
             Name = name;
@@ -43,6 +45,7 @@ namespace NFlags
             GenericConfig = genericConfig;
             HelpPrinter = helpPrinter;
             ArgumentConverters = argumentConverters;
+            VersionEnabled = versionEnabled;
         }
 
         /// <summary>
@@ -94,5 +97,10 @@ namespace NFlags
         /// Help printer to generate help text
         /// </summary>
         public IHelpPrinter HelpPrinter { get; }
+
+        /// <summary>
+        /// Is Version option enabled. Register default version option if enabled
+        /// </summary>
+        public bool VersionEnabled { get; }
     }
 }

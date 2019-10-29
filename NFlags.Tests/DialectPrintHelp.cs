@@ -44,6 +44,32 @@ namespace NFlags.Tests
         }
 
         [Fact]
+        public void PrintHelp_ShouldPrintInfoOfVersionOption_WhenEnabled()
+        {
+            var outputAggregator = new OutputAggregator();
+            Cli.Configure(configurator =>
+                {
+                    configurator
+                        .SetDialect(_dialect)
+                        .SetOutput(outputAggregator)
+                        .EnableVersionOption();
+                })
+                .Root(c => { })
+                .Run(new[] { "" + _longPrefix + "help" });
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\ttesthost [OPTIONS]...",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "\t" + _longPrefix + "version, " + _shortPrefix + "v\tPrints application version",
+                ""
+            );
+        }
+
+        [Fact]
         public void PrintHelp_ShouldPrintSubCommandBasicInfoWithDefaultName()
         {
             var outputAggregator = new OutputAggregator();
