@@ -11,6 +11,10 @@ namespace NFlags.Commands
 {
     internal class CommandExecutionContextProvider
     {
+        private const string HelpFlag = "help";
+        private const string HelpFlagAbr = "h";
+        private const string HelpDescription = "Prints this help";
+
         private readonly CommandConfig _commandConfig;
         private readonly Shifter<Parameter> _parameters;
         private readonly ParameterSeries _parameterSeries;
@@ -24,44 +28,86 @@ namespace NFlags.Commands
         )
         {
             _commandConfig = commandConfig;
+
+            InitBaseOptions();
+
             _parameters = new Shifter<Parameter>(commandConfig.Parameters.ToArray());
             _parameterSeries = commandConfig.ParameterSeries;
             _args = new Shifter<string>(args);
             _commandArgs = InitDefaultCommandArgs();
             _optionValues = new Dictionary<string, ArrayAggregator>();
         }
+        
+        private void InitBaseOptions()
+        {
+            _commandConfig.Options.Add(
+                new Flag
+                {
+                    Name = HelpFlag,
+                    Abr = HelpFlagAbr,
+                    Description = HelpDescription,
+                    DefaultValue = false
+                }
+            );
+        }
 
         public CommandExecutionContext GetFromArgs()
         {
-            var cmdAllowed = true;
+            try
+            {
+                return PrepareCommandExecutionContext();
+            }
+            catch (ArgumentValueException e)
+            {
+                if (!_commandConfig.CliConfig.IsExceptionHandlingEnabled)
+                    throw;
+
+                return PrepareHelpCommandExecutionContext(_commandConfig, e.Message);
+            }
+            catch (TooManyParametersException e)
+            {
+                if (!_commandConfig.CliConfig.IsExceptionHandlingEnabled)
+                    throw;
+
+                return PrepareHelpCommandExecutionContext(_commandConfig, e.Message);
+            }
+        }
+
+        private CommandExecutionContext PrepareCommandExecutionContext()
+        {
+            if (_args.HasData())
+            {
+                var arg = _args.Current();
+
+                var cmd = GetCommand(arg);
+                if (cmd != null)
+                {
+                    _args.Next();
+                    return cmd.Read(_args.ToArray());
+                }
+            }
+
+            var defaultCommand = GetDefaultCommand();
+            if (defaultCommand != null)
+                return defaultCommand.Read(_args.ToArray());
+
+            ReadArgsAndOptions();
+
+            return _commandConfig.PrintHelpOnExecute || _commandArgs.GetFlag(HelpFlag)
+                ? PrepareHelpCommandExecutionContext(_commandConfig)
+                : new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
+        }
+
+        private void ReadArgsAndOptions()
+        {
             while (_args.HasData())
             {
                 var arg = _args.Shift();
 
-                Command cmd = null;
-                if (cmdAllowed)
-                    cmd = GetCommand(arg);
-
-                if (cmd == null)
-                {
-                    cmd = GetDefaultCommand();
-
-                    if (cmd != null)
-                        _args.ShiftBack();
-                }
-
-                if (cmd != null)
-                    return cmd.Read(_args.ToArray());
-
-                if (_commandConfig.PrintHelpOnExecute)
-                    return PrepareHelpCommandExecutionContext(_commandConfig);
-
-                cmdAllowed = false;
                 if (!ReadOpt(arg))
                     ReadParam(arg);
-
             }
-
+            
             foreach (var optionValue in _optionValues)
             {
                 _commandArgs.AddOptionValueProvider(
@@ -69,22 +115,13 @@ namespace NFlags.Commands
                     new ConstValueProvider(
                         optionValue.Value.GetArray(
                             _commandConfig.Options.Single(o => o.Name == optionValue.Key).ValueType)
-                        )
-                    );
+                    )
+                );
             }
-
-
-            var noArgsDefaultCommand = GetDefaultCommand();
-            if (noArgsDefaultCommand != null)
-                return noArgsDefaultCommand.Read(_args.ToArray());
-
-            return _commandConfig.PrintHelpOnExecute
-                ? PrepareHelpCommandExecutionContext(_commandConfig)
-                : new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
         }
 
 
-        public static PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(CommandConfig commandConfig, string additionalPrefixMessage = "")
+        private static PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(CommandConfig commandConfig, string additionalPrefixMessage = "")
         {
             return new PrintHelpCommandExecutionContext(additionalPrefixMessage, commandConfig);
         }

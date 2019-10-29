@@ -2,7 +2,8 @@ using System;
 
 namespace NFlags.Utils
 {
-    internal class Shifter<T> {
+    internal class Shifter<T>    
+    {
         private readonly T[] _array;
 
         private int _current;
@@ -15,8 +16,12 @@ namespace NFlags.Utils
             return _array[_current++];
         }
 
-        public T ShiftBack() {
-            return _array[--_current];
+        public T Current() {
+            return _array[_current];            
+        }
+
+        public void Next() {
+            _current++;
         }
 
         public bool HasData() {

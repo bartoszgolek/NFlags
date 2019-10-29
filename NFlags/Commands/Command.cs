@@ -1,6 +1,3 @@
-using NFlags.Arguments;
-using NFlags.TypeConverters;
-
 namespace NFlags.Commands
 {
     /// <summary>
@@ -8,10 +5,6 @@ namespace NFlags.Commands
     /// </summary>
     public class Command
     {
-        private const string HelpFlag = "help";
-        private const string HelpFlagAbr = "h";
-        private const string HelpDescription = "Prints this help";
-
         private readonly CommandConfig _commandConfig;
 
         /// <summary>
@@ -29,41 +22,10 @@ namespace NFlags.Commands
         /// <param name="args">Application arguments.</param>
         public CommandExecutionContext Read(string[] args)
         {
-            _commandConfig.Options.Add(
-                new Flag
-                {
-                    Name = HelpFlag,
-                    Abr = HelpFlagAbr,
-                    Description = HelpDescription,
-                    DefaultValue = false
-                }
-            );
-
-            try
-            {
-                var commandExecutionContext = new CommandExecutionContextProvider(
-                    _commandConfig,
-                    args
-                ).GetFromArgs();
-
-                return commandExecutionContext.Args != null && commandExecutionContext.Args.GetFlag(HelpFlag)
-                    ? CommandExecutionContextProvider.PrepareHelpCommandExecutionContext(_commandConfig)
-                    : commandExecutionContext;
-            }
-            catch (ArgumentValueException e)
-            {
-                if (!_commandConfig.CliConfig.IsExceptionHandlingEnabled)
-                    throw;
-
-                return CommandExecutionContextProvider.PrepareHelpCommandExecutionContext(_commandConfig, e.Message);
-            }
-            catch (TooManyParametersException e)
-            {
-                if (!_commandConfig.CliConfig.IsExceptionHandlingEnabled)
-                    throw;
-
-                return CommandExecutionContextProvider.PrepareHelpCommandExecutionContext(_commandConfig, e.Message);
-            }
+            return new CommandExecutionContextProvider(
+                _commandConfig,
+                args
+            ).GetFromArgs();
         }
     }
 }
