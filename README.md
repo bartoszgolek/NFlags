@@ -76,6 +76,7 @@ This is NFlags
 
         Options:
         --help, -h      Prints this help
+        --version, -v      Prints application version
 
 $> 
 

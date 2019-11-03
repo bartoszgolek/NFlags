@@ -15,6 +15,7 @@ Cli.Configure(configure => configure
     .SetDialect(Dialect.Gnu)
     .SetName("QuickStart")
     .SetDescription("This is NFlags")
+    .EnableVersionOption()
 )
 .Root(rc => rc
     .RegisterFlag("flag1", "f", "Flag description", false)
@@ -52,6 +53,7 @@ This is NFlags
         --flag1, -f     Flag description
         --option <option>, -o <option>  Option description (Default: 'optionDefaultValue')
         --help, -h      Prints this help
+        --version, -v      Prints application version
 
 
 
@@ -70,6 +72,7 @@ This is NFlags
 
         Options:
         --help, -h      Prints this help
+        --version, -v      Prints application version
 
 $> 
 
