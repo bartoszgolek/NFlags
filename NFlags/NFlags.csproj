@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Authors>Bartosz Gołek</Authors>
-    <Description>Simple yet powerfull library to made parsing CLI arguments easy. Library also allow You to print usage help "out of box".</Description>
+    <Description>Simple yet powerfull library to made parsing CLI arguments easy. Library also allow to print usage help and application version "out of box".</Description>
     <PackageProjectUrl>https://github.com/bartoszgolek/NFlags</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Bartosz Gołek@2017</Copyright>

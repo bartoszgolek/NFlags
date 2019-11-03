@@ -5,7 +5,7 @@
 [![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/labstack/echo/master/LICENSE)
 
 Simple yet powerfull library to made parsing CLI arguments easy. 
-Library also allow to print usage help "out of box".
+Library also allow to print usage help and application version "out of box".
 
 For example of usage check **Examples** directory.
 
