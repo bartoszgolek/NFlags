@@ -1,7 +1,7 @@
 # NFlags
 
 Simple yet powerfull library to made parsing CLI arguments easy. 
-Library also allow to print usage help "out of box".
+Library also allow to print usage help and application version "out of box".
 
 For example of usage check **Examples** directory.
 
@@ -89,6 +89,12 @@ Cli.Configure(configurator => configurator.SetName("Custom Name"));
 Description set with following code, will be printed in help.
 ```c#
 Cli.Configure(configurator => configurator.SetDescription("App description"));
+```
+
+#### Enabling Version option
+When enabled version option allows to print application version using special argument.
+```c#
+Cli.Configure(configurator => configurator.EnableVersionOption());
 ```
 
 #### Set output
