@@ -41,7 +41,7 @@ namespace NFlags.Commands
             _commandArgs = InitDefaultCommandArgs();
             _optionValues = new Dictionary<string, ArrayAggregator>();
         }
-        
+
         private void InitBaseOptions()
         {
             _commandConfig.Options.Add(
@@ -64,7 +64,7 @@ namespace NFlags.Commands
                         Description = VersionDescription,
                         DefaultValue = false
                     }
-                );    
+                );
             }
         }
 
@@ -92,31 +92,33 @@ namespace NFlags.Commands
 
         private CommandExecutionContext PrepareCommandExecutionContext()
         {
-            if (_args.HasData())
-            {
-                var arg = _args.Current();
+            if (CurrentArgIsCommand())
+                return GetSubCommand();
 
-                var cmd = GetCommand(arg);
-                if (cmd != null)
-                {
-                    _args.Next();
-                    return cmd.Read(_args.ToArray());
-                }
-            }
-
-            var defaultCommand = GetDefaultCommand();
-            if (defaultCommand != null)
-                return defaultCommand.Read(_args.ToArray());
+            if (HasDefaultCommand())
+                return GetDefaultCommand();
 
             ReadArgsAndOptions();
 
             if (_commandConfig.CliConfig.VersionEnabled && _commandArgs.GetFlag(VersionFlag))
                 return PreparePrintVersionCommandExecutionContext(_commandConfig);
-            
+
             if (_commandConfig.PrintHelpOnExecute || _commandArgs.GetFlag(HelpFlag))
                 return PrepareHelpCommandExecutionContext(_commandConfig);
-                
+
             return new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
+        }
+
+        private CommandExecutionContext GetSubCommand()
+        {
+            var commandName = _args.Current();
+            _args.Next();
+
+            return _commandConfig
+                .Commands
+                .FirstOrDefault(command => command.Name == commandName)
+                ?.CreateCommand(_commandConfig)
+                .Read(_args.ToArray());
         }
 
         private void ReadArgsAndOptions()
@@ -128,7 +130,7 @@ namespace NFlags.Commands
                 if (!ReadOpt(arg))
                     ReadParam(arg);
             }
-            
+
             foreach (var optionValue in _optionValues)
             {
                 _commandArgs.AddOptionValueProvider(
@@ -229,11 +231,11 @@ namespace NFlags.Commands
 
         private object ReadConfigGenericValue(DefaultValueArgument argument)
         {
-            if (_commandConfig.CliConfig.GenericConfig == null) 
+            if (_commandConfig.CliConfig.GenericConfig == null)
                 return null;
-            
+
             if (!_commandConfig.CliConfig.GenericConfig.Has(argument.ConfigPath))
-                return null;                
+                return null;
 
             return _commandConfig.CliConfig.GenericConfig.GetType()
                 .GetMethod("Get", BindingFlags.Public | BindingFlags.Instance)
@@ -335,16 +337,19 @@ namespace NFlags.Commands
             throw new MissingConverterException(expectedType);
         }
 
-        private Command GetCommand(string arg)
+        private bool CurrentArgIsCommand()
         {
-            return _commandConfig.Commands.FirstOrDefault(
-                command => command.Name == arg
-            )?.CreateCommand(_commandConfig);
+            return _args.HasData() && _commandConfig.Commands.Any(command => command.Name == _args.Current());
         }
 
-        private Command GetDefaultCommand()
+        private CommandExecutionContext GetDefaultCommand()
         {
-            return _commandConfig.DefaultCommand?.CreateCommand(_commandConfig);
+            return _commandConfig.DefaultCommand?.CreateCommand(_commandConfig).Read(_args.ToArray());
+        }
+
+        private bool HasDefaultCommand()
+        {
+            return _commandConfig.DefaultCommand != null;
         }
     }
 }
