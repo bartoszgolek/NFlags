@@ -21,7 +21,7 @@ namespace NFlags
             );
             configureRootCommand(commandConfigurator);
 
-            return new Bootstrap(cli.CliConfig, commandConfigurator.CreateCommand());
+            return new Bootstrap(cli.CliConfig, commandConfigurator.GetCommandConfig());
         }
     }
 }

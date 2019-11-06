@@ -106,11 +106,13 @@ namespace NFlags.Commands
             var commandName = _args.Current();
             _args.Next();
 
-            return _commandConfig
-                .Commands
-                .FirstOrDefault(command => command.Name == commandName)
-                ?.CreateCommand(_commandConfig)
-                .Read(_args.ToArray());
+            return new CommandExecutionContextProvider(
+                _commandConfig
+                    .Commands
+                    .FirstOrDefault(command => command.Name == commandName)
+                    ?.GetCommandConfig(_commandConfig),
+                _args.ToArray()
+            ).GetFromArgs();
         }
 
         private void ReadArgsAndOptions()
@@ -336,7 +338,10 @@ namespace NFlags.Commands
 
         private CommandExecutionContext GetDefaultCommand()
         {
-            return _commandConfig.DefaultCommand?.CreateCommand(_commandConfig).Read(_args.ToArray());
+            return new CommandExecutionContextProvider(
+                _commandConfig.DefaultCommand?.GetCommandConfig(_commandConfig),
+                _args.ToArray()
+            ).GetFromArgs();
         }
 
         private bool HasDefaultCommand()

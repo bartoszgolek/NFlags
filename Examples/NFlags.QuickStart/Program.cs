@@ -8,7 +8,7 @@
                 .SetDialect(Dialect.Gnu)
                 .SetName("QuickStart")
                 .SetDescription("This is NFlags")
-                .EnableVersionOption()
+                .ConfigureVersion(vc => vc.Enable())
             ).
             Root(rc => rc.
                 RegisterFlag("flag1", "f", "Flag description", false).

@@ -52,7 +52,7 @@ namespace NFlags.Tests
                     configurator
                         .SetDialect(_dialect)
                         .SetOutput(outputAggregator)
-                        .EnableVersionOption();
+                        .ConfigureVersion(vc => vc.Enable());
                 })
                 .Root(c => { })
                 .Run(new[] { "" + _longPrefix + "help" });

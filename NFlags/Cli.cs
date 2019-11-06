@@ -34,7 +34,7 @@ namespace NFlags
             var commandConfigurator = new CommandConfigurator("", "", CliConfig);
             configureRootCommand(commandConfigurator);
 
-            return new Bootstrap(CliConfig, commandConfigurator.CreateCommand());
+            return new Bootstrap(CliConfig, commandConfigurator.GetCommandConfig());
         }
 
         /// <summary>

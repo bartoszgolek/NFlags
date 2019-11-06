@@ -425,21 +425,19 @@ namespace NFlags.Commands
             return this;
         }
 
-        internal Command CreateCommand(CommandConfig parentConfig = null)
+        internal CommandConfig GetCommandConfig(CommandConfig parentConfig = null)
         {
-            return new Command(
-                new CommandConfig(
-                    _cliConfig,
-                    Name,
-                    _printHelpOnExecute,
-                    _parents,
-                    _commands,
-                    _defaultCommand,
-                    GetCommandOptions(parentConfig),
-                    _parameters,
-                    _paramSeries,
-                    _execute
-                )
+            return new CommandConfig(
+                _cliConfig,
+                Name,
+                _printHelpOnExecute,
+                _parents,
+                _commands,
+                _defaultCommand,
+                GetCommandOptions(parentConfig),
+                _parameters,
+                _paramSeries,
+                _execute
             );
         }
 

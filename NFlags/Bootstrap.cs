@@ -8,17 +8,17 @@ namespace NFlags
     public class Bootstrap
     {
         private readonly CliConfig _cliConfig;
-        private readonly Command _rootCommand;
+        private readonly CommandConfig _rootCommandConfig;
 
         /// <summary>
         /// Creates new instance of NFlags bootstrap
         /// </summary>
-        /// <param name="rootCommand">Root command</param>
+        /// <param name="rootCommandConfigConfig">Root command config</param>
         /// <param name="cliConfig">NFlags configuration</param>
-        internal Bootstrap(CliConfig cliConfig, Command rootCommand)
+        internal Bootstrap(CliConfig cliConfig, CommandConfig rootCommandConfigConfig)
         {
             _cliConfig = cliConfig;
-            _rootCommand = rootCommand;
+            _rootCommandConfig = rootCommandConfigConfig;
         }
 
         /// <summary>
@@ -27,7 +27,11 @@ namespace NFlags
         /// <param name="args">Application arguments</param>
         public int Run(string[] args)
         {
-            var c = _rootCommand.Read(args);
+            var c = new CommandExecutionContextProvider(
+                _rootCommandConfig,
+                args
+            ).GetFromArgs();
+
             if (c.Execute == null)
                 throw new MissingCommandImplementationException();
 

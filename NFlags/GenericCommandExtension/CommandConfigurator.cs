@@ -22,10 +22,10 @@ namespace NFlags.GenericCommandExtension
             _commandRegisterer = new CommandRegisterer(commandConfigurator);
         }
 
-        internal Command CreateCommand()
+        internal CommandConfig GetCommandConfig()
         {
             RegisterArguments();
-            return _commandConfigurator.CreateCommand();
+            return _commandConfigurator.GetCommandConfig();
         }
 
         /// <summary>
