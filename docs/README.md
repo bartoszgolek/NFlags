@@ -15,7 +15,7 @@ Cli.Configure(configure => configure
     .SetDialect(Dialect.Gnu)
     .SetName("QuickStart")
     .SetDescription("This is NFlags")
-    .EnableVersionOption()
+    .ConfigureVersion(vc => vc.Enable())
 )
 .Root(rc => rc
     .RegisterFlag("flag1", "f", "Flag description", false)
@@ -93,12 +93,6 @@ Cli.Configure(configurator => configurator.SetName("Custom Name"));
 Description set with following code, will be printed in help.
 ```c#
 Cli.Configure(configurator => configurator.SetDescription("App description"));
-```
-
-#### Enabling Version option
-When enabled version option allows to print application version using special argument.
-```c#
-Cli.Configure(configurator => configurator.EnableVersionOption());
 ```
 
 #### Set output
@@ -484,7 +478,7 @@ Cli.Configure(c => c.ConfigureHelp(hc => hc.SetOptionDescription("custom descrip
 ```
 $> dotnet NFlags.CustomHelpDesc.dll
 Usage:
-        NFlags.Empty [OPTIONS]...
+        NFlags.CustomHelpFlags [OPTIONS]...
 
         Options:
         --help, -h       custom description
@@ -496,6 +490,49 @@ HelpPrinter is used to generate text output from NFlags configuration represente
 Cli.Configure(c => c.ConfigureHelp(hc => hc.SetPrinter(new CustomHelpPrinter())))
 ```
 `CustomHelpPrinter` must implement `IHelpPrinter` interface.
+
+## Version
+
+Printing application Version is supported "out of box". By default versions are disabled.
+
+#### Enabling Version option
+When enabled version option allows to print application version using special argument.
+```c#
+Cli.Configure(configurator => configurator.ConfigureVersion(vc => vc.Enable()));
+```
+
+#### Option flag and abbreviation
+By default version option use `version` (with `v` abbreviation) to define print version option. This can be customized in version configuration
+```c#
+Cli.Configure(c => c.ConfigureVersion(vc => vc.Enable().SetOptionFlag("xversion").SetOptionAbr("x")))
+```
+
+```
+$> dotnet NFlags.CustomVersionFlags.dll -x
+Usage:
+        NFlags.CustomVersionFlags [OPTIONS]...
+
+        Options:
+        --help, -h      Prints this help
+        --xversion, -x      Prints application version
+```
+
+#### Version flag help description text
+Default help text for version option is `Prints application version`. This can be customized in version configuration
+```c#
+Cli.Configure(c => c.ConfigureVersion(vc => vc.Enable().SetOptionDescription("custom version description")))
+```
+
+```
+$> dotnet NFlags.CustomVersionFlags.dll
+Usage:
+        NFlags.CustomVersionFlags [OPTIONS]...
+
+        Options:
+        --help, -h       Prints this help
+        --version, -v      custom version description
+```
+
 
 ## Generics
 Generics are an alternative method of registering commands arguments. Generic cannot be mixed with basic methods to configure command.

@@ -1,5 +1,4 @@
 using NFlags.TypeConverters;
-using NFlags.Utils;
 
 namespace NFlags
 {
@@ -20,7 +19,7 @@ namespace NFlags
         /// <param name="genericConfig">Generic configuration values provider</param>
         /// <param name="helpConfig">Help generation configuration</param>
         /// <param name="isExceptionHandlingEnabled">Is Exception handling enabled. Use exit code if enabled, otherwise throw exceptions. Default False</param>
-        /// <param name="versionEnabled">Is Version option enabled. Register default version option if enabled</param>
+        /// <param name="versionConfig">Version option configuration</param>
         /// <param name="argumentConverters">List of param converters</param>
         public CliConfig(
             string name,
@@ -32,7 +31,7 @@ namespace NFlags
             IGenericConfig genericConfig,
             HelpConfig helpConfig,
             bool isExceptionHandlingEnabled,
-            bool versionEnabled,
+            VersionConfig versionConfig,
             IArgumentConverter[] argumentConverters)
         {
             Name = name;
@@ -45,7 +44,7 @@ namespace NFlags
             GenericConfig = genericConfig;
             HelpConfig = helpConfig;
             ArgumentConverters = argumentConverters;
-            VersionEnabled = versionEnabled;
+            VersionConfig = versionConfig;
         }
 
         /// <summary>
@@ -99,8 +98,8 @@ namespace NFlags
         public HelpConfig HelpConfig { get; }
 
         /// <summary>
-        /// Is Version option enabled. Register default version option if enabled
+        /// Version option configuration
         /// </summary>
-        public bool VersionEnabled { get; }
+        public VersionConfig VersionConfig { get; }
     }
 }

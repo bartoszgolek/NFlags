@@ -11,10 +11,6 @@ namespace NFlags.Commands
 {
     internal class CommandExecutionContextProvider
     {
-        private const string VersionFlag = "version";
-        private const string VersionFlagAbr = "v";
-        private const string VersionDescription = "Prints application version";
-
         private readonly CommandConfig _commandConfig;
         private readonly Shifter<Parameter> _parameters;
         private readonly ParameterSeries _parameterSeries;
@@ -50,14 +46,14 @@ namespace NFlags.Commands
                 }
             );
 
-            if (_commandConfig.CliConfig.VersionEnabled)
+            if (_commandConfig.CliConfig.VersionConfig.Enabled)
             {
                 _commandConfig.Options.Add(
                     new Flag
                     {
-                        Name = VersionFlag,
-                        Abr = VersionFlagAbr,
-                        Description = VersionDescription,
+                        Name = _commandConfig.CliConfig.VersionConfig.Flag,
+                        Abr = _commandConfig.CliConfig.VersionConfig.Abr,
+                        Description = _commandConfig.CliConfig.VersionConfig.Description,
                         DefaultValue = false
                     }
                 );
@@ -96,7 +92,7 @@ namespace NFlags.Commands
 
             ReadArgsAndOptions();
 
-            if (_commandConfig.CliConfig.VersionEnabled && _commandArgs.GetFlag(VersionFlag))
+            if (_commandConfig.CliConfig.VersionConfig.Enabled && _commandArgs.GetFlag(_commandConfig.CliConfig.VersionConfig.Flag))
                 return PreparePrintVersionCommandExecutionContext(_commandConfig);
 
             if (_commandConfig.PrintHelpOnExecute || _commandArgs.GetFlag(_commandConfig.CliConfig.HelpConfig.Flag))

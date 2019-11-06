@@ -21,8 +21,6 @@ namespace NFlags
 
         private bool _exceptionHandling = true;
 
-        private bool _versionEnabled;
-
         private IConfig _config;
 
         private IGenericConfig _genericConfig;
@@ -36,6 +34,7 @@ namespace NFlags
 
         private readonly List<IArgumentConverter> _argumentConverters = new List<IArgumentConverter>();
         private readonly HelpConfigurator _helpConfigurator = new HelpConfigurator();
+        private VersionConfigurator _versionConfigurator = new VersionConfigurator();
 
         /// <summary>
         /// Set name of application, for help printing.
@@ -126,7 +125,7 @@ namespace NFlags
         /// </summary>
         /// <param name="helpPrinter">Help printer</param>
         /// <returns>Self instance</returns>
-        [Obsolete]
+        [Obsolete("SetHelpPrinter method is obsolete. Use CliConfig.ConfigureHelp() instead.")]
         public CliConfigurator SetHelpPrinter(IHelpPrinter helpPrinter)
         {
             _helpConfigurator.SetPrinter(helpPrinter);
@@ -172,9 +171,22 @@ namespace NFlags
         /// Enables default version option;
         /// </summary>
         /// <returns>Self instance</returns>
+        [Obsolete("EnableVersionOption method is obsolete. Use CliConfig.ConfigureVersion() instead.")]
         public CliConfigurator EnableVersionOption()
         {
-            _versionEnabled = true;
+            _versionConfigurator.Enable();
+            return this;
+        }
+
+        /// <summary>
+        /// Configure version option
+        /// </summary>
+        /// <param name="configureVersion">Configure version option action</param>
+        /// <returns>Self instance</returns>
+        public CliConfigurator ConfigureVersion(Action<VersionConfigurator> configureVersion)
+        {
+            configureVersion(_versionConfigurator);
+
             return this;
         }
 
@@ -183,7 +195,7 @@ namespace NFlags
             var converters = new List<IArgumentConverter>(_argumentConverters);
             converters.AddRange(_baseArgumentConverters);
             return new Cli(
-                new CliConfig( _name, _description, _dialect, _output, _environment, _config, _genericConfig, _helpConfigurator.GetHelpConfig(), _exceptionHandling, _versionEnabled, converters.ToArray())
+                new CliConfig( _name, _description, _dialect, _output, _environment, _config, _genericConfig, _helpConfigurator.GetHelpConfig(), _exceptionHandling, _versionConfigurator.GetVersionConfig(), converters.ToArray())
             );
         }
     }

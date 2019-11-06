@@ -513,5 +513,89 @@ namespace NFlags.Tests
                 ""
             );
         }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintCustomVersionFlag()
+        {
+            var outputAggregator = new OutputAggregator();
+            Cli.Configure(configurator => configurator
+                    .SetDialect(_dialect)
+                    .SetOutput(outputAggregator)
+                    .SetName("groups")
+                    .SetDescription("some description")
+                    .ConfigureVersion(vc => vc.Enable().SetOptionFlag("xversion"))
+                )
+                .Root(configurator => configurator.PrintHelpOnExecute())
+                .Run(new string[0]);
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tgroups [OPTIONS]...",
+                "",
+                "some description",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "\t" + _longPrefix + "xversion, " + _shortPrefix + "v\tPrints application version",
+                ""
+            );
+        }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintCustomVersionFlagAbbreviation()
+        {
+            var outputAggregator = new OutputAggregator();
+            Cli.Configure(configurator => configurator
+                    .SetDialect(_dialect)
+                    .SetOutput(outputAggregator)
+                    .SetName("groups")
+                    .SetDescription("some description")
+                    .ConfigureVersion(vc => vc.Enable().SetOptionAbr("x"))
+                )
+                .Root(configurator => configurator.PrintHelpOnExecute())
+                .Run(new string[0]);
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tgroups [OPTIONS]...",
+                "",
+                "some description",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "\t" + _longPrefix + "version, " + _shortPrefix + "x\tPrints application version",
+                ""
+            );
+        }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintCustomVersionDescription()
+        {
+            var outputAggregator = new OutputAggregator();
+            Cli.Configure(configurator => configurator
+                    .SetDialect(_dialect)
+                    .SetOutput(outputAggregator)
+                    .SetName("groups")
+                    .SetDescription("some description")
+                    .ConfigureVersion(vc => vc.Enable().SetOptionDescription("custom version description"))
+                )
+                .Root(configurator => configurator.PrintHelpOnExecute())
+                .Run(new string[0]);
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tgroups [OPTIONS]...",
+                "",
+                "some description",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tPrints this help",
+                "\t" + _longPrefix + "version, " + _shortPrefix + "v\tcustom version description",
+                ""
+            );
+        }
     }
 }

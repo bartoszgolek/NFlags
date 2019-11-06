@@ -1,7 +1,7 @@
 namespace NFlags
 {
     /// <summary>
-    /// Represents NFlags configuration ability.
+    /// Represents NFlags help configuration ability.
     /// </summary>
     public class HelpConfigurator
     {
