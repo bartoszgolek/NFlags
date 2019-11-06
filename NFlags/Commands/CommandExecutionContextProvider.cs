@@ -12,11 +12,7 @@ namespace NFlags.Commands
     internal class CommandExecutionContextProvider
     {
         private readonly CommandConfig _commandConfig;
-        private readonly Shifter<Parameter> _parameters;
-        private readonly ParameterSeries _parameterSeries;
-        private readonly Shifter<string> _args;
-        private readonly CommandArgs _commandArgs;
-        private readonly IDictionary<string, ArrayAggregator> _optionValues;
+        private readonly string[] _args;
 
         public CommandExecutionContextProvider(
             CommandConfig commandConfig,
@@ -24,40 +20,7 @@ namespace NFlags.Commands
         )
         {
             _commandConfig = commandConfig;
-
-            InitBaseOptions();
-
-            _parameters = new Shifter<Parameter>(commandConfig.Parameters.ToArray());
-            _parameterSeries = commandConfig.ParameterSeries;
-            _args = new Shifter<string>(args);
-            _commandArgs = InitDefaultCommandArgs();
-            _optionValues = new Dictionary<string, ArrayAggregator>();
-        }
-
-        private void InitBaseOptions()
-        {
-            _commandConfig.Options.Add(
-                new Flag
-                {
-                    Name = _commandConfig.CliConfig.HelpConfig.Flag,
-                    Abr = _commandConfig.CliConfig.HelpConfig.Abr,
-                    Description = _commandConfig.CliConfig.HelpConfig.Description,
-                    DefaultValue = false
-                }
-            );
-
-            if (_commandConfig.CliConfig.VersionConfig.Enabled)
-            {
-                _commandConfig.Options.Add(
-                    new Flag
-                    {
-                        Name = _commandConfig.CliConfig.VersionConfig.Flag,
-                        Abr = _commandConfig.CliConfig.VersionConfig.Abr,
-                        Description = _commandConfig.CliConfig.VersionConfig.Description,
-                        DefaultValue = false
-                    }
-                );
-            }
+            _args = args;
         }
 
         public CommandExecutionContext GetFromArgs()
@@ -84,57 +47,105 @@ namespace NFlags.Commands
 
         private CommandExecutionContext PrepareCommandExecutionContext()
         {
-            if (CurrentArgIsCommand())
-                return GetSubCommand();
 
-            if (HasDefaultCommand())
-                return GetDefaultCommand();
+            var commandConfig = _commandConfig;
+            var args = new Shifter<string>(_args);
 
-            ReadArgsAndOptions();
-
-            if (_commandConfig.CliConfig.VersionConfig.Enabled && _commandArgs.GetFlag(_commandConfig.CliConfig.VersionConfig.Flag))
-                return PreparePrintVersionCommandExecutionContext(_commandConfig);
-
-            if (_commandConfig.PrintHelpOnExecute || _commandArgs.GetFlag(_commandConfig.CliConfig.HelpConfig.Flag))
-                return PrepareHelpCommandExecutionContext(_commandConfig);
-
-            return new CommandExecutionContext(_commandConfig.Execute, _commandArgs);
-        }
-
-        private CommandExecutionContext GetSubCommand()
-        {
-            var commandName = _args.Current();
-            _args.Next();
-
-            return new CommandExecutionContextProvider(
-                _commandConfig
-                    .Commands
-                    .FirstOrDefault(command => command.Name == commandName)
-                    ?.GetCommandConfig(_commandConfig),
-                _args.ToArray()
-            ).GetFromArgs();
-        }
-
-        private void ReadArgsAndOptions()
-        {
-            while (_args.HasData())
+            while (args.HasData() && ArgIsCommand(commandConfig, args.Current()) || HasDefaultCommand(commandConfig))
             {
-                var arg = _args.Shift();
+                if (args.HasData() && ArgIsCommand(commandConfig, args.Current()))
+                {
+                    commandConfig = GetSubCommandConfig(commandConfig, args.Current());
+                    args.Next();
+                }
 
-                if (!ReadOpt(arg))
-                    ReadParam(arg);
+                if (HasDefaultCommand(commandConfig))
+                    commandConfig = GetDefaultCommandConfig(commandConfig);
+            }
+            
+            InitBaseOptions(commandConfig);
+            var commandArgs = InitDefaultCommandArgs(commandConfig);
+
+            ReadArgsAndOptions(commandConfig, commandArgs, args);
+
+            if (commandConfig.CliConfig.VersionConfig.Enabled && commandArgs.GetFlag(commandConfig.CliConfig.VersionConfig.Flag))
+                return PreparePrintVersionCommandExecutionContext(commandConfig);
+
+            if (commandConfig.PrintHelpOnExecute || commandArgs.GetFlag(commandConfig.CliConfig.HelpConfig.Flag))
+                return PrepareHelpCommandExecutionContext(commandConfig);
+
+            return new CommandExecutionContext(commandConfig.Execute, commandArgs);
+        }
+
+        private static void InitBaseOptions(CommandConfig commandConfig)
+        {
+            commandConfig.Options.Add(
+                new Flag
+                {
+                    Name = commandConfig.CliConfig.HelpConfig.Flag,
+                    Abr = commandConfig.CliConfig.HelpConfig.Abr,
+                    Description = commandConfig.CliConfig.HelpConfig.Description,
+                    DefaultValue = false
+                }
+            );
+
+            if (commandConfig.CliConfig.VersionConfig.Enabled)
+            {
+                commandConfig.Options.Add(
+                    new Flag
+                    {
+                        Name = commandConfig.CliConfig.VersionConfig.Flag,
+                        Abr = commandConfig.CliConfig.VersionConfig.Abr,
+                        Description = commandConfig.CliConfig.VersionConfig.Description,
+                        DefaultValue = false
+                    }
+                );
+            }
+        }
+
+        private CommandConfig GetSubCommandConfig(CommandConfig commandConfig, string commandName)
+        {
+            return commandConfig
+                .Commands
+                .FirstOrDefault(command => command.Name == commandName)
+                ?.GetCommandConfig(commandConfig);
+        }
+
+        private void ReadArgsAndOptions(CommandConfig commandConfig, CommandArgs commandArgs, Shifter<string> args)
+        {
+            var parameters = new Shifter<Parameter>(commandConfig.Parameters.ToArray());
+            var optionValues = new Dictionary<string, ArrayAggregator>();
+            while (args.HasData())
+            {
+                var arg = args.Shift();
+
+                if (!ReadOpt(commandConfig, commandArgs, optionValues, args, arg) &&
+                    !ReadParam(commandConfig, commandArgs, parameters, arg) &&
+                    !ReadParamSeries(commandConfig, commandArgs, arg))
+                {
+                    throw new TooManyParametersException(arg);
+                }
             }
 
-            foreach (var optionValue in _optionValues)
+            foreach (var optionValue in optionValues)
             {
-                _commandArgs.AddOptionValueProvider(
+                commandArgs.AddOptionValueProvider(
                     optionValue.Key,
                     new ConstValueProvider(
                         optionValue.Value.GetArray(
-                            _commandConfig.Options.Single(o => o.Name == optionValue.Key).ValueType)
+                            commandConfig.Options.Single(o => o.Name == optionValue.Key).ValueType)
                     )
                 );
             }
+        }
+
+        private static bool ReadParamSeries(CommandConfig commandConfig, CommandArgs commandArgs, string arg)
+        {
+            if (commandConfig.ParameterSeries == null)
+                return false;
+            
+            commandArgs.AddParameterToSeries(ConvertValueToExpectedType(commandConfig, arg, commandConfig.ParameterSeries.ValueType));
+            return true;
         }
 
         private static PrintHelpCommandExecutionContext PrepareHelpCommandExecutionContext(CommandConfig commandConfig, string additionalPrefixMessage)
@@ -154,19 +165,19 @@ namespace NFlags.Commands
             return new PrintVersionCommandExecutionContext(commandConfig);
         }
 
-        private CommandArgs InitDefaultCommandArgs()
+        private CommandArgs InitDefaultCommandArgs(CommandConfig commandConfig)
         {
             var commandArgs = new CommandArgs();
-            foreach (var option in _commandConfig.Options)
+            foreach (var option in commandConfig.Options)
             {
-                var valueProviders = GetDefaultValueProvidersInPrecedence(option);
+                var valueProviders = GetDefaultValueProvidersInPrecedence(commandConfig, option);
                 foreach (var valueProvider in valueProviders)
                     commandArgs.AddOptionValueProvider(option.Name, valueProvider);
             }
 
-            foreach (var parameter in _parameters.ToArray())
+            foreach (var parameter in commandConfig.Parameters)
             {
-                var valueProviders = GetDefaultValueProvidersInPrecedence(parameter);
+                var valueProviders = GetDefaultValueProvidersInPrecedence(commandConfig, parameter);
                 foreach (var valueProvider in valueProviders)
                     commandArgs.AddParameterValueProvider(parameter.Name, valueProvider);
             }
@@ -174,7 +185,8 @@ namespace NFlags.Commands
             return commandArgs;
         }
 
-        private IEnumerable<IValueProvider> GetDefaultValueProvidersInPrecedence(DefaultValueArgument argument)
+        private IEnumerable<IValueProvider> GetDefaultValueProvidersInPrecedence(CommandConfig commandConfig,
+            DefaultValueArgument argument)
         {
             var valueProvidersCollection = new List<IValueProvider>
             {
@@ -183,18 +195,18 @@ namespace NFlags.Commands
 
             if (argument.ConfigPath != null)
             {
-                if (_commandConfig.CliConfig.GenericConfig != null)
+                if (commandConfig.CliConfig.GenericConfig != null)
                 {
                     var valueProvider = argument.IsConfigPathLazy
-                        ? (IValueProvider) new ValueProviderProxy(() => ReadConfigGenericValue(argument))
-                        : new ConstValueProvider(ReadConfigGenericValue(argument));
+                        ? (IValueProvider) new ValueProviderProxy(() => ReadConfigGenericValue(commandConfig, argument))
+                        : new ConstValueProvider(ReadConfigGenericValue(commandConfig, argument));
 
                     valueProvidersCollection.Add(
                         valueProvider
                     );
                 }
 
-                if (_commandConfig.CliConfig.Config != null)
+                if (commandConfig.CliConfig.Config != null)
                 {
                     var valueProvider = argument.IsConfigPathLazy
                         ? (IValueProvider) new ValueProviderProxy(() => ReadConfigValue(argument))
@@ -223,18 +235,18 @@ namespace NFlags.Commands
             return ReadValue(argument, _commandConfig.CliConfig.Config?.Get(argument.ConfigPath));
         }
 
-        private object ReadConfigGenericValue(DefaultValueArgument argument)
+        private object ReadConfigGenericValue(CommandConfig commandConfig, DefaultValueArgument argument)
         {
-            if (_commandConfig.CliConfig.GenericConfig == null)
+            if (commandConfig.CliConfig.GenericConfig == null)
                 return null;
 
-            if (!_commandConfig.CliConfig.GenericConfig.Has(argument.ConfigPath))
+            if (!commandConfig.CliConfig.GenericConfig.Has(argument.ConfigPath))
                 return null;
 
-            return _commandConfig.CliConfig.GenericConfig.GetType()
+            return commandConfig.CliConfig.GenericConfig.GetType()
                 .GetMethod("Get", BindingFlags.Public | BindingFlags.Instance)
                 ?.MakeGenericMethod(argument.ValueType)
-                .Invoke(_commandConfig.CliConfig.GenericConfig, new object[] { argument.ConfigPath });
+                .Invoke(commandConfig.CliConfig.GenericConfig, new object[] { argument.ConfigPath });
         }
 
         private object ReadValue(Argument argument, string value)
@@ -245,7 +257,7 @@ namespace NFlags.Commands
             if (argument.ValueType.IsArray)
             {
                 var values = value.Split(';')
-                    .Select(v => ConvertValueToExpectedType(v, argument.ValueType.GetElementType()))
+                    .Select(v => ConvertValueToExpectedType(_commandConfig, v, argument.ValueType.GetElementType()))
                     .ToArray();
 
                 return ArrayUtils.GetArray(
@@ -253,7 +265,7 @@ namespace NFlags.Commands
                     argument.ValueType);
             }
 
-            return ConvertValueToExpectedType(value, argument.ValueType);
+            return ConvertValueToExpectedType(_commandConfig, value, argument.ValueType);
         }
 
         private object ReadEnvironmentVariable(DefaultValueArgument argument)
@@ -261,23 +273,20 @@ namespace NFlags.Commands
             return ReadValue(argument, _commandConfig.CliConfig.Environment.Get(argument.EnvironmentVariable));
         }
 
-        private void ReadParam(string arg)
+        private bool ReadParam(CommandConfig commandConfig, CommandArgs commandArgs, Shifter<Parameter> parameters, string arg)
         {
-            if (_parameters.HasData())
-            {
-                var parameter = _parameters.Shift();
-                _commandArgs.AddParameterValueProvider(parameter.Name, new ConstValueProvider(ConvertValueToExpectedType(arg, parameter.ValueType)));
-            }
-            else if (_parameterSeries != null)
-                _commandArgs.AddParameterToSeries(ConvertValueToExpectedType(arg, _parameterSeries.ValueType));
-            else
-                throw new TooManyParametersException(arg);
+            if (!parameters.HasData())
+                return false;
+            
+            var parameter = parameters.Shift();
+            commandArgs.AddParameterValueProvider(parameter.Name, new ConstValueProvider(ConvertValueToExpectedType(commandConfig, arg, parameter.ValueType)));
+            return true;
         }
 
-        private bool ReadOpt(string arg)
+        private bool ReadOpt(CommandConfig commandConfig, CommandArgs commandArgs, Dictionary<string, ArrayAggregator> optionValues, Shifter<string> args, string arg)
         {
-            var opt = _commandConfig.Options.FirstOrDefault(
-                option => ArgMatcher.GetMatcher(_commandConfig.CliConfig.Dialect).IsOptionMatching(option, arg)
+            var opt = commandConfig.Options.FirstOrDefault(
+                option => ArgMatcher.GetMatcher(commandConfig.CliConfig.Dialect).IsOptionMatching(option, arg)
             );
 
             if (opt == null)
@@ -286,37 +295,37 @@ namespace NFlags.Commands
             if (!opt.RequireValue)
             {
                 if (opt.ValueType == typeof(bool))
-                    _commandArgs.AddOptionValueProvider(opt.Name, new ConstValueProvider(!(bool) opt.DefaultValue));
+                    commandArgs.AddOptionValueProvider(opt.Name, new ConstValueProvider(!(bool) opt.DefaultValue));
 
                 return true;
             }
 
             var optionValue = OptionReader
                 .GetReader(_commandConfig.CliConfig.Dialect.OptionValueMode)
-                .ReadValue(_args, arg);
+                .ReadValue(args, arg);
 
             if (opt.ValueType.IsArray)
             {
-                if (_optionValues.ContainsKey(opt.Name))
+                if (optionValues.ContainsKey(opt.Name))
                 {
-                    _optionValues[opt.Name].Add(ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType()));
+                    optionValues[opt.Name].Add(ConvertValueToExpectedType(commandConfig, optionValue, opt.ValueType.GetElementType()));
                 }
                 else if (opt.ValueType.IsArray)
                 {
-                    _optionValues.Add(opt.Name,
-                        new ArrayAggregator(ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType())));
+                    optionValues.Add(opt.Name,
+                        new ArrayAggregator(ConvertValueToExpectedType(commandConfig, optionValue, opt.ValueType.GetElementType())));
                 }
             }
             else
             {
-                _commandArgs.AddOptionValueProvider(opt.Name,
-                        new ConstValueProvider(ConvertValueToExpectedType(optionValue, opt.ValueType)));
+                commandArgs.AddOptionValueProvider(opt.Name,
+                        new ConstValueProvider(ConvertValueToExpectedType(commandConfig, optionValue, opt.ValueType)));
             }
 
             return true;
         }
 
-        private object ConvertValueToExpectedType(string value, Type expectedType)
+        private static object ConvertValueToExpectedType(CommandConfig commandConfig, string value, Type expectedType)
         {
             if (value == null)
                 return null;
@@ -324,29 +333,26 @@ namespace NFlags.Commands
             if (expectedType == typeof(string))
                 return value;
 
-            foreach (var converter in _commandConfig.CliConfig.ArgumentConverters)
+            foreach (var converter in commandConfig.CliConfig.ArgumentConverters)
                 if (converter.CanConvert(expectedType))
                     return converter.Convert(expectedType, value);
 
             throw new MissingConverterException(expectedType);
         }
 
-        private bool CurrentArgIsCommand()
+        private static bool ArgIsCommand(CommandConfig commandConfig, string arg)
         {
-            return _args.HasData() && _commandConfig.Commands.Any(command => command.Name == _args.Current());
+            return commandConfig.Commands.Any(command => command.Name == arg);
         }
 
-        private CommandExecutionContext GetDefaultCommand()
+        private CommandConfig GetDefaultCommandConfig(CommandConfig commandConfig)
         {
-            return new CommandExecutionContextProvider(
-                _commandConfig.DefaultCommand?.GetCommandConfig(_commandConfig),
-                _args.ToArray()
-            ).GetFromArgs();
+            return commandConfig.DefaultCommand?.GetCommandConfig(commandConfig);
         }
 
-        private bool HasDefaultCommand()
+        private bool HasDefaultCommand(CommandConfig commandConfig)
         {
-            return _commandConfig.DefaultCommand != null;
+            return commandConfig.DefaultCommand != null;
         }
     }
 }
