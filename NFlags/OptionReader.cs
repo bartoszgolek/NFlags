@@ -18,6 +18,6 @@ namespace NFlags
             return Readers[optionValueMode];
         }
 
-        public abstract string ReadValue(Shifter<string> args, string arg);
+        public abstract string ReadValue(ArrayReader<string> args, string arg);
     }
 }

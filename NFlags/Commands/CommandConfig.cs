@@ -12,7 +12,6 @@ namespace NFlags.Commands
         /// <summary>
         /// Creates new instance of command configuration.
         /// </summary>
-        /// <param name="cliConfig">NFlags Cli config</param>
         /// <param name="name">Command name</param>
         /// <param name="printHelpOnExecute">If True command will print help instead of running execute method</param>
         /// <param name="parents">Command parents list</param>
@@ -23,7 +22,6 @@ namespace NFlags.Commands
         /// <param name="parameterSeries">Registered parameter series</param>
         /// <param name="execute">Function to execute when command is called</param>
         public CommandConfig(
-            CliConfig cliConfig,
             string name,
             bool printHelpOnExecute,
             List<string> parents,
@@ -34,7 +32,6 @@ namespace NFlags.Commands
             ParameterSeries parameterSeries,
             Func<CommandArgs, IOutput, int> execute)
         {
-            CliConfig = cliConfig;
             Name = name;
             Parents = parents;
             Options = options;
@@ -50,17 +47,6 @@ namespace NFlags.Commands
         /// List of registered commands
         /// </summary>
         public List<CommandConfigurator> Commands { get; }
-
-        /// <summary>
-        /// NFlags Cli config
-        /// </summary>
-        public CliConfig CliConfig { get; }
-
-        /// <summary>
-        /// NFlags config
-        /// </summary>
-        [Obsolete("NFlags property is obsolete. Use CliConfig instead.")]
-        public CliConfig NFlagsConfig { get; }
 
         /// <summary>
         /// Command name

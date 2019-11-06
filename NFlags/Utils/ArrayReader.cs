@@ -2,33 +2,29 @@ using System;
 
 namespace NFlags.Utils
 {
-    internal class Shifter<T>    
+    internal class ArrayReader<T>    
     {
         private readonly T[] _array;
 
         private int _current;
 
-        public Shifter(T[] array) {
+        public ArrayReader(T[] array) {
             _array = array;
-        }
-
-        public T Shift() {
-            return _array[_current++];
-        }
-
-        public T Current() {
-            return _array[_current];            
-        }
-
-        public void Next() {
-            _current++;
         }
 
         public bool HasData() {
             return _current < _array.Length;
         }
 
-        public T[] ToArray()
+        public T Current() {
+            return _array[_current];            
+        }
+
+        public T Read() {
+            return _array[_current++];
+        }
+
+        public T[] ReadToEnd()
         {
             var copyLength = _array.Length - _current;
             var destination = new T[copyLength];

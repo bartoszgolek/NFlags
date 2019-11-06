@@ -28,6 +28,7 @@ namespace NFlags
         public int Run(string[] args)
         {
             var c = new CommandExecutionContextProvider(
+                _cliConfig,
                 _rootCommandConfig,
                 args
             ).GetFromArgs();

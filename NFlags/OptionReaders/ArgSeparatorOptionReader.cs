@@ -4,9 +4,9 @@ namespace NFlags.OptionReaders
 {
     internal class ArgSeparatorOptionReader : OptionReader
     {
-        public override string ReadValue(Shifter<string> args, string arg)
+        public override string ReadValue(ArrayReader<string> args, string arg)
         {
-            return args.Shift();
+            return args.Read();
         }
     }
 }

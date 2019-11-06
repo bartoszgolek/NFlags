@@ -6,7 +6,7 @@ namespace NFlags.OptionReaders
     {
         private const char EqualitySign = '=';
 
-        public override string ReadValue(Shifter<string> args, string arg)
+        public override string ReadValue(ArrayReader<string> args, string arg)
         {
             return arg.Split(new[] {EqualitySign}, 2)[1];
         }

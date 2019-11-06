@@ -13,17 +13,19 @@ namespace NFlags.Utils
     public class DefaultHelpPrinter : IHelpPrinter
     {
         /// <inheritdoc />
-        public string PrintHelp(CommandConfig commandConfig)
+        public string PrintHelp(CliConfig cliConfig, CommandConfig commandConfig)
         {
-            return new HelpPrinterInt(commandConfig).Print();
+            return new HelpPrinterInt(cliConfig, commandConfig).Print();
         }
 
         private class HelpPrinterInt
         {
+            private readonly CliConfig _cliConfig;
             private readonly CommandConfig _commandConfig;
 
-            public HelpPrinterInt(CommandConfig commandConfig)
+            public HelpPrinterInt(CliConfig cliConfig, CommandConfig commandConfig)
             {
+                _cliConfig = cliConfig;
                 _commandConfig = commandConfig;
             }
 
@@ -43,7 +45,7 @@ namespace NFlags.Utils
                 builder.AppendLine("Usage:");
                 var line = "\t";
 
-                line += _commandConfig.CliConfig.Name;
+                line += _cliConfig.Name;
                 line += string.Join(" ", _commandConfig.Parents.ToArray());
 
                 if (!string.IsNullOrEmpty(_commandConfig.Name))
@@ -58,10 +60,10 @@ namespace NFlags.Utils
                 builder.AppendLine(line);
                 builder.AppendLine("");
 
-                if (string.IsNullOrEmpty(_commandConfig.CliConfig.Description))
+                if (string.IsNullOrEmpty(_cliConfig.Description))
                     return;
 
-                builder.AppendLine(_commandConfig.CliConfig.Description);
+                builder.AppendLine(_cliConfig.Description);
                 builder.AppendLine("");
             }
 
@@ -88,7 +90,7 @@ namespace NFlags.Utils
 
                 var groups = new Dictionary<string, StringBuilder>();
 
-                var optionFormatter = OptionFormatter.GetFormatter(_commandConfig.CliConfig.Dialect);
+                var optionFormatter = OptionFormatter.GetFormatter(_cliConfig.Dialect);
 
                 builder.AppendLine("\tOptions:");
                 foreach (var option in _commandConfig.Options)

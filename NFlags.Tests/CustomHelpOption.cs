@@ -24,7 +24,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "--xhelp" });
 
-            printer.Received().PrintHelp(Arg.Any<CommandConfig>());
+            printer.Received().PrintHelp(Arg.Any<CliConfig>(), Arg.Any<CommandConfig>());
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "-x" });
 
-            printer.Received().PrintHelp(Arg.Any<CommandConfig>());
+            printer.Received().PrintHelp(Arg.Any<CliConfig>(), Arg.Any<CommandConfig>());
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "--help" });
 
-            printer.DidNotReceive().PrintHelp(Arg.Any<CommandConfig>());
+            printer.DidNotReceive().PrintHelp(Arg.Any<CliConfig>(), Arg.Any<CommandConfig>());
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace NFlags.Tests
                 )
                 .Run(new[] { "-h" });
 
-            printer.DidNotReceive().PrintHelp(Arg.Any<CommandConfig>());
+            printer.DidNotReceive().PrintHelp(Arg.Any<CliConfig>(), Arg.Any<CommandConfig>());
         }
     }
 }

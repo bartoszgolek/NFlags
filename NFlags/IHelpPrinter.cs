@@ -10,8 +10,9 @@ namespace NFlags
         /// <summary>
         /// Create help text based on CommandConfig 
         /// </summary>
+        /// <param name="cliConfig">Cli configuration</param>
         /// <param name="commandConfig">Command configuration</param>
         /// <returns>Help text</returns>
-        string PrintHelp(CommandConfig commandConfig);
+        string PrintHelp(CliConfig cliConfig, CommandConfig commandConfig);
     }
 }

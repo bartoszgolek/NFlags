@@ -428,7 +428,6 @@ namespace NFlags.Commands
         internal CommandConfig GetCommandConfig(CommandConfig parentConfig = null)
         {
             return new CommandConfig(
-                _cliConfig,
                 Name,
                 _printHelpOnExecute,
                 _parents,

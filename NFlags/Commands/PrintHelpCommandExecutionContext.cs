@@ -4,22 +4,22 @@
     {
         private const int ErrorExitCode = 255;
 
-        public PrintHelpCommandExecutionContext(string additionalPrefixMessage, CommandConfig commandConfig)
+        public PrintHelpCommandExecutionContext(string additionalPrefixMessage, CliConfig cliConfig, CommandConfig commandConfig)
             : base((commandArgs, output) =>
             {
                 output.WriteLine(additionalPrefixMessage);
                 output.WriteLine();
-                output.Write(commandConfig.CliConfig.HelpConfig.Printer.PrintHelp(commandConfig));
+                output.Write(cliConfig.HelpConfig.Printer.PrintHelp(cliConfig, commandConfig));
 
                 return ErrorExitCode;
             }, null)
         {
         }
 
-        public PrintHelpCommandExecutionContext(CommandConfig commandConfig)
+        public PrintHelpCommandExecutionContext(CliConfig cliConfig, CommandConfig commandConfig)
             : base((commandArgs, output) =>
             {
-                output.Write(commandConfig.CliConfig.HelpConfig.Printer.PrintHelp(commandConfig));
+                output.Write(cliConfig.HelpConfig.Printer.PrintHelp(cliConfig, commandConfig));
 
                 return 0;
             }, null)

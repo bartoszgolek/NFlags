@@ -19,7 +19,7 @@ namespace NFlags.Tests
                 )
                 .Run(new string[0]);
 
-            printer.Received().PrintHelp(Arg.Any<CommandConfig>());
+            printer.Received().PrintHelp(Arg.Any<CliConfig>(), Arg.Any<CommandConfig>());
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace NFlags.Tests
             const string helpText = "some help text";
 
             var printer = Substitute.For<IHelpPrinter>();
-            printer.PrintHelp(Arg.Any<CommandConfig>()).Returns(helpText);
+            printer.PrintHelp(Arg.Any<CliConfig>(), Arg.Any<CommandConfig>()).Returns(helpText);
 
             var output = Substitute.For<IOutput>();
 
