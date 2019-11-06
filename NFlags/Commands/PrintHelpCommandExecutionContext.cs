@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace NFlags.Commands
+﻿namespace NFlags.Commands
 {
     internal class PrintHelpCommandExecutionContext : CommandExecutionContext
     {
@@ -11,7 +9,7 @@ namespace NFlags.Commands
             {
                 output.WriteLine(additionalPrefixMessage);
                 output.WriteLine();
-                output.Write(commandConfig.CliConfig.HelpPrinter.PrintHelp(commandConfig));
+                output.Write(commandConfig.CliConfig.HelpConfig.Printer.PrintHelp(commandConfig));
 
                 return ErrorExitCode;
             }, null)
@@ -21,7 +19,7 @@ namespace NFlags.Commands
         public PrintHelpCommandExecutionContext(CommandConfig commandConfig)
             : base((commandArgs, output) =>
             {
-                output.Write(commandConfig.CliConfig.HelpPrinter.PrintHelp(commandConfig));
+                output.Write(commandConfig.CliConfig.HelpConfig.Printer.PrintHelp(commandConfig));
 
                 return 0;
             }, null)

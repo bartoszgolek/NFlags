@@ -18,7 +18,7 @@ namespace NFlags
         /// <param name="environment">Environment variables provider</param>
         /// <param name="config">Configuration values provider</param>
         /// <param name="genericConfig">Generic configuration values provider</param>
-        /// <param name="helpPrinter">Help printer to generate help text</param>
+        /// <param name="helpConfig">Help generation configuration</param>
         /// <param name="isExceptionHandlingEnabled">Is Exception handling enabled. Use exit code if enabled, otherwise throw exceptions. Default False</param>
         /// <param name="versionEnabled">Is Version option enabled. Register default version option if enabled</param>
         /// <param name="argumentConverters">List of param converters</param>
@@ -30,7 +30,7 @@ namespace NFlags
             IEnvironment environment,
             IConfig config,
             IGenericConfig genericConfig,
-            IHelpPrinter helpPrinter,
+            HelpConfig helpConfig,
             bool isExceptionHandlingEnabled,
             bool versionEnabled,
             IArgumentConverter[] argumentConverters)
@@ -43,7 +43,7 @@ namespace NFlags
             Environment = environment;
             Config = config;
             GenericConfig = genericConfig;
-            HelpPrinter = helpPrinter;
+            HelpConfig = helpConfig;
             ArgumentConverters = argumentConverters;
             VersionEnabled = versionEnabled;
         }
@@ -94,9 +94,9 @@ namespace NFlags
         public IGenericConfig GenericConfig { get; }
 
         /// <summary>
-        /// Help printer to generate help text
+        /// Help generation configuration
         /// </summary>
-        public IHelpPrinter HelpPrinter { get; }
+        public HelpConfig HelpConfig { get; }
 
         /// <summary>
         /// Is Version option enabled. Register default version option if enabled

@@ -11,10 +11,6 @@ namespace NFlags.Commands
 {
     internal class CommandExecutionContextProvider
     {
-        private const string HelpFlag = "help";
-        private const string HelpFlagAbr = "h";
-        private const string HelpDescription = "Prints this help";
-
         private const string VersionFlag = "version";
         private const string VersionFlagAbr = "v";
         private const string VersionDescription = "Prints application version";
@@ -47,9 +43,9 @@ namespace NFlags.Commands
             _commandConfig.Options.Add(
                 new Flag
                 {
-                    Name = HelpFlag,
-                    Abr = HelpFlagAbr,
-                    Description = HelpDescription,
+                    Name = _commandConfig.CliConfig.HelpConfig.Flag,
+                    Abr = _commandConfig.CliConfig.HelpConfig.Abr,
+                    Description = _commandConfig.CliConfig.HelpConfig.Description,
                     DefaultValue = false
                 }
             );
@@ -103,7 +99,7 @@ namespace NFlags.Commands
             if (_commandConfig.CliConfig.VersionEnabled && _commandArgs.GetFlag(VersionFlag))
                 return PreparePrintVersionCommandExecutionContext(_commandConfig);
 
-            if (_commandConfig.PrintHelpOnExecute || _commandArgs.GetFlag(HelpFlag))
+            if (_commandConfig.PrintHelpOnExecute || _commandArgs.GetFlag(_commandConfig.CliConfig.HelpConfig.Flag))
                 return PrepareHelpCommandExecutionContext(_commandConfig);
 
             return new CommandExecutionContext(_commandConfig.Execute, _commandArgs);

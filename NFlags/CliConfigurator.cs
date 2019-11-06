@@ -22,7 +22,7 @@ namespace NFlags
         private bool _exceptionHandling = true;
 
         private bool _versionEnabled;
-        
+
         private IConfig _config;
 
         private IGenericConfig _genericConfig;
@@ -35,7 +35,7 @@ namespace NFlags
         };
 
         private readonly List<IArgumentConverter> _argumentConverters = new List<IArgumentConverter>();
-        private IHelpPrinter _helpPrinter = HelpPrinter.Default;
+        private readonly HelpConfigurator _helpConfigurator = new HelpConfigurator();
 
         /// <summary>
         /// Set name of application, for help printing.
@@ -126,9 +126,22 @@ namespace NFlags
         /// </summary>
         /// <param name="helpPrinter">Help printer</param>
         /// <returns>Self instance</returns>
+        [Obsolete]
         public CliConfigurator SetHelpPrinter(IHelpPrinter helpPrinter)
         {
-            _helpPrinter = helpPrinter;
+            _helpConfigurator.SetPrinter(helpPrinter);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Configure help generation
+        /// </summary>
+        /// <param name="configureHelp">Configure help action</param>
+        /// <returns>Self instance</returns>
+        public CliConfigurator ConfigureHelp(Action<HelpConfigurator> configureHelp)
+        {
+            configureHelp(_helpConfigurator);
 
             return this;
         }
@@ -170,7 +183,7 @@ namespace NFlags
             var converters = new List<IArgumentConverter>(_argumentConverters);
             converters.AddRange(_baseArgumentConverters);
             return new Cli(
-                new CliConfig( _name, _description, _dialect, _output, _environment, _config, _genericConfig, _helpPrinter, _exceptionHandling, _versionEnabled, converters.ToArray())
+                new CliConfig( _name, _description, _dialect, _output, _environment, _config, _genericConfig, _helpConfigurator.GetHelpConfig(), _exceptionHandling, _versionEnabled, converters.ToArray())
             );
         }
     }

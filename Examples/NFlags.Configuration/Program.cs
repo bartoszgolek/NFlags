@@ -11,8 +11,8 @@ namespace NFlags.Configuration
                     .SetBasePath (Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json")
                 ;
-            
-            
+
+
             var configuration = builder.Build();
 
             Cli.Configure(c => c

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace NFlags.Tests
 {
-    public class CustomHelpPrinterTest
+    public class CustomHelpPrinter
     {
         [Fact]
         public void PrintingHelp_ShouldUseProvidedCustomHelpPrinter()
@@ -12,7 +12,7 @@ namespace NFlags.Tests
             var printer = Substitute.For<IHelpPrinter>();
 
             Cli.Configure(c => c
-                    .SetHelpPrinter(printer)
+                    .ConfigureHelp(configurator => configurator.SetPrinter(printer))
                 )
                 .Root(c => c
                     .PrintHelpOnExecute()
@@ -31,9 +31,9 @@ namespace NFlags.Tests
             printer.PrintHelp(Arg.Any<CommandConfig>()).Returns(helpText);
 
             var output = Substitute.For<IOutput>();
-            
+
             Cli.Configure(c => c
-                    .SetHelpPrinter(printer)
+                    .ConfigureHelp(configurator => configurator.SetPrinter(printer))
                     .SetOutput(output)
                 )
                 .Root(c => c

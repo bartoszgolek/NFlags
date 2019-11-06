@@ -31,6 +31,7 @@ Cli.Configure(configure => configure
 Run(args);
 ```
 Run application and enjoy:
+
 ```
 $> dotnet NFlags.QuickStart.dll
 This is root command: ParamDefaultValue%
@@ -457,11 +458,44 @@ Usage:
         --option <option>, -o <option>  option description
         --help, -h      Prints this help
 ```
+### Configuring help
 
-HelpPrinter implementation can be replaced trough configurations to customize help printing.
+#### Option flag and abbreviation
+By default help option use `help` (with `h` abbreviation) to define print help option. This can be customized in help configuration
 ```c#
+Cli.Configure(c => c.ConfigureHelp(hc => hc.SetOptionFlag("xhelp").SetOptionAbr("x")))
+```
 
 ```
+$> dotnet NFlags.CustomHelpFlags.dll -x
+Usage:
+        NFlags.CustomHelpFlags [OPTIONS]...
+
+        Options:
+        --xhelp, -x      Prints this help
+```
+
+#### Help flag help description text
+Default help text for help option is `Prints this help`. This can be customized in help configuration
+```c#
+Cli.Configure(c => c.ConfigureHelp(hc => hc.SetOptionDescription("custom description")))
+```
+
+```
+$> dotnet NFlags.CustomHelpDesc.dll
+Usage:
+        NFlags.Empty [OPTIONS]...
+
+        Options:
+        --help, -h       custom description
+```
+
+#### HelpPrinter
+HelpPrinter is used to generate text output from NFlags configuration represented by `CommandConfig`. The default implementation can be replaced trough configuration to customize help printing.
+```c#
+Cli.Configure(c => c.ConfigureHelp(hc => hc.SetPrinter(new CustomHelpPrinter())))
+```
+`CustomHelpPrinter` must implement `IHelpPrinter` interface.
 
 ## Generics
 Generics are an alternative method of registering commands arguments. Generic cannot be mixed with basic methods to configure command.

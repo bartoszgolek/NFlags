@@ -432,5 +432,86 @@ namespace NFlags.Tests
                 ""
             );
         }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintCustomHelpFlag()
+        {
+            var outputAggregator = new OutputAggregator();
+            Cli.Configure(configurator => configurator
+                    .SetDialect(_dialect)
+                    .SetOutput(outputAggregator)
+                    .SetName("groups")
+                    .SetDescription("some description")
+                    .ConfigureHelp(hc => hc.SetOptionFlag("xhelp"))
+                )
+                .Root(configurator => configurator.PrintHelpOnExecute())
+                .Run(new string[0]);
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tgroups [OPTIONS]...",
+                "",
+                "some description",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "xhelp, " + _shortPrefix + "h\tPrints this help",
+                ""
+            );
+        }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintCustomHelpFlagAbbreviation()
+        {
+            var outputAggregator = new OutputAggregator();
+            Cli.Configure(configurator => configurator
+                    .SetDialect(_dialect)
+                    .SetOutput(outputAggregator)
+                    .SetName("groups")
+                    .SetDescription("some description")
+                    .ConfigureHelp(hc => hc.SetOptionAbr("x"))
+                )
+                .Root(configurator => configurator.PrintHelpOnExecute())
+                .Run(new string[0]);
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tgroups [OPTIONS]...",
+                "",
+                "some description",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "x\tPrints this help",
+                ""
+            );
+        }
+
+        [Fact]
+        public void PrintHelp_ShouldPrintCustomHelpDescription()
+        {
+            var outputAggregator = new OutputAggregator();
+            Cli.Configure(configurator => configurator
+                    .SetDialect(_dialect)
+                    .SetOutput(outputAggregator)
+                    .SetName("groups")
+                    .SetDescription("some description")
+                    .ConfigureHelp(hc => hc.SetOptionDescription("custom help description"))
+                )
+                .Root(configurator => configurator.PrintHelpOnExecute())
+                .Run(new string[0]);
+
+            NFAssert.HelpEquals(
+                outputAggregator,
+                "Usage:",
+                "\tgroups [OPTIONS]...",
+                "",
+                "some description",
+                "",
+                "\tOptions:",
+                "\t" + _longPrefix + "help, " + _shortPrefix + "h\tcustom help description",
+                ""
+            );
+        }
     }
 }
