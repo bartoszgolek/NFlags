@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using NFlags.Arguments;
 using NFlags.TypeConverters;
 using NFlags.Utils;
@@ -11,64 +9,72 @@ namespace NFlags.Commands
 {
     internal class CommandExecutionContextProvider
     {
-        private readonly CommandConfig _commandConfig;
+        private readonly CommandConfig _rootCommandConfig;
         private readonly string[] _args;
         private readonly CliConfig _cliConfig;
+        private readonly ValueConverter _valueConverter;
+        private readonly ArgumentValueReader _argumentValueReader;
+        private readonly ConfigReader _configReader;
 
         public CommandExecutionContextProvider(
             CliConfig cliConfig,
-            CommandConfig commandConfig,
+            CommandConfig rootCommandConfig,
             string[] args)
         {
             _cliConfig = cliConfig;
-            _commandConfig = commandConfig;
+
+            _rootCommandConfig = rootCommandConfig;
             _args = args;
+
+            _valueConverter = new ValueConverter(cliConfig.ArgumentConverters);
+            _argumentValueReader = new ArgumentValueReader(_valueConverter);
+            _configReader = new ConfigReader(_argumentValueReader, cliConfig.Config, cliConfig.GenericConfig);
         }
 
         public CommandExecutionContext GetFromArgs()
         {
             try
             {
-                return PrepareCommandExecutionContext();
+                var argumentsReader = new ArrayReader<string>(_args);
+
+                var commandConfig = ParseCommands(_rootCommandConfig, argumentsReader);
+                var commandArguments = ReadCommandArguments(commandConfig, argumentsReader);
+
+                return GetCommandExecutionContext(commandConfig, commandArguments);
             }
             catch (ArgumentValueException e)
             {
                 if (!_cliConfig.IsExceptionHandlingEnabled)
                     throw;
 
-                return PrepareHelpCommandExecutionContext(_commandConfig, e.Message);
+                return PrepareHelpCommandExecutionContext(_rootCommandConfig, e.Message);
             }
             catch (TooManyParametersException e)
             {
                 if (!_cliConfig.IsExceptionHandlingEnabled)
                     throw;
 
-                return PrepareHelpCommandExecutionContext(_commandConfig, e.Message);
+                return PrepareHelpCommandExecutionContext(_rootCommandConfig, e.Message);
             }
         }
 
-        private CommandExecutionContext PrepareCommandExecutionContext()
+        private CommandExecutionContext GetCommandExecutionContext(CommandConfig commandConfig, CommandArgs commandArgs)
         {
-            var commandArgsParseContext = ParseCommands(_commandConfig, _args);
-
-            var commandArgs = ReadArgsAndOptions(commandArgsParseContext);
-
             if (_cliConfig.VersionConfig.Enabled && commandArgs.GetFlag(_cliConfig.VersionConfig.Flag))
-                return PreparePrintVersionCommandExecutionContext(commandArgsParseContext.CommandConfig);
+                return PreparePrintVersionCommandExecutionContext(commandConfig);
 
-            if (commandArgsParseContext.CommandConfig.PrintHelpOnExecute || commandArgs.GetFlag(_cliConfig.HelpConfig.Flag))
-                return PrepareHelpCommandExecutionContext(commandArgsParseContext.CommandConfig);
+            if (commandConfig.PrintHelpOnExecute || commandArgs.GetFlag(_cliConfig.HelpConfig.Flag))
+                return PrepareHelpCommandExecutionContext(commandConfig);
 
-            return new CommandExecutionContext(commandArgsParseContext.CommandConfig.Execute, commandArgs);
+            return new CommandExecutionContext(commandConfig.Execute, commandArgs);
         }
 
-        private CommandArgsParseContext ParseCommands(CommandConfig commandConfig, string[] args)
+        private CommandConfig ParseCommands(CommandConfig commandConfig, ArrayReader<string> argumentsReader)
         {
-            var argReader = new ArrayReader<string>(args);
-            while (argReader.HasData() && ArgIsCommand(commandConfig, argReader.Current()) || HasDefaultCommand(commandConfig))
+            while (argumentsReader.HasData() && ArgIsCommand(commandConfig, argumentsReader.Current()) || HasDefaultCommand(commandConfig))
             {
-                if (argReader.HasData() && ArgIsCommand(commandConfig, argReader.Current()))
-                    commandConfig = GetSubCommandConfig(commandConfig, argReader.Read());
+                if (argumentsReader.HasData() && ArgIsCommand(commandConfig, argumentsReader.Current()))
+                    commandConfig = GetSubCommandConfig(commandConfig, argumentsReader.Read());
 
                 if (HasDefaultCommand(commandConfig))
                     commandConfig = GetDefaultCommandConfig(commandConfig);
@@ -76,7 +82,7 @@ namespace NFlags.Commands
 
             InitBaseOptions(ref commandConfig);
 
-            return new CommandArgsParseContext(commandConfig, argReader.ReadToEnd());
+            return commandConfig;
         }
 
         private void InitBaseOptions(ref CommandConfig commandConfig)
@@ -113,21 +119,19 @@ namespace NFlags.Commands
                 ?.GetCommandConfig(commandConfig);
         }
 
-        private CommandArgs ReadArgsAndOptions(CommandArgsParseContext commandArgsParseContext)
+        private CommandArgs ReadCommandArguments(CommandConfig commandConfig, ArrayReader<string> argumentsReader)
         {
-            var argsReader = new ArrayReader<string>(commandArgsParseContext.Args);
-
-            var options = commandArgsParseContext.CommandConfig.Options;
+            var options = commandConfig.Options;
             var optionValues = new Dictionary<string, ArrayAggregator>();
-            var parameterSeries = commandArgsParseContext.CommandConfig.ParameterSeries;
-            var parameters = new ArrayReader<Parameter>(commandArgsParseContext.CommandConfig.Parameters.ToArray());
+            var parameterSeries = commandConfig.ParameterSeries;
+            var parameters = new ArrayReader<Parameter>(commandConfig.Parameters.ToArray());
 
-            var commandArgs = InitDefaultCommandArgs(commandArgsParseContext.CommandConfig);
-            while (argsReader.HasData())
+            var commandArgs = InitDefaultCommandArgs(commandConfig);
+            while (argumentsReader.HasData())
             {
-                var arg = argsReader.Read();
+                var arg = argumentsReader.Read();
 
-                if (!ReadOpt(options, commandArgs, optionValues, argsReader, arg) &&
+                if (!ReadOpt(options, commandArgs, optionValues, argumentsReader, arg) &&
                     !ReadParam(commandArgs, parameters, arg) &&
                     !ReadParamSeries(parameterSeries, commandArgs, arg))
                 {
@@ -135,13 +139,13 @@ namespace NFlags.Commands
                 }
             }
 
-            foreach (var optionValue in optionValues)
+            foreach (var (optionName, optionValue) in optionValues)
             {
                 commandArgs.AddOptionValueProvider(
-                    optionValue.Key,
+                    optionName,
                     new ConstValueProvider(
-                        optionValue.Value.GetArray(
-                            options.Single(o => o.Name == optionValue.Key).ValueType)
+                        optionValue.GetArray(
+                            options.Single(o => o.Name == optionName).ValueType)
                     )
                 );
             }
@@ -154,7 +158,7 @@ namespace NFlags.Commands
             if (parameterSeries == null)
                 return false;
 
-            commandArgs.AddParameterToSeries(ConvertValueToExpectedType(_cliConfig.ArgumentConverters, arg, parameterSeries.ValueType));
+            commandArgs.AddParameterToSeries(_valueConverter.ConvertValueToExpectedType(arg, parameterSeries.ValueType));
             return true;
         }
 
@@ -195,89 +199,49 @@ namespace NFlags.Commands
 
         private IEnumerable<IValueProvider> GetDefaultValueProvidersInPrecedence(DefaultValueArgument argument)
         {
-            var valueProvidersCollection = new List<IValueProvider>
+            return new List<IValueProvider>
             {
-                new ConstValueProvider(argument.DefaultValue)
+                new ConstValueProvider(argument.DefaultValue),
+                GetReadConfigValueProvider(argument),
+                GetEnvironmentValueProvider(argument)
             };
-
-            if (argument.ConfigPath != null)
-            {
-                if (_cliConfig.GenericConfig != null)
-                {
-                    var valueProvider = argument.IsConfigPathLazy
-                        ? (IValueProvider) new ValueProviderProxy(() => ReadConfigGenericValue(argument))
-                        : new ConstValueProvider(ReadConfigGenericValue(argument));
-
-                    valueProvidersCollection.Add(
-                        valueProvider
-                    );
-                }
-
-                if (_cliConfig.Config != null)
-                {
-                    var valueProvider = argument.IsConfigPathLazy
-                        ? (IValueProvider) new ValueProviderProxy(() => ReadConfigValue(argument))
-                        : new ConstValueProvider(ReadConfigValue(argument));
-
-                    valueProvidersCollection.Add(
-                        valueProvider
-                    );
-                }
-            }
-
-            if (argument.EnvironmentVariable != null)
-            {
-                var valueProvider = argument.IsEnvironmentVariableLazy
-                    ? (IValueProvider) new ValueProviderProxy(() => ReadEnvironmentVariable(argument))
-                    : new ConstValueProvider(ReadEnvironmentVariable(argument));
-
-                valueProvidersCollection.Add(valueProvider);
-            }
-
-            return valueProvidersCollection;
         }
 
-        private object ReadConfigValue(DefaultValueArgument argument)
+        private IValueProvider GetEnvironmentValueProvider(DefaultValueArgument argument)
         {
-            return ReadValue(argument, _cliConfig.Config?.Get(argument.ConfigPath));
+            if (argument.EnvironmentVariable == null)
+                return new EmptyValueProvider();
+
+            return argument.IsEnvironmentVariableLazy
+                ? (IValueProvider) new ValueProviderProxy(() => ReadEnvironmentVariable(argument))
+                : new ConstValueProvider(ReadEnvironmentVariable(argument));
         }
 
-        private object ReadConfigGenericValue(DefaultValueArgument argument)
+        private IValueProvider GetReadConfigValueProvider(DefaultValueArgument argument)
         {
-            if (_cliConfig.GenericConfig == null)
-                return null;
+            if (argument.ConfigPath == null)
+                return new EmptyValueProvider();
 
-            if (!_cliConfig.GenericConfig.Has(argument.ConfigPath))
-                return null;
-
-            return _cliConfig.GenericConfig.GetType()
-                .GetMethod("Get", BindingFlags.Public | BindingFlags.Instance)
-                ?.MakeGenericMethod(argument.ValueType)
-                .Invoke(_cliConfig.GenericConfig, new object[] { argument.ConfigPath });
-        }
-
-        private object ReadValue(Argument argument, string value)
-        {
-            if (value == null)
-                return null;
-
-            if (argument.ValueType.IsArray)
+            if (_cliConfig.GenericConfig != null)
             {
-                var values = value.Split(';')
-                    .Select(v => ConvertValueToExpectedType(_cliConfig.ArgumentConverters, v, argument.ValueType.GetElementType()))
-                    .ToArray();
-
-                return ArrayUtils.GetArray(
-                    values,
-                    argument.ValueType);
+                return argument.IsConfigPathLazy
+                    ? (IValueProvider) new ValueProviderProxy(() => _configReader.ReadConfigGenericValue(argument))
+                    : new ConstValueProvider(_configReader.ReadConfigGenericValue(argument));
             }
 
-            return ConvertValueToExpectedType(_cliConfig.ArgumentConverters, value, argument.ValueType);
+            if (_cliConfig.Config != null)
+            {
+                return argument.IsConfigPathLazy
+                    ? (IValueProvider) new ValueProviderProxy(() => _configReader.ReadConfigValue(argument))
+                    : new ConstValueProvider(_configReader.ReadConfigValue(argument));
+            }
+
+            return new EmptyValueProvider();
         }
 
         private object ReadEnvironmentVariable(DefaultValueArgument argument)
         {
-            return ReadValue(argument, _cliConfig.Environment.Get(argument.EnvironmentVariable));
+            return _argumentValueReader.Read(argument, _cliConfig.Environment.Get(argument.EnvironmentVariable));
         }
 
         private bool ReadParam(CommandArgs commandArgs, ArrayReader<Parameter> parameters, string arg)
@@ -286,7 +250,7 @@ namespace NFlags.Commands
                 return false;
 
             var parameter = parameters.Read();
-            commandArgs.AddParameterValueProvider(parameter.Name, new ConstValueProvider(ConvertValueToExpectedType(_cliConfig.ArgumentConverters, arg, parameter.ValueType)));
+            commandArgs.AddParameterValueProvider(parameter.Name, new ConstValueProvider(_valueConverter.ConvertValueToExpectedType(arg, parameter.ValueType)));
             return true;
         }
 
@@ -315,36 +279,21 @@ namespace NFlags.Commands
             {
                 if (optionValues.ContainsKey(opt.Name))
                 {
-                    optionValues[opt.Name].Add(ConvertValueToExpectedType(_cliConfig.ArgumentConverters, optionValue, opt.ValueType.GetElementType()));
+                    optionValues[opt.Name].Add(_valueConverter.ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType()));
                 }
                 else if (opt.ValueType.IsArray)
                 {
                     optionValues.Add(opt.Name,
-                        new ArrayAggregator(ConvertValueToExpectedType(_cliConfig.ArgumentConverters, optionValue, opt.ValueType.GetElementType())));
+                        new ArrayAggregator(_valueConverter.ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType())));
                 }
             }
             else
             {
                 commandArgs.AddOptionValueProvider(opt.Name,
-                        new ConstValueProvider(ConvertValueToExpectedType(_cliConfig.ArgumentConverters, optionValue, opt.ValueType)));
+                        new ConstValueProvider(_valueConverter.ConvertValueToExpectedType(optionValue, opt.ValueType)));
             }
 
             return true;
-        }
-
-        private static object ConvertValueToExpectedType(IEnumerable<IArgumentConverter> argumentConverters, string value, Type expectedType)
-        {
-            if (value == null)
-                return null;
-
-            if (expectedType == typeof(string))
-                return value;
-
-            foreach (var converter in argumentConverters)
-                if (converter.CanConvert(expectedType))
-                    return converter.Convert(expectedType, value);
-
-            throw new MissingConverterException(expectedType);
         }
 
         private static bool ArgIsCommand(CommandConfig commandConfig, string arg)

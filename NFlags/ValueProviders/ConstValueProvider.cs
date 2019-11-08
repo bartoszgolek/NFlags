@@ -9,6 +9,11 @@ namespace NFlags.ValueProviders
             _value = value;
         }
 
+        public bool HasValue()
+        {
+            return true;
+        }
+
         public object ReadValue()
         {
             return _value;

@@ -11,6 +11,11 @@ namespace NFlags.ValueProviders
             _proxy = proxy;
         }
 
+        public bool HasValue()
+        {
+            return true;
+        }
+
         public object ReadValue()
         {
             return _proxy();
