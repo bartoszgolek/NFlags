@@ -1,3 +1,21 @@
+# next version
+ * Configurable 'help' and 'version' options
+ * 
+ * [breaking] Properties CliConfig and NFlagsConfig removed from CommandConfig class.
+ * [breaking] Changed IHelpPrinter interface
+
+# 1.7.2
+ * Added version option to print current application version
+
+# 1.7.1
+ * Nflags class obsoleted in favorite of Cli class. (#20)
+
+# 1.7.0
+ * Array support for options
+ * Ability to provide custom print helper
+ * Generic configuration provider
+ * Help text improvements
+
 # 1.6.0
  * Introduced support for binding to configuration
  * Introduced lazy binding for environment variables
