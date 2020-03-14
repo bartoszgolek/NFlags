@@ -1,3 +1,6 @@
+using System.Reflection.Emit;
+using NFlags.TypeConverters;
+
 namespace NFlags.Arguments
 {
     /// <summary>
@@ -13,6 +16,7 @@ namespace NFlags.Arguments
         private string _configPath;
         private bool _isEnvironmentVariableLazy;
         private bool _isConfigPathLazy;
+        private IArgumentConverter _converter;
 
         /// <summary>
         /// Set name of the argument.
@@ -103,6 +107,18 @@ namespace NFlags.Arguments
         }
 
         /// <summary>
+        /// Set converter
+        /// </summary>
+        /// <param name="converter">Converter instance</param>
+        /// <returns>Self instance</returns>
+        public ParameterBuilder<T> Converter(IArgumentConverter converter)
+        {
+            _converter = converter;
+
+            return this;
+        }
+
+        /// <summary>
         /// Build parameter
         /// </summary>
         /// <returns>Parameter</returns>
@@ -117,7 +133,8 @@ namespace NFlags.Arguments
                 EnvironmentVariable = _environmentVariable,
                 IsEnvironmentVariableLazy = _isEnvironmentVariableLazy,
                 ConfigPath = _configPath,
-                IsConfigPathLazy = _isConfigPathLazy
+                IsConfigPathLazy = _isConfigPathLazy,
+                Converter = _converter
             };
         }
     }

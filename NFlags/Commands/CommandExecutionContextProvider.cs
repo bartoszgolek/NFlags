@@ -158,7 +158,7 @@ namespace NFlags.Commands
             if (parameterSeries == null)
                 return false;
 
-            commandArgs.AddParameterToSeries(_valueConverter.ConvertValueToExpectedType(arg, parameterSeries.ValueType));
+            commandArgs.AddParameterToSeries(_valueConverter.ConvertValueToExpectedType(arg, parameterSeries.ValueType, parameterSeries.Converter));
             return true;
         }
 
@@ -250,7 +250,7 @@ namespace NFlags.Commands
                 return false;
 
             var parameter = parameters.Read();
-            commandArgs.AddParameterValueProvider(parameter.Name, new ConstValueProvider(_valueConverter.ConvertValueToExpectedType(arg, parameter.ValueType)));
+            commandArgs.AddParameterValueProvider(parameter.Name, new ConstValueProvider(_valueConverter.ConvertValueToExpectedType(arg, parameter.ValueType, parameter.Converter)));
             return true;
         }
 
@@ -279,18 +279,18 @@ namespace NFlags.Commands
             {
                 if (optionValues.ContainsKey(opt.Name))
                 {
-                    optionValues[opt.Name].Add(_valueConverter.ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType()));
+                    optionValues[opt.Name].Add(_valueConverter.ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType(), opt.Converter));
                 }
                 else if (opt.ValueType.IsArray)
                 {
                     optionValues.Add(opt.Name,
-                        new ArrayAggregator(_valueConverter.ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType())));
+                        new ArrayAggregator(_valueConverter.ConvertValueToExpectedType(optionValue, opt.ValueType.GetElementType(), opt.Converter)));
                 }
             }
             else
             {
                 commandArgs.AddOptionValueProvider(opt.Name,
-                        new ConstValueProvider(_valueConverter.ConvertValueToExpectedType(optionValue, opt.ValueType)));
+                        new ConstValueProvider(_valueConverter.ConvertValueToExpectedType(optionValue, opt.ValueType, opt.Converter)));
             }
 
             return true;

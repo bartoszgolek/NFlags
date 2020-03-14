@@ -19,10 +19,10 @@ namespace NFlags.Commands
                 return null;
 
             if (!argument.ValueType.IsArray)
-                return _valueConverter.ConvertValueToExpectedType(value, argument.ValueType);
+                return _valueConverter.ConvertValueToExpectedType(value, argument.ValueType, argument.Converter);
 
             var values = value.Split(';')
-                .Select(v => _valueConverter.ConvertValueToExpectedType(v, argument.ValueType.GetElementType()))
+                .Select(v => _valueConverter.ConvertValueToExpectedType(v, argument.ValueType.GetElementType(), argument.Converter))
                 .ToArray();
 
             return ArrayUtils.GetArray(

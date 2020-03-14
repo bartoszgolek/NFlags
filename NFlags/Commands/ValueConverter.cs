@@ -13,7 +13,7 @@ namespace NFlags.Commands
             _argumentConverters = argumentConverters;
         }
 
-        public object ConvertValueToExpectedType(string value, Type expectedType)
+        public object ConvertValueToExpectedType(string value, Type expectedType, IArgumentConverter converter)
         {
             if (value == null)
                 return null;
@@ -21,9 +21,12 @@ namespace NFlags.Commands
             if (expectedType == typeof(string))
                 return value;
 
-            foreach (var converter in _argumentConverters)
-                if (converter.CanConvert(expectedType))
-                    return converter.Convert(expectedType, value);
+            if (converter != null && converter.CanConvert(expectedType))
+                return converter.Convert(expectedType, value);
+
+            foreach (var c in _argumentConverters)
+                if (c.CanConvert(expectedType))
+                    return c.Convert(expectedType, value);
 
             throw new MissingConverterException(expectedType);
         }

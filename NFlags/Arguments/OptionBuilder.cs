@@ -1,3 +1,5 @@
+using NFlags.TypeConverters;
+
 namespace NFlags.Arguments
 {
     /// <summary>
@@ -16,6 +18,7 @@ namespace NFlags.Arguments
         private bool _isEnvironmentVariableLazy;
         private bool _isConfigPathLazy;
         private string _group;
+        private IArgumentConverter _converter;
 
         /// <summary>
         /// Set name of the argument.
@@ -143,6 +146,18 @@ namespace NFlags.Arguments
         }
 
         /// <summary>
+        /// Set converter
+        /// </summary>
+        /// <param name="converter">Converter instance</param>
+        /// <returns>Self instance</returns>
+        public OptionBuilder<T> Converter(IArgumentConverter converter)
+        {
+            _converter = converter;
+
+            return this;
+        }
+
+        /// <summary>
         /// Build option
         /// </summary>
         /// <returns>Option</returns>
@@ -160,7 +175,8 @@ namespace NFlags.Arguments
                 IsConfigPathLazy = _isConfigPathLazy,
                 Abr = _abr,
                 IsPersistent = _isPersistent,
-                Group = _group
+                Group = _group,
+                Converter = _converter
             };
         }
     }

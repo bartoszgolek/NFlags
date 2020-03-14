@@ -1,3 +1,5 @@
+using NFlags.TypeConverters;
+
 namespace NFlags.Arguments
 {
     /// <summary>
@@ -8,6 +10,7 @@ namespace NFlags.Arguments
     {
         private string _name;
         private string _description;
+        private IArgumentConverter _converter;
 
         /// <summary>
         /// Set name of the argument.
@@ -34,6 +37,18 @@ namespace NFlags.Arguments
         }
 
         /// <summary>
+        /// Set converter
+        /// </summary>
+        /// <param name="converter">Converter instance</param>
+        /// <returns>Self instance</returns>
+        public ParameterSeriesBuilder<T> Converter(IArgumentConverter converter)
+        {
+            _converter = converter;
+
+            return this;
+        }
+
+        /// <summary>
         /// Build parameter series
         /// </summary>
         /// <returns>Parameter series</returns>
@@ -43,7 +58,8 @@ namespace NFlags.Arguments
             {
                 Name = _name,
                 Description = _description,
-                ValueType = typeof(T)
+                ValueType = typeof(T),
+                Converter = _converter
             };
         }
     }

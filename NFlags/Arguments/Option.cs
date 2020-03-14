@@ -1,3 +1,5 @@
+using NFlags.TypeConverters;
+
 namespace NFlags.Arguments
 {
     /// <inheritdoc />

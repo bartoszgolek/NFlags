@@ -330,7 +330,7 @@ namespace NFlags.Commands
 
         internal CommandConfigurator RegisterOptionInstance<T>(Option option)
         {
-            CheckConverterIsRegistered(typeof(T));
+            ValidateType<T>(option);
             _options.Add(option);
 
             return this;
@@ -375,7 +375,7 @@ namespace NFlags.Commands
 
         internal CommandConfigurator RegisterParameterInstance<T>(Parameter parameter)
         {
-            CheckConverterIsRegistered(typeof(T));
+            ValidateType<T>(parameter);
             _parameters.Add(parameter);
 
             return this;
@@ -420,9 +420,16 @@ namespace NFlags.Commands
 
         internal CommandConfigurator RegisterParameterSeriesInstance<T>(ParameterSeries parameterSeries)
         {
-            CheckConverterIsRegistered(typeof(T));
+            ValidateType<T>(parameterSeries);
             _paramSeries = parameterSeries;
+
             return this;
+        }
+
+        private void ValidateType<T>(Argument argument)
+        {
+            if (argument.Converter == null || !argument.Converter.CanConvert(typeof(T)))
+                CheckConverterIsRegistered(typeof(T));
         }
 
         internal CommandConfig GetCommandConfig(CommandConfig parentConfig = null)

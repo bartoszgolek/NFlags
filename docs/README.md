@@ -1,6 +1,6 @@
 # NFlags
 
-Simple yet powerfull library to made parsing CLI arguments easy. 
+Simple yet powerfull library to made parsing CLI arguments easy.
 Library also allow to print usage help and application version "out of box".
 
 For example of usage check **Examples** directory.
@@ -75,7 +75,7 @@ This is NFlags
         --help, -h      Prints this help
         --version, -v      Prints application version
 
-$> 
+$>
 
 ```
 ## Basics
@@ -117,7 +117,7 @@ Cli.Configure(configurator => configurator.SetConfiguration(...);
 There are two types of configuration providers `IConfig` and `IGenericConfig`.
 `IGenericConfig` require to return value in expected type (for argument using it), where  When using `IConfig` value returned by `Get` method is parsed using Converters. See [Converters](#converters) section.
 
-When both `IConfig` and `IGenericConfig` are provided, generic one takes precedence.   
+When both `IConfig` and `IGenericConfig` are provided, generic one takes precedence.
 
 #### Set dialect
 Dialect defines how flags and options are prefixed and how option value follows option.
@@ -182,6 +182,7 @@ Cli
             .ConfigPath("app.settings.option") // .LazyConfigPath("app.settings.flag")
             .Persistent()
             .DefaultValue(1.1)
+            .Converter(new ValueConverter())
         )
     );
 ```
@@ -207,12 +208,13 @@ Cli
             .EnvironmentVariable("NFLAGS_PARAMETER") // .LazyEnvironmentVariable("NFLAGS_PARAMETER")
             .ConfigPath("app.settings.parameter") // .LazyConfigPath("app.settings.parameter")
             .DefaultValue(1.2)
+            .Converter(new ValueConverter())
         )
     );
 ```
 
 When registering parameter, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.
-Same goes to setting config path, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.  
+Same goes to setting config path, builder contains either `EnvironmentVariable` and `LazyEnvironmentVariable` methods. If `LazyEnvironmentVariable` is used, the variable will be resolved using provider when accessing command arg value, otherwise during initialisation.
 
 ### Set parameter series
 Parameter series is a collection of parameters after last named parameter.
@@ -225,7 +227,7 @@ Cli.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries<int
 There is also non-generic method where argument type is string
 ```c#
 Cli.Configure(c => {}).Root(configurator => configurator.RegisterParamSeries("paramSeries", "Param series description"));
-``` 
+```
 
 ### Argument grouping
 Both flags and options can attached to groups and printed in separate section in help.
@@ -308,7 +310,7 @@ Cli.Configure(c => {}).
 
 
 ### Define default command
-Default command can be defined, when registering command with `RegisterDefaultCommand`. If default command is registered, it will be executed, when application is called to execute parent command. 
+Default command can be defined, when registering command with `RegisterDefaultCommand`. If default command is registered, it will be executed, when application is called to execute parent command.
 ```c#
 Cli.Configure(c => {}).
     Root(configurator => configurator.
@@ -334,12 +336,12 @@ Dialect can be set (default is Win) using:
 Cli.Configure(configurator => configurator.SetDialect(Dialect.Gnu));
 ```
 
-Dialects can be easily extended. 
+Dialects can be easily extended.
 To create new dialect simply create new class inherited from Dialect class.
 
 ```c#
     public class CustomDialect : Dialect
-    {      
+    {
         public override string Prefix => "x";
 
         public override string AbrPrefix => "a";
@@ -356,8 +358,8 @@ Cli.Configure(configurator => configurator.SetDialect(new CustomDialect()));
 
 Win dialect, follows MS Windows standards for defining console app arguments:
 
-- Flags and flags abbreviations are prefixed by '/' 
-- Options and options abbreviations are prefixed by '/' 
+- Flags and flags abbreviations are prefixed by '/'
+- Options and options abbreviations are prefixed by '/'
 - Value follow option after '='
 
 
@@ -365,10 +367,10 @@ Win dialect, follows MS Windows standards for defining console app arguments:
 
 Gnu dialect, follows Gnu Linux standards for defining console app arguments:
 
-- Flags are prefixed by '--' 
-- Flags abbreviations are prefixed by '-' 
-- Options are prefixed by '--' 
-- Options abbreviations are prefixed by '-' 
+- Flags are prefixed by '--'
+- Flags abbreviations are prefixed by '-'
+- Options are prefixed by '--'
+- Options abbreviations are prefixed by '-'
 - Value follow option as next argument after option
 
 ## Help
@@ -552,7 +554,7 @@ To use generic way of registering commands with arguments custom type with field
         [ParameterSeries("parameterSeries", "parameter series description")]
         public int[] ParameterSeries;
     }
-    
+
     public class Command2Arguments
     {
         [Option("option2", "o2", "option description", 3)]
@@ -584,8 +586,8 @@ Cli
 
 See `NFlags.Generics` example.
 
-Generics also supports lazy environment and configuration binding. When property is of type `Lazy<>` the value will be 
-resolved when accessed by `Value` property of `Lazy<>` type. 
+Generics also supports lazy environment and configuration binding. When property is of type `Lazy<>` the value will be
+resolved when accessed by `Value` property of `Lazy<>` type.
 
 ```c#
     public class RootCommandArguments
@@ -603,7 +605,7 @@ resolved when accessed by `Value` property of `Lazy<>` type.
 
 ## Array support
 
-When option is registered with array type NFlags allows to pass argument multiple times from CLI and aggregate it into array. 
+When option is registered with array type NFlags allows to pass argument multiple times from CLI and aggregate it into array.
 
 Running the following code:
 ```c#
@@ -631,7 +633,7 @@ c
 
 ## Converters
 
-Converters are used to convert argument (option or parameter) value to expected type. 
+Converters are used to convert argument (option or parameter) value to expected type.
 Converter must implement interface `NFlags.TypeConverters.IArgumentConverter` interface.
 ```c#
     public class UserConverter : IArgumentConverter
@@ -660,6 +662,26 @@ When registering parameter/option, existence of converter is checked, otherwise 
 When parsing arguments, first matching converter is used (in registration order).
 ```c#
 Cli.Configure(configurator => configurator.RegisterConverter(new UserConverter()));
+```
+
+Converter can be also set directly for argument trough builder method. If passed the converter from argument definition is used ,intstead of global registerd converters.
+```c#
+Cli
+    .Configure(c => {})
+    .Root(configurator => configurator
+        .RegisterOption<double>(b => b
+            .Name("option")
+            .Converter(new ValueConverter())
+        )
+        .RegisterParameter<double>(b => b
+            .Name("parameter")
+            .Converter(new ValueConverter())
+        )
+        .RegisterParameterSeries<double>(b => b
+            .Name("parameterSeries")
+            .Converter(new ValueConverter())
+        )
+    );
 ```
 
 ## Exception handling
