@@ -1,6 +1,8 @@
 # next version
  * Configurable 'help' and 'version' options
- * 
+ * [breaking] NFlags class removed.
+ * [breaking] RegisterSubcommand method removed from CommandConfigurator
+ * [breaking] RegisterParam&lt;T&gt; method removed from CommandConfigurator
  * [breaking] Properties CliConfig and NFlagsConfig removed from CommandConfig class.
  * [breaking] Changed IHelpPrinter interface
 
@@ -31,7 +33,7 @@
  * Generic custom args command registration
  * Method RegisterSubcommand marked as obsolete and RegisterCommand method introduced
  * Introduced PrintHelpOnExecute
- * Introduced default commands 
+ * Introduced default commands
 
 # 1.3.1
  * generic options and parameters getters in CommandArgs
@@ -46,7 +48,7 @@
 # 1.1.1
  * commands support
  * custom output handling
- 
+
 # 1.0.0
 
  * application description

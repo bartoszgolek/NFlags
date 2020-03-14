@@ -94,20 +94,6 @@ namespace NFlags.Commands
         /// <param name="description">Command description for help.</param>
         /// <param name="configureCommand">Command configuration callback</param>
         /// <returns>Self instance</returns>
-        [Obsolete("RegisterSubcommand method is obsolete. Use RegisterCommand instead.")]
-        public CommandConfigurator RegisterSubcommand(string name, string description,
-            Action<CommandConfigurator> configureCommand)
-        {
-            return RegisterCommand(name, description, configureCommand);
-        }
-
-        /// <summary>
-        /// Register sub command for the command
-        /// </summary>
-        /// <param name="name">Command name</param>
-        /// <param name="description">Command description for help.</param>
-        /// <param name="configureCommand">Command configuration callback</param>
-        /// <returns>Self instance</returns>
         public CommandConfigurator RegisterCommand(string name, string description,
             Action<CommandConfigurator> configureCommand)
         {
@@ -334,19 +320,6 @@ namespace NFlags.Commands
             _options.Add(option);
 
             return this;
-        }
-
-        /// <summary>
-        /// Register parameter for the command
-        /// </summary>
-        /// <param name="name">Parameter name</param>
-        /// <param name="description">Parameter description for help.</param>
-        /// <param name="defaultValue">Default parameter value.</param>
-        /// <returns>Self instance</returns>
-        [Obsolete("RegisterParam method is obsolete. Use RegisterParameter instead.")]
-        public CommandConfigurator RegisterParam<T>(string name, string description, T defaultValue)
-        {
-            return RegisterParameter(name, description, defaultValue);
         }
 
         /// <summary>
