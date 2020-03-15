@@ -38,9 +38,10 @@ namespace NFlags.Commands
                 var argumentsReader = new ArrayReader<string>(_args);
 
                 var commandConfig = ParseCommands(_rootCommandConfig, argumentsReader);
-                var commandArguments = ReadCommandArguments(commandConfig, argumentsReader);
+                var defaultCommandConfig = FindDefaultCommandConfig(commandConfig, argumentsReader);
+                var commandArguments = ReadCommandArguments(defaultCommandConfig, argumentsReader);
 
-                return GetCommandExecutionContext(commandConfig, commandArguments);
+                return GetCommandExecutionContext(commandConfig, defaultCommandConfig, commandArguments);
             }
             catch (ArgumentValueException e)
             {
@@ -58,26 +59,37 @@ namespace NFlags.Commands
             }
         }
 
-        private CommandExecutionContext GetCommandExecutionContext(CommandConfig commandConfig, CommandArgs commandArgs)
+        private CommandConfig FindDefaultCommandConfig(CommandConfig commandConfig, ArrayReader<string> argumentsReader)
+        {
+            while (HasDefaultCommand(commandConfig))
+                commandConfig = GetDefaultCommandConfig(commandConfig);
+
+            InitBaseOptions(ref commandConfig);
+
+            return commandConfig;
+        }
+
+        private CommandExecutionContext GetCommandExecutionContext(CommandConfig config, CommandConfig defaultConfig,
+            CommandArgs commandArgs)
         {
             if (_cliConfig.VersionConfig.Enabled && commandArgs.GetFlag(_cliConfig.VersionConfig.Flag))
-                return PreparePrintVersionCommandExecutionContext(commandConfig);
+                return PreparePrintVersionCommandExecutionContext(config);
 
-            if (commandConfig.PrintHelpOnExecute || commandArgs.GetFlag(_cliConfig.HelpConfig.Flag))
-                return PrepareHelpCommandExecutionContext(commandConfig);
+            if (commandArgs.GetFlag(_cliConfig.HelpConfig.Flag))
+                return PrepareHelpCommandExecutionContext(config);
 
-            return new CommandExecutionContext(commandConfig.Execute, commandArgs);
+            if (defaultConfig.PrintHelpOnExecute)
+                return PrepareHelpCommandExecutionContext(defaultConfig);
+
+            return new CommandExecutionContext(defaultConfig.Execute, commandArgs);
         }
 
         private CommandConfig ParseCommands(CommandConfig commandConfig, ArrayReader<string> argumentsReader)
         {
-            while (argumentsReader.HasData() && ArgIsCommand(commandConfig, argumentsReader.Current()) || HasDefaultCommand(commandConfig))
+            while (argumentsReader.HasData() && ArgIsCommand(commandConfig, argumentsReader.Current()))
             {
                 if (argumentsReader.HasData() && ArgIsCommand(commandConfig, argumentsReader.Current()))
                     commandConfig = GetSubCommandConfig(commandConfig, argumentsReader.Read());
-
-                if (HasDefaultCommand(commandConfig))
-                    commandConfig = GetDefaultCommandConfig(commandConfig);
             }
 
             InitBaseOptions(ref commandConfig);
@@ -87,17 +99,21 @@ namespace NFlags.Commands
 
         private void InitBaseOptions(ref CommandConfig commandConfig)
         {
-            commandConfig.Options.Add(
-                new Flag
-                {
-                    Name = _cliConfig.HelpConfig.Flag,
-                    Abr = _cliConfig.HelpConfig.Abr,
-                    Description = _cliConfig.HelpConfig.Description,
-                    DefaultValue = false
-                }
-            );
+            if (commandConfig.Options.All(a => a.Name != _cliConfig.HelpConfig.Flag))
+            {
+                commandConfig.Options.Add(
+                    new Flag
+                    {
+                        Name = _cliConfig.HelpConfig.Flag,
+                        Abr = _cliConfig.HelpConfig.Abr,
+                        Description = _cliConfig.HelpConfig.Description,
+                        DefaultValue = false
+                    }
+                );
+            }
 
-            if (_cliConfig.VersionConfig.Enabled)
+            if (_cliConfig.VersionConfig.Enabled &&
+                commandConfig.Options.All(a => a.Name != _cliConfig.VersionConfig.Flag))
             {
                 commandConfig.Options.Add(
                     new Flag

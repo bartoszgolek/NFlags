@@ -46,6 +46,70 @@ namespace NFlags.Tests
         }
 
         [Fact]
+        public void TestRun_ShouldPrintRootCommandHelp_IfDefaultCommandIsSetAndHelpFlagIsPassed()
+        {
+            var outputAggregator = new OutputAggregator();
+            Cli
+                .Configure(c => c
+                    .SetOutput(outputAggregator)
+                    .SetDialect(Dialect.Gnu)
+                )
+                .Root(c => c
+                    .RegisterDefaultCommand(
+                        "command",
+                        "description",
+                        configurator => configurator
+                            .PrintHelpOnExecute()
+                    )
+                )
+                .Run(new [] { "-h" });
+
+            NFAssert.HelpEquals(outputAggregator,
+                "Usage:",
+                "\ttesthost [COMMAND] [OPTIONS]...",
+                "",
+                "\tCommands:",
+                "\tcommand\tdescription",
+                "",
+                "\tOptions:",
+                "\t--help, -h\tPrints this help",
+                ""
+            );
+        }
+
+        [Fact]
+        public void TestRun_ShouldPrintGenericRootCommandHelp_IfDefaultCommandIsSetAndHelpFlagIsPassed()
+        {
+            var outputAggregator = new OutputAggregator();
+            Cli
+                .Configure(c => c
+                    .SetOutput(outputAggregator)
+                    .SetDialect(Dialect.Gnu)
+                )
+                .Root<EmptyArgumentsType>(c => c
+                    .RegisterDefaultCommand<EmptyArgumentsType>(
+                        "command",
+                        "description",
+                        configurator => configurator
+                            .PrintHelpOnExecute()
+                    )
+                )
+                .Run(new [] { "-h" });
+
+            NFAssert.HelpEquals(outputAggregator,
+                "Usage:",
+                "\ttesthost [COMMAND] [OPTIONS]...",
+                "",
+                "\tCommands:",
+                "\tcommand\tdescription",
+                "",
+                "\tOptions:",
+                "\t--help, -h\tPrints this help",
+                ""
+            );
+        }
+
+        [Fact]
         public void TestRun_ShouldPrintSubCommandHelp_IfPrintHelpOnExecuteIsSetForSubCommand()
         {
             var outputAggregator = new OutputAggregator();
