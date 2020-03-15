@@ -1,4 +1,4 @@
-# next version
+1.8.0
  * Configurable 'help' and 'version' options
  * [breaking] NFlags class removed.
  * [breaking] RegisterSubcommand method removed from CommandConfigurator
