@@ -1,5 +1,9 @@
-1.8.0
- * Configurable 'help' and 'version' options
+# 1.8.0
+
+__Warning:__ This version contains breaking changes. Remove all deprecations, before update.
+
+ * New option 'version' to print current application version.
+ * Configurable 'help' option.
  * [breaking] NFlags class removed.
  * [breaking] RegisterSubcommand method removed from CommandConfigurator
  * [breaking] RegisterParam&lt;T&gt; method removed from CommandConfigurator
