@@ -7,6 +7,6 @@
     <Copyright>Bartosz Gołek@2017</Copyright>
     <PackageTags>cli;library;parser;parsing;helper</PackageTags>
     <DocumentationFile>bin\Debug\netstandard2.0\NFlags.xml</DocumentationFile>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 </Project>
