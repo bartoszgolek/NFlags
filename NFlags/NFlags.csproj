@@ -7,6 +7,7 @@
     <Copyright>Bartosz Gołek@2017</Copyright>
     <PackageTags>cli;library;parser;parsing;helper</PackageTags>
     <DocumentationFile>bin\Debug\netstandard2.0\NFlags.xml</DocumentationFile>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 </Project>
